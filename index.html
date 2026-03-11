@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D&D Campaign Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0d0d; --bg2:#141414; --bg3:#1a1a1a; --bg4:#222;
+  --border:#2a2a2a; --red:#e53e3e; --red-dark:#c53030;
+  --red-dim:rgba(229,62,62,0.15); --text:#e2e2e2;
+  --muted:#888; --dim:#555;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:16px;min-height:100vh;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+.navbar{background:#0a0a0a;border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;gap:4px;height:52px;position:sticky;top:0;z-index:100;overflow-x:auto;}
+.nav-logo{display:flex;align-items:center;gap:8px;margin-right:12px;cursor:pointer;flex-shrink:0;}
+.nav-logo-icon{width:32px;height:32px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:white;font-family:'Cinzel',serif;font-weight:700;}
+.nav-logo-text{color:var(--red);font-family:'Cinzel',serif;font-weight:700;font-size:18px;}
+.hamburger{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:6px;margin-right:8px;flex-shrink:0;}
+.nav-item{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:15px;color:var(--muted);transition:all .15s;white-space:nowrap;font-family:'Crimson Text',serif;background:none;border:none;flex-shrink:0;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{color:var(--text);}
+.main{padding:32px;max-width:1200px;margin:0 auto;}
+.page{display:none;}
+.page.active{display:block;}
+body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
+.btn-primary{background:var(--red);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:15px;font-family:'Crimson Text',serif;display:inline-flex;align-items:center;gap:8px;transition:background .15s;}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:15px;font-family:'Crimson Text',serif;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
+.btn-secondary:hover{background:var(--bg3);border-color:#444;}
+.page-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--red);}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.section-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;}
+.section-title{display:flex;align-items:center;gap:8px;font-family:'Cinzel',serif;font-size:16px;margin-bottom:20px;}
+.empty-state{text-align:center;padding:32px;color:var(--dim);}
+.empty-icon{font-size:36px;margin-bottom:12px;opacity:.3;}
+.tab-row{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Crimson Text',serif;font-size:15px;display:inline-flex;align-items:center;gap:6px;transition:all .15s;}
+.tab-btn.active{background:var(--red-dim);border-color:var(--red);color:var(--text);}
+.tab-btn:hover:not(.active){background:var(--bg3);color:var(--text);}
+.hero-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:40px 48px;margin-bottom:28px;position:relative;overflow:hidden;}
+.hero-card::before{content:'';position:absolute;top:0;right:0;width:300px;height:100%;background:radial-gradient(ellipse at right,rgba(229,62,62,.08),transparent 70%);pointer-events:none;}
+.hero-eyebrow{color:var(--muted);font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.hero-title{font-family:'Cinzel',serif;font-size:52px;font-weight:700;color:var(--red);line-height:1;margin-bottom:16px;}
+.hero-desc{color:var(--muted);font-size:17px;max-width:480px;line-height:1.6;margin-bottom:28px;}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;cursor:pointer;transition:all .2s;}
+.feature-card:hover{border-color:#444;background:var(--bg3);}
+.feature-card.c1{border-left:3px solid #8b0000;}
+.feature-card.c2{border-left:3px solid #4a7c59;}
+.feature-card.c3{border-left:3px solid #4a2c6e;}
+.feature-card.c4{border-left:3px solid #2c4a6e;}
+.feature-card.c5{border-left:3px solid #1a4a4a;}
+.feature-card.c6{border-left:3px solid #7a6000;}
+.feature-icon{font-size:20px;margin-bottom:12px;}
+.feature-title{font-family:'Cinzel',serif;font-size:15px;font-weight:600;margin-bottom:6px;}
+.feature-desc{font-size:14px;color:var(--muted);}
+.feature-arrow{color:var(--red);margin-top:12px;}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.dice-grid{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.die-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-family:'Crimson Text',serif;font-size:14px;transition:all .15s;}
+.die-btn:hover,.die-btn.active{background:var(--red);border-color:var(--red);color:white;}
+.dice-result{text-align:center;padding:16px;}
+.dice-result-number{font-family:'Cinzel',serif;font-size:48px;font-weight:700;color:var(--red);line-height:1;transition:transform .2s;}
+.dice-result-label{font-size:13px;color:var(--muted);margin-top:4px;}
+.campaign-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;cursor:pointer;border:1px solid var(--border);margin-bottom:8px;background:var(--bg3);transition:all .15s;}
+.campaign-item:hover{border-color:#444;background:var(--bg4);}
+.campaign-thumb{width:40px;height:40px;border-radius:6px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:18px;flex-shrink:0;}
+.campaign-list-item{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:10px;cursor:pointer;border:1px solid var(--border);margin-bottom:8px;background:var(--bg2);transition:all .15s;}
+.campaign-list-item:hover{border-color:#444;background:var(--bg3);}
+.campaign-big-thumb{width:56px;height:56px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:24px;flex-shrink:0;}
+.campaign-list-info{flex:1;}
+.campaign-list-name-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.campaign-list-name{font-family:'Cinzel',serif;font-size:16px;font-weight:600;}
+.badge{padding:2px 8px;border-radius:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+.badge-priv{background:rgba(229,62,62,.15);color:#fc8181;border:1px solid rgba(229,62,62,.4);}
+.badge-pub{background:rgba(45,106,79,.4);color:#5cb88a;border:1px solid rgba(45,106,79,.6);}
+.visibility-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.vis-btn{flex:1;padding:10px 16px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Crimson Text',serif;font-size:15px;transition:all .15s;}
+.vis-btn.active.public{background:rgba(45,106,79,.4);color:#5cb88a;}
+.vis-btn.active.private{background:rgba(229,62,62,.15);color:#fc8181;}
+.vis-btn:not(.active):hover{background:var(--bg3);color:var(--text);}
+.player-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);margin-bottom:8px;}
+.player-item-info{flex:1;}
+.player-item-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600;}
+.player-item-dn{font-size:12px;color:var(--red);font-family:monospace;}
+.campaign-list-desc{font-size:14px;color:var(--muted);margin-bottom:6px;}
+.campaign-list-meta{font-size:13px;color:var(--dim);display:flex;gap:16px;}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--red);cursor:pointer;font-size:15px;margin-bottom:28px;}
+.back-link:hover{text-decoration:underline;}
+.form-section{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:32px;max-width:760px;}
+.form-group{margin-bottom:24px;}
+.form-label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.form-label .req{color:var(--red);}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:'Crimson Text',serif;font-size:16px;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--red);}
+.form-input::placeholder{color:var(--dim);}
+.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:'Crimson Text',serif;font-size:16px;outline:none;min-height:100px;resize:vertical;transition:border-color .15s;}
+.form-textarea:focus{border-color:var(--red);}
+.form-textarea::placeholder{color:var(--dim);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-family:'Crimson Text',serif;font-size:16px;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:40px;text-align:center;cursor:pointer;margin-bottom:28px;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .2s;}
+.upload-zone:hover{border-color:var(--red);}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;min-height:28px;}
+.tag-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--red-dim);border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:13px;}
+.tag-remove{cursor:pointer;color:var(--muted);}
+.tag-input-row{display:flex;gap:8px;}
+.tag-input-row .form-input{flex:1;}
+.campaign-detail-hero{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:32px;margin-bottom:20px;display:flex;gap:24px;}
+.campaign-detail-icon{width:80px;height:80px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;}
+.campaign-detail-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--red);margin-bottom:8px;}
+.campaign-detail-desc{font-size:15px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.campaign-detail-meta{display:flex;gap:20px;flex-wrap:wrap;}
+.campaign-meta-item{font-size:13px;color:var(--muted);}
+.map-topbar{background:#0a0a0a;border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:8px;overflow-x:auto;}
+.map-tab{padding:5px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;white-space:nowrap;}
+.map-tab.active{background:var(--red-dim);border-color:rgba(229,62,62,.4);color:var(--text);}
+.map-tool-btn{padding:5px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--muted);border:1px solid transparent;background:transparent;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap;}
+.map-tool-btn.active{background:var(--red);border-color:var(--red);color:white;}
+.map-tool-btn:hover:not(.active){background:var(--bg3);color:var(--text);}
+.map-layout{display:flex;height:calc(100vh - 104px);}
+.map-sidebar{width:180px;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:12px;flex-shrink:0;}
+.map-sidebar-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:12px 0 8px 4px;}
+.map-sidebar-title:first-child{margin-top:0;}
+.token-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--muted);transition:background .15s;}
+.token-item:hover{background:var(--bg3);color:var(--text);}
+.token-item.selected{background:var(--red-dim);color:var(--text);}
+.token-emoji{font-size:16px;width:22px;text-align:center;}
+.map-canvas{flex:1;background:#111;position:relative;overflow:hidden;cursor:crosshair;}
+.map-grid{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(to right,rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;}
+.placed-token{position:absolute;font-size:24px;cursor:pointer;transform:translate(-50%,-50%);user-select:none;transition:transform .1s;}
+.placed-token:hover{transform:translate(-50%,-50%) scale(1.3);}
+.ai-panel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
+.ai-panel-title{font-size:13px;color:var(--muted);margin-bottom:8px;}
+.map-textarea{width:100%;background:var(--bg4);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px;font-family:'Crimson Text',serif;font-size:13px;outline:none;resize:none;min-height:60px;margin-bottom:8px;}
+.map-gen-btn{width:100%;background:var(--red);color:white;border:none;padding:8px;border-radius:6px;cursor:pointer;font-family:'Crimson Text',serif;font-size:14px;transition:background .15s;}
+.map-gen-btn:hover{background:var(--red-dark);}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.char-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .2s;}
+.char-card:hover{border-color:#444;background:var(--bg3);}
+.char-avatar{width:64px;height:64px;border-radius:50%;background:var(--bg4);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid var(--border);}
+.char-name{font-family:'Cinzel',serif;font-size:16px;font-weight:600;text-align:center;margin-bottom:6px;}
+.char-class-line{font-size:14px;color:var(--muted);text-align:center;margin-bottom:16px;}
+.char-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.char-stat{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center;}
+.char-stat-val{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--red);}
+.char-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.new-char-card{background:var(--bg2);border:2px dashed var(--border);border-radius:10px;padding:40px 20px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);text-align:center;min-height:200px;}
+.new-char-card:hover{border-color:var(--red);color:var(--text);}
+.compendium-layout{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start;}
+.compendium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.monster-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;transition:all .2s;}
+.monster-card:hover{border-color:#555;background:var(--bg3);}
+.monster-card.selected{border-color:var(--red);background:var(--red-dim);}
+.monster-emoji{font-size:28px;margin-bottom:8px;}
+.monster-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;margin-bottom:3px;}
+.monster-cr{font-size:12px;color:var(--muted);}
+.ai-search-wrap{position:relative;margin-bottom:16px;}
+.ai-search-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px 50px 12px 44px;font-family:'Crimson Text',serif;font-size:16px;outline:none;transition:border-color .2s;}
+.ai-search-input:focus{border-color:var(--red);}
+.ai-search-input::placeholder{color:var(--dim);}
+.ai-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none;display:flex;align-items:center;}
+.ai-search-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--red);color:white;border:none;border-radius:6px;width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.ai-search-btn:hover{background:var(--red-dark);}
+.ai-search-btn:disabled{background:#555;cursor:not-allowed;}
+.detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:70px;max-height:calc(100vh - 90px);display:flex;flex-direction:column;}
+.detail-panel-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.detail-panel-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.detail-panel-subtitle{font-size:14px;color:var(--muted);}
+.detail-panel-body{padding:20px 24px;overflow-y:auto;flex:1;}
+.detail-section{margin-bottom:20px;}
+.detail-section-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.detail-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.detail-stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;}
+.detail-stat-val{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--red);}
+.detail-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.detail-prop-row{display:flex;gap:6px;margin-bottom:6px;font-size:14px;line-height:1.5;}
+.detail-prop-label{color:var(--muted);min-width:120px;flex-shrink:0;font-style:italic;}
+.detail-text{font-size:15px;line-height:1.7;color:#ccc;}
+.detail-action{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;}
+.detail-action-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;margin-bottom:4px;}
+.detail-action-desc{font-size:13px;color:var(--muted);line-height:1.5;}
+.detail-tag-row{display:flex;gap:6px;flex-wrap:wrap;}
+.detail-tag{padding:3px 10px;background:var(--bg4);border:1px solid var(--border);border-radius:20px;font-size:12px;color:var(--muted);}
+.detail-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;color:var(--dim);gap:12px;flex:1;}
+.source-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(229,62,62,.12);border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:11px;color:var(--red);margin-bottom:12px;}
+.shimmer{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;height:14px;margin-bottom:8px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── AUTH SCREEN ── */
+.auth-screen{position:fixed;inset:0;background:#0a0a0a;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.auth-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:48px 40px;width:100%;max-width:420px;}
+.auth-logo{text-align:center;margin-bottom:32px;}
+.auth-logo-icon{width:64px;height:64px;background:var(--red);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;color:white;font-family:'Cinzel',serif;font-weight:700;margin:0 auto 16px;}
+.auth-title{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--red);margin-bottom:6px;}
+.auth-sub{color:var(--muted);font-size:15px;}
+.auth-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:9px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Crimson Text',serif;font-size:15px;transition:all .15s;}
+.auth-tab.active{background:var(--bg4);color:var(--text);}
+.auth-form-group{margin-bottom:18px;}
+.auth-label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.auth-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px;font-family:'Crimson Text',serif;font-size:16px;outline:none;transition:border-color .15s;}
+.auth-input:focus{border-color:var(--red);}
+.auth-input::placeholder{color:var(--dim);}
+.auth-btn{width:100%;background:var(--red);color:white;border:none;padding:13px;border-radius:10px;cursor:pointer;font-family:'Cinzel',serif;font-size:16px;letter-spacing:.05em;transition:background .15s;margin-top:8px;}
+.auth-btn:hover{background:var(--red-dark);}
+.auth-dn-preview{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.auth-dn-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.auth-dn-code{font-family:monospace;font-size:18px;color:var(--red);letter-spacing:.1em;}
+.auth-error{color:#fc8181;font-size:14px;margin-bottom:12px;text-align:center;min-height:20px;}
+/* ── MESSAGES ── */
+.messages-layout{display:flex;height:calc(100vh - 52px);}
+.msg-sidebar{width:300px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.msg-sidebar-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.msg-sidebar-title{font-family:'Cinzel',serif;font-size:16px;color:var(--text);}
+.msg-new-btn{background:var(--red);color:white;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.msg-new-btn:hover{background:var(--red-dark);}
+.msg-search{padding:10px 16px;border-bottom:1px solid var(--border);}
+.msg-search-inp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-family:'Crimson Text',serif;font-size:14px;outline:none;}
+.msg-search-inp:focus{border-color:var(--red);}
+.msg-search-inp::placeholder{color:var(--dim);}
+.msg-convo-list{flex:1;overflow-y:auto;}
+.msg-convo{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid rgba(42,42,42,.4);transition:background .15s;position:relative;}
+.msg-convo:hover{background:var(--bg3);}
+.msg-convo.active{background:var(--bg3);border-left:2px solid var(--red);}
+.msg-avatar{width:42px;height:42px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;position:relative;}
+.msg-avatar.group{border-radius:10px;}
+.msg-unread-dot{position:absolute;top:0;right:0;width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--bg2);}
+.msg-convo-info{flex:1;min-width:0;}
+.msg-convo-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-convo-preview{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-convo-time{font-size:11px;color:var(--dim);flex-shrink:0;align-self:flex-start;padding-top:3px;}
+.msg-main{flex:1;display:flex;flex-direction:column;background:var(--bg);}
+.msg-topbar{padding:0 20px;height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2);}
+.msg-topbar-info{display:flex;align-items:center;gap:12px;}
+.msg-topbar-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.msg-topbar-avatar.group{border-radius:8px;}
+.msg-topbar-name{font-family:'Cinzel',serif;font-size:16px;font-weight:600;}
+.msg-topbar-sub{font-size:12px;color:var(--muted);}
+.msg-topbar-actions{display:flex;gap:8px;}
+.msg-topbar-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:13px;font-family:'Crimson Text',serif;transition:all .15s;}
+.msg-topbar-btn:hover{background:var(--bg4);color:var(--text);}
+.msg-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:4px;}
+.msg-day-divider{text-align:center;margin:16px 0;position:relative;}
+.msg-day-divider span{background:var(--bg);color:var(--dim);font-size:12px;padding:0 12px;position:relative;z-index:1;}
+.msg-day-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);}
+.msg-bubble-row{display:flex;align-items:flex-end;gap:8px;margin:2px 0;}
+.msg-bubble-row.mine{flex-direction:row-reverse;}
+.msg-bubble-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;}
+.msg-bubble{max-width:68%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.5;word-break:break-word;}
+.msg-bubble.theirs{background:var(--bg3);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text);}
+.msg-bubble.mine{background:var(--red);color:white;border-bottom-right-radius:4px;}
+.msg-bubble-meta{font-size:11px;color:var(--dim);margin:2px 8px;display:flex;gap:6px;align-items:center;}
+.msg-bubble-meta.mine{justify-content:flex-end;}
+.msg-input-area{padding:16px 20px;border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:10px;flex-shrink:0;background:var(--bg2);}
+.msg-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:13px 16px;font-family:'Crimson Text',serif;font-size:16px;outline:none;resize:none;min-height:48px;max-height:160px;overflow-y:auto;line-height:1.5;transition:border-color .15s;}
+.msg-input:focus{border-color:var(--red);}
+.msg-input::placeholder{color:var(--dim);}
+.msg-send-btn{width:48px;height:48px;background:var(--red);color:white;border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.msg-send-btn:hover{background:var(--red-dark);}
+.msg-send-btn:disabled{background:#444;cursor:not-allowed;}
+.msg-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);}
+/* ── NEW CHAT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;width:100%;max-width:480px;overflow:hidden;}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Cinzel',serif;font-size:18px;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;border-radius:4px;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:20px 24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.dn-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--red-dim);border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:13px;margin:4px;}
+.dn-chip-remove{cursor:pointer;color:var(--red);}
+/* ── FRIENDS ── */
+.friend-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(42,42,42,.5);}
+.friend-avatar{width:36px;height:36px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.friend-info{flex:1;}
+.friend-name{font-family:'Cinzel',serif;font-size:14px;font-weight:600;}
+.friend-dn{font-size:12px;color:var(--red);font-family:monospace;}
+.online-dot{width:8px;height:8px;border-radius:50%;background:#2d6a4f;flex-shrink:0;}
+
+.profile-panel{position:fixed;left:0;top:52px;width:280px;height:calc(100vh - 52px);background:var(--bg2);border-right:1px solid var(--border);padding:20px;z-index:50;transform:translateX(-100%);transition:transform .25s;overflow-y:auto;}
+.profile-panel.open{transform:translateX(0);}
+.profile-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.profile-title{font-family:'Cinzel',serif;font-size:18px;}
+.icon-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;border-radius:4px;}
+.icon-btn:hover{color:var(--text);}
+.profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:12px;}
+.profile-username{font-family:'Cinzel',serif;font-size:16px;font-weight:600;margin-bottom:4px;}
+.profile-id{color:var(--red);font-size:13px;font-family:monospace;}
+.profile-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;}
+.profile-stat{text-align:center;}
+.profile-stat-val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;}
+.profile-stat-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;}
+.profile-field{margin-bottom:16px;}
+.profile-field-label{font-size:11px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.signout-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:10px;border-radius:8px;cursor:pointer;font-family:'Crimson Text',serif;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;transition:all .15s;}
+.signout-btn:hover{background:var(--bg3);color:var(--text);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;display:none;}
+.overlay.open{display:block;}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 20px;font-size:14px;z-index:200;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-left:3px solid #2d6a4f;}
+.toast.error{border-left:3px solid var(--red);}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <button class="hamburger" onclick="toggleProfile()">&#9776;</button>
+  <div class="nav-logo" onclick="navigate('home')">
+    <div class="nav-logo-icon">&#9876;</div>
+    <span class="nav-logo-text">D&amp;D</span>
+  </div>
+  <button class="nav-item" id="nav-home" onclick="navigate('home')">&#127968; Home</button>
+  <button class="nav-item" id="nav-campaigns" onclick="navigate('campaigns')">&#9876; Campaigns</button>
+  <button class="nav-item" id="nav-characters" onclick="navigate('characters')">&#128100; Characters</button>
+  <button class="nav-item" id="nav-map" onclick="navigate('map')">&#128506; Map Builder</button>
+  <button class="nav-item" id="nav-messages" onclick="navigate('messages')">&#128172; Messages</button>
+  <button class="nav-item" id="nav-compendium" onclick="navigate('compendium')">&#128218; Compendium</button>
+  <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
+  <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#127897; Voice</button>
+  <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#9881; Admin</button>
+</nav>
+
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">&#9876;</div>
+      <div class="auth-title">D&amp;D Manager</div>
+      <div class="auth-sub">Forge your legend. Join the realm.</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+    <div id="authError" class="auth-error"></div>
+    <!-- LOGIN -->
+    <div id="authLogin">
+      <div class="auth-form-group">
+        <label class="auth-label">Username</label>
+        <input class="auth-input" id="loginUsername" placeholder="Your username..." autocomplete="username">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="auth-btn" onclick="doLogin()">Enter the Realm</button>
+    </div>
+    <!-- REGISTER -->
+    <div id="authRegister" style="display:none">
+      <div class="auth-form-group">
+        <label class="auth-label">Username</label>
+        <input class="auth-input" id="regUsername" placeholder="Choose a name, adventurer..." autocomplete="username">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" id="regPassword" type="password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Confirm Password</label>
+        <input class="auth-input" id="regPasswordConfirm" type="password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="auth-dn-preview">
+        <div>
+          <div class="auth-dn-label">Your Dungeon Number</div>
+          <div class="auth-dn-code" id="authDNPreview">#DN-......</div>
+        </div>
+        <button onclick="rerollDN()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;" title="Reroll">&#8635;</button>
+      </div>
+      <button class="auth-btn" onclick="doRegister()" onkeydown="if(event.key==='Enter')doRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeProfile()"></div>
+
+<div class="profile-panel" id="profilePanel">
+  <div class="profile-header-row">
+    <span class="profile-title">Profile</span>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" onclick="navigate('messages')" title="Messages">&#128172;</button>
+      <button class="icon-btn">&#128276;</button>
+      <button class="icon-btn" onclick="closeProfile()">&#10005;</button>
+    </div>
+  </div>
+  <div class="profile-avatar-wrap">
+    <div class="profile-avatar" id="profileAvatar">&#128100;</div>
+    <div class="profile-username" id="profileUsername">Adventurer</div>
+    <div class="profile-id" id="profileDN">#DN-4ENWOZ</div>
+  </div>
+  <div class="profile-stats-row">
+    <div class="profile-stat"><div class="profile-stat-val" id="pStatLevel">1</div><div class="profile-stat-label">Level</div></div>
+    <div class="profile-stat"><div class="profile-stat-val" id="pStatCampaigns">0</div><div class="profile-stat-label">Campaigns</div></div>
+    <div class="profile-stat"><div class="profile-stat-val" id="pStatFriends">0</div><div class="profile-stat-label">Friends</div></div>
+  </div>
+  <!-- ADD FRIEND -->
+  <div class="profile-field">
+    <div class="profile-field-label">Add Friend by Dungeon Number</div>
+    <div style="display:flex;gap:8px">
+      <input class="form-input" id="addFriendInput" placeholder="#DN-......" style="flex:1;font-family:monospace;font-size:13px;" onkeydown="if(event.key==='Enter')addFriend()">
+      <button class="btn-primary" style="padding:8px 14px" onclick="addFriend()">+ Add</button>
+    </div>
+  </div>
+  <!-- FRIENDS LIST -->
+  <div class="profile-field">
+    <div class="profile-field-label">Friends</div>
+    <div id="friendsList"><div style="color:var(--dim);font-size:13px;padding:8px 0">No friends yet. Add by Dungeon Number!</div></div>
+  </div>
+  <div class="profile-field">
+    <div class="profile-field-label">Race</div>
+    <select class="form-select" id="profileRace" onchange="saveProfileRace()">
+      <option>Human</option><option>Elf</option><option>Dwarf</option><option>Halfling</option>
+      <option>Gnome</option><option>Half-Elf</option><option>Half-Orc</option><option>Tiefling</option>
+      <option>Dragonborn</option><option>Aasimar</option>
+    </select>
+  </div>
+  <button class="signout-btn" onclick="doSignOut()">&#8618; Sign Out</button>
+</div>
+
+<div class="main" id="mainContent">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero-card">
+      <div class="hero-eyebrow">&#128293; WELCOME BACK</div>
+      <div class="hero-title">D&amp;D</div>
+      <p class="hero-desc">Forge your destiny. Build campaigns, create characters, and embark on epic adventures with fellow adventurers.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="navigate('campaigns')">&#9876; My Campaigns</button>
+        <button class="btn-secondary" onclick="navigate('browse')">&#128269; Browse Campaigns</button>
+      </div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card c1" onclick="navigate('campaigns')"><div class="feature-icon">&#9876;</div><div class="feature-title">My Campaigns</div><div class="feature-desc">View and manage campaigns</div><div class="feature-arrow">&#8250;</div></div>
+      <div class="feature-card c2" onclick="navigate('characters')"><div class="feature-icon">&#128100;</div><div class="feature-title">Characters</div><div class="feature-desc">Create and edit characters</div><div class="feature-arrow">&#8250;</div></div>
+      <div class="feature-card c3" onclick="navigate('map')"><div class="feature-icon">&#128506;</div><div class="feature-title">Map Builder</div><div class="feature-desc">Build dungeon maps</div><div class="feature-arrow">&#8250;</div></div>
+      <div class="feature-card c4" onclick="navigate('browse')"><div class="feature-icon">&#128269;</div><div class="feature-title">Browse</div><div class="feature-desc">Find public campaigns</div><div class="feature-arrow">&#8250;</div></div>
+      <div class="feature-card c5" onclick="navigate('messages')"><div class="feature-icon">&#128172;</div><div class="feature-title">Messages</div><div class="feature-desc">Chat with party members</div><div class="feature-arrow">&#8250;</div></div>
+      <div class="feature-card c6" onclick="navigate('compendium')"><div class="feature-icon">&#128218;</div><div class="feature-title">Compendium</div><div class="feature-desc">Spells, monsters &amp; more</div><div class="feature-arrow">&#8250;</div></div>
+    </div>
+    <div class="bottom-grid">
+      <div class="section-card">
+        <div class="section-title">&#128737; Recent Campaigns</div>
+        <div id="recentCampaignsList"></div>
+        <button class="btn-primary" style="margin-top:16px;width:100%;justify-content:center" onclick="navigate('campaigns')">Find a Campaign</button>
+      </div>
+      <div class="section-card">
+        <div class="section-title">&#127922; Quick Roll</div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;margin-bottom:12px">Dice Roller</div>
+        <div class="dice-grid">
+          <button class="die-btn" onclick="rollDie(4,this)">d4</button>
+          <button class="die-btn" onclick="rollDie(6,this)">d6</button>
+          <button class="die-btn" onclick="rollDie(8,this)">d8</button>
+          <button class="die-btn" onclick="rollDie(10,this)">d10</button>
+          <button class="die-btn" onclick="rollDie(12,this)">d12</button>
+          <button class="die-btn" onclick="rollDie(20,this)">d20</button>
+          <button class="die-btn" onclick="rollDie(100,this)">d100</button>
+        </div>
+        <div class="dice-result" id="diceResult" style="display:none">
+          <div class="dice-result-number" id="diceResultNum">-</div>
+          <div class="dice-result-label" id="diceResultLabel">d20</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGNS -->
+  <div class="page" id="page-campaigns">
+    <div class="page-header">
+      <div class="page-title">Campaigns</div>
+      <button class="btn-primary" onclick="navigate('create-campaign')">+ New Campaign</button>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchCampaignTab(this)">&#9876; My Campaigns</button>
+      <button class="tab-btn" onclick="switchCampaignTab(this)">&#128101; Joined</button>
+    </div>
+    <div id="campaignsListContainer"></div>
+  </div>
+
+  <!-- CREATE CAMPAIGN -->
+  <div class="page" id="page-create-campaign">
+    <div class="back-link" onclick="navigate('campaigns')">&#8592; Back to Campaigns</div>
+    <div class="page-title" style="margin-bottom:24px">Create Campaign</div>
+    <div class="form-section">
+      <div class="upload-zone" onclick="showToast('Upload coming soon','success')">
+        <div style="font-size:32px;color:var(--dim)">&#8679;</div>
+        <div style="font-size:15px;color:var(--dim)">Upload Cover Image</div>
+      </div>
+      <div class="form-group"><label class="form-label">CAMPAIGN NAME <span class="req">*</span></label><input class="form-input" id="ccName" placeholder="The Curse of Strahd..."></div>
+      <div class="form-group"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" id="ccDesc" placeholder="Describe your campaign..."></textarea></div>
+      <div class="form-group"><label class="form-label">SETTING / WORLD</label><input class="form-input" id="ccWorld" placeholder="Forgotten Realms, Eberron, Homebrew..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">DIFFICULTY</label><select class="form-select" id="ccDifficulty"><option>easy</option><option selected>medium</option><option>hard</option><option>deadly</option></select></div>
+        <div class="form-group"><label class="form-label">MAX PLAYERS</label><input class="form-input" id="ccMaxPlayers" type="number" value="6"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">LEVEL RANGE</label><input class="form-input" id="ccLevelRange" placeholder="1-5"></div>
+        <div class="form-group"><label class="form-label">SCHEDULE</label><input class="form-input" id="ccSchedule" placeholder="Every Saturday 7pm"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">VISIBILITY</label>
+        <div class="visibility-toggle">
+          <button class="vis-btn active public" id="visPublic" onclick="setVisibility('public')">🌍 Public — appears in Browse</button>
+          <button class="vis-btn private" id="visPrivate" onclick="setVisibility('private')">🔒 Private — invite only</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ADD PLAYERS <span style="color:var(--dim);font-weight:400;text-transform:none;letter-spacing:0">(optional — enter Dungeon Numbers)</span></label>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input class="form-input" id="ccPlayerInput" placeholder="#DN-......" style="font-family:monospace;font-size:13px;" onkeydown="if(event.key==='Enter')addCampaignPlayer()">
+          <button class="btn-primary" style="padding:8px 14px;white-space:nowrap" onclick="addCampaignPlayer()">+ Add</button>
+        </div>
+        <div id="ccPlayerError" style="color:#fc8181;font-size:13px;min-height:18px;margin-bottom:6px"></div>
+        <div id="ccPlayersList"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">TAGS</label>
+        <div class="tag-row" id="tagRow"></div>
+        <div class="tag-input-row"><input class="form-input" id="tagInput" placeholder="Add tag..."><button class="btn-primary" onclick="addTag()">Add</button></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <button class="btn-primary" style="flex:1;justify-content:center" onclick="createCampaign()">Create Campaign</button>
+        <button class="btn-secondary" onclick="navigate('campaigns')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGN DETAIL -->
+  <div class="page" id="page-campaign-detail">
+    <div class="back-link" id="cdBackLink" onclick="navigate('campaigns')">&#8592; Back to Campaigns</div>
+    <div class="campaign-detail-hero">
+      <div class="campaign-detail-icon">&#9876;</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <div class="campaign-detail-title" id="cdTitle">Campaign Name</div>
+          <span class="badge" id="cdVisibilityBadge">public</span>
+        </div>
+        <div class="campaign-detail-desc" id="cdDesc">Campaign description.</div>
+        <div class="campaign-detail-meta">
+          <span class="campaign-meta-item">&#128101; <span id="cdPlayers">0/6</span></span>
+          <span class="campaign-meta-item">&#9876; <span id="cdDifficulty">medium</span></span>
+          <span class="campaign-meta-item">&#128202; <span id="cdLevel">Lv 1-5</span></span>
+          <span class="campaign-meta-item">&#127758; <span id="cdWorld">Homebrew</span></span>
+          <span class="campaign-meta-item" id="cdOwnerRow" style="display:none">&#128081; DM: <span id="cdOwner">—</span></span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:20px" id="cdActions">
+      <button class="btn-primary" onclick="navigate('map')">&#128506; Open Map Builder</button>
+      <button class="btn-secondary" id="cdMsgBtn" onclick="openCampaignChat()">&#128172; Party Chat</button>
+      <button class="btn-secondary" id="cdJoinBtn" style="display:none" onclick="joinCampaign()">+ Join Campaign</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="section-card">
+        <div class="section-title">&#128101; Players</div>
+        <div id="cdPlayersList"></div>
+        <div id="cdAddPlayerSection" style="display:none;margin-top:12px">
+          <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Add Player by Dungeon Number</div>
+          <div style="display:flex;gap:8px">
+            <input class="form-input" id="cdAddPlayerInput" placeholder="#DN-......" style="font-family:monospace;font-size:13px;" onkeydown="if(event.key==='Enter')addPlayerToCampaign()">
+            <button class="btn-primary" style="padding:8px 14px" onclick="addPlayerToCampaign()">+ Add</button>
+          </div>
+          <div id="cdAddPlayerError" style="color:#fc8181;font-size:13px;margin-top:6px;min-height:18px"></div>
+        </div>
+      </div>
+      <div class="section-card"><div class="section-title">&#128221; Session Notes</div><div class="empty-state"><div class="empty-icon">&#128203;</div><div>No session notes yet.</div></div></div>
+    </div>
+  </div>
+
+  <!-- MAP BUILDER -->
+  <div class="page" id="page-map">
+    <div class="map-topbar">
+      <div class="map-tab active" id="mapTabDungeon" onclick="switchMapTab('dungeon')">&#127984; Dungeon Scrawl</div>
+      <div class="map-tab" id="mapTabImage" onclick="switchMapTab('image')">&#128444; Image Map + Tokens</div>
+      <div style="flex:1"></div>
+      <button class="map-tool-btn active" id="toolPlace" onclick="setMapTool('place')">&#9998; Place</button>
+      <button class="map-tool-btn" id="toolErase" onclick="setMapTool('erase')">&#10005; Erase</button>
+      <button class="map-tool-btn" id="toolPan" onclick="setMapTool('pan')">&#9995; Pan</button>
+      <button class="map-tool-btn active" id="toolGrid" onclick="toggleGrid()">&#8862; Grid</button>
+      <button class="map-tool-btn" onclick="showToast('Snap enabled','success')">&#8857; Snap</button>
+      <span style="color:var(--muted);font-size:13px;margin:0 8px">100%</span>
+      <button class="map-tool-btn" onclick="clearMap()">&#8635; Reset</button>
+    </div>
+    <div class="map-layout">
+      <div class="map-sidebar">
+        <div class="ai-panel">
+          <div class="ai-panel-title">&#10024; AI Map Generator</div>
+          <textarea class="map-textarea" placeholder="Describe a map or name a campaign..."></textarea>
+          <button class="map-gen-btn" onclick="showToast('Generating map...','success')">&#10024; Generate Map</button>
+        </div>
+        <div class="map-sidebar-title">MONSTERS</div>
+        <div id="monsterTokens"></div>
+        <div class="map-sidebar-title">PLAYERS</div>
+        <div id="playerTokens"></div>
+      </div>
+      <div class="map-canvas" id="mapCanvas" onclick="placeToken(event)">
+        <div class="map-grid" id="mapGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARACTERS -->
+  <div class="page" id="page-characters">
+    <div class="page-header">
+      <div class="page-title">Characters</div>
+      <button class="btn-primary" onclick="showToast('Character creator coming soon','success')">+ New Character</button>
+    </div>
+    <div class="char-grid" id="charGrid"></div>
+  </div>
+
+  <!-- COMPENDIUM -->
+  <div class="page" id="page-compendium">
+    <div class="page-header" style="margin-bottom:16px"><div class="page-title">Compendium</div></div>
+
+    <div class="ai-search-wrap" style="max-width:760px;margin-bottom:28px;">
+      <span class="ai-search-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </span>
+      <input class="ai-search-input" id="compendiumAIInput" placeholder="Search the realms — 'Ancient Red Dragon', 'Fireball', 'Vorpal Sword', 'Paladin'..." onkeydown="if(event.key==='Enter')aiCompendiumSearch()">
+      <button class="ai-search-btn" id="aiSearchBtn" onclick="aiCompendiumSearch()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div style="max-width:760px;">
+      <div class="detail-panel" id="detailPanel" style="position:static;max-height:none;">
+        <div class="detail-placeholder" id="detailPlaceholder" style="padding:60px 24px;">
+          <div style="opacity:.2;margin-bottom:16px;">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div style="font-size:17px;color:var(--muted);margin-bottom:8px;">The Compendium awaits</div>
+          <div style="font-size:14px;color:var(--dim);max-width:380px;line-height:1.6;">Search for any monster, spell, item, race, or class — the AI will search the web and compile full D&amp;D 5e lore, stats, and abilities.</div>
+        </div>
+        <div id="detailContent" style="display:none;flex-direction:column;flex:1;overflow:hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BROWSE -->
+  <div class="page" id="page-browse">
+    <div class="page-header">
+      <div class="page-title">Browse Campaigns</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="form-input" id="browseSearch" placeholder="Search campaigns..." style="width:240px" oninput="renderBrowse()">
+      </div>
+    </div>
+    <div id="browseCampaignsList"></div>
+  </div>
+
+  <!-- MESSAGES -->
+  <div class="page" id="page-messages">
+    <div class="messages-layout">
+      <!-- SIDEBAR -->
+      <div class="msg-sidebar">
+        <div class="msg-sidebar-top">
+          <span class="msg-sidebar-title">&#128172; Messages</span>
+          <button class="msg-new-btn" onclick="openNewChatModal()" title="New conversation">+</button>
+        </div>
+        <div class="msg-search">
+          <input class="msg-search-inp" placeholder="Search conversations..." oninput="filterConvos(this.value)" id="msgSearchInput">
+        </div>
+        <div class="msg-convo-list" id="msgConvoList"></div>
+      </div>
+      <!-- MAIN CHAT AREA -->
+      <div class="msg-main" id="msgMain">
+        <div class="msg-empty" id="msgEmpty">
+          <div style="font-size:52px;opacity:.15">&#128172;</div>
+          <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--muted)">Select a conversation</div>
+          <div style="font-size:14px">or start a new one with the + button</div>
+          <button class="btn-primary" style="margin-top:16px" onclick="openNewChatModal()">+ New Message</button>
+        </div>
+        <div id="msgChatView" style="display:none;flex-direction:column;height:100%">
+          <div class="msg-topbar" id="msgTopbar">
+            <div class="msg-topbar-info">
+              <div class="msg-topbar-avatar" id="msgTopAvatar">&#128100;</div>
+              <div>
+                <div class="msg-topbar-name" id="msgTopName">—</div>
+                <div class="msg-topbar-sub" id="msgTopSub">—</div>
+              </div>
+            </div>
+            <div class="msg-topbar-actions">
+              <button class="msg-topbar-btn" onclick="openGroupInfoModal()" id="msgInfoBtn">&#9432; Info</button>
+            </div>
+          </div>
+          <div class="msg-messages" id="msgMessages"></div>
+          <div class="msg-input-area">
+            <textarea class="msg-input" id="msgInput" placeholder="Type a message..." rows="1"
+              onkeydown="handleMsgKey(event)"
+              oninput="autoResize(this)"></textarea>
+            <button class="msg-send-btn" onclick="sendMessage()" id="msgSendBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOICE -->
+  <div class="page" id="page-voice">
+    <div class="page-header"><div class="page-title">Voice</div></div>
+    <div class="empty-state" style="padding:80px"><div class="empty-icon">&#127897;</div><div style="font-size:18px;margin-bottom:8px">Voice Chat</div><div>Coming soon.</div></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="page" id="page-admin">
+    <div class="page-header"><div class="page-title">Admin</div></div>
+    <div class="section-card"><div class="section-title">&#9881; Administration Panel</div><p style="color:var(--muted);font-size:15px">Manage users, campaigns, and site settings.</p></div>
+  </div>
+
+</div>
+
+<!-- NEW CHAT MODAL -->
+<div class="modal-overlay" id="newChatModal" style="display:none" onclick="if(event.target===this)closeNewChatModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Conversation</span>
+      <button class="modal-close" onclick="closeNewChatModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="auth-tabs" style="margin-bottom:20px">
+        <button class="auth-tab active" id="ncTabDM" onclick="switchNCTab('dm')">Direct Message</button>
+        <button class="auth-tab" id="ncTabGroup" onclick="switchNCTab('group')">Group Chat</button>
+      </div>
+      <!-- DM -->
+      <div id="ncDM">
+        <div class="auth-form-group">
+          <label class="auth-label">Dungeon Number or Username</label>
+          <input class="auth-input" id="ncDMInput" placeholder="#DN-......" onkeydown="if(event.key==='Enter')startDM()">
+        </div>
+        <div id="ncDMResult" style="min-height:20px;font-size:14px;color:var(--muted)"></div>
+      </div>
+      <!-- GROUP -->
+      <div id="ncGroup" style="display:none">
+        <div class="auth-form-group">
+          <label class="auth-label">Group Name</label>
+          <input class="auth-input" id="ncGroupName" placeholder="Party of Heroes...">
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Add Members (up to 10 total)</label>
+          <input class="auth-input" id="ncGroupInput" placeholder="#DN-......" onkeydown="if(event.key==='Enter')addGroupMember()">
+          <div id="ncGroupError" style="color:#fc8181;font-size:13px;margin-top:6px;min-height:18px"></div>
+        </div>
+        <div id="ncGroupMembers" style="display:flex;flex-wrap:wrap;gap:4px;min-height:32px;margin-bottom:8px"></div>
+        <div style="font-size:13px;color:var(--dim)" id="ncGroupCount">0 members added (max 9 others)</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeNewChatModal()">Cancel</button>
+      <button class="btn-primary" id="ncStartBtn" onclick="startConversation()">Start Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP INFO MODAL -->
+<div class="modal-overlay" id="groupInfoModal" style="display:none" onclick="if(event.target===this)closeGroupInfoModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="giTitle">Group Info</span>
+      <button class="modal-close" onclick="closeGroupInfoModal()">&#10005;</button>
+    </div>
+    <div class="modal-body" id="giBody"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeGroupInfoModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  AUTH + USER SYSTEM
+// ══════════════════════════════════════════════════════
+var currentUser = null;   // { username, dn, passwordHash, race, friends:[] }
+var _pendingDN  = '';
+
+function genDN() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code = '';
+  for (var i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return '#DN-' + code;
+}
+
+function hashPass(p) {
+  // Simple deterministic hash (not for real security — localStorage is client-side anyway)
+  var h = 0;
+  for (var i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i); h |= 0; }
+  return h.toString(36);
+}
+
+function getAllUsers() {
+  return JSON.parse(localStorage.getItem('dnd_users') || '{}');
+}
+function saveAllUsers(users) {
+  localStorage.setItem('dnd_users', JSON.stringify(users));
+}
+
+function rerollDN() {
+  _pendingDN = genDN();
+  var el = document.getElementById('authDNPreview');
+  if (el) el.textContent = _pendingDN;
+}
+
+function switchAuthTab(tab) {
+  document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('authTabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authLogin').style.display    = tab === 'login'    ? '' : 'none';
+  document.getElementById('authRegister').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('authError').textContent = '';
+}
+
+function doLogin() {
+  var username = document.getElementById('loginUsername').value.trim();
+  var password  = document.getElementById('loginPassword').value;
+  var errEl = document.getElementById('authError');
+  if (!username || !password) { errEl.textContent = 'Please enter username and password.'; return; }
+  var users = getAllUsers();
+  var key = username.toLowerCase();
+  if (!users[key]) { errEl.textContent = 'Username not found. Create an account first.'; return; }
+  if (users[key].passwordHash !== hashPass(password)) { errEl.textContent = 'Incorrect password.'; return; }
+  currentUser = users[key];
+  localStorage.setItem('dnd_session', JSON.stringify({ username: currentUser.username }));
+  bootApp();
+}
+
+function doRegister() {
+  var username = document.getElementById('regUsername').value.trim();
+  var password  = document.getElementById('regPassword').value;
+  var confirm   = document.getElementById('regPasswordConfirm').value;
+  var errEl = document.getElementById('authError');
+  if (!username) { errEl.textContent = 'Please choose a username.'; return; }
+  if (username.length < 3) { errEl.textContent = 'Username must be at least 3 characters.'; return; }
+  if (!password) { errEl.textContent = 'Please enter a password.'; return; }
+  if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
+  var users = getAllUsers();
+  if (users[username.toLowerCase()]) { errEl.textContent = 'Username already taken.'; return; }
+  // Check DN not taken
+  var dn = _pendingDN || genDN();
+  for (var k in users) { if (users[k].dn === dn) { dn = genDN(); } }
+  var newUser = { username: username, dn: dn, passwordHash: hashPass(password), race: 'Human', friends: [] };
+  users[username.toLowerCase()] = newUser;
+  saveAllUsers(users);
+  currentUser = newUser;
+  localStorage.setItem('dnd_session', JSON.stringify({ username: username }));
+  bootApp();
+}
+
+function doSignOut() {
+  localStorage.removeItem('dnd_session');
+  currentUser = null;
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('mainContent').style.display = 'none';
+  document.querySelector('.navbar').style.display = 'none';
+  closeProfile();
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('authError').textContent = '';
+  switchAuthTab('login');
+}
+
+function bootApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  document.querySelector('.navbar').style.display = 'flex';
+  refreshProfilePanel();
+  navigate('home');
+}
+
+function refreshProfilePanel() {
+  if (!currentUser) return;
+  document.getElementById('profileUsername').textContent = currentUser.username;
+  document.getElementById('profileDN').textContent = currentUser.dn;
+  document.getElementById('pStatFriends').textContent = (currentUser.friends || []).length;
+  document.getElementById('pStatCampaigns').textContent = campaigns.length;
+  renderFriendsList();
+}
+
+function saveProfileRace() {
+  if (!currentUser) return;
+  currentUser.race = document.getElementById('profileRace').value;
+  var users = getAllUsers();
+  users[currentUser.username.toLowerCase()] = currentUser;
+  saveAllUsers(users);
+}
+
+// ── FRIENDS ──
+function addFriend() {
+  var input = document.getElementById('addFriendInput');
+  var val = input.value.trim().toUpperCase();
+  if (!val.startsWith('#DN-')) val = '#DN-' + val.replace('#DN-','');
+  var users = getAllUsers();
+  // Find user by DN
+  var found = null;
+  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
+  if (!found) { showToast('Dungeon Number not found', 'error'); return; }
+  if (found.dn === currentUser.dn) { showToast('You cannot add yourself!', 'error'); return; }
+  if ((currentUser.friends || []).indexOf(found.dn) >= 0) { showToast('Already friends!', 'error'); return; }
+  currentUser.friends = currentUser.friends || [];
+  currentUser.friends.push(found.dn);
+  var allUsers = getAllUsers();
+  allUsers[currentUser.username.toLowerCase()] = currentUser;
+  saveAllUsers(allUsers);
+  input.value = '';
+  refreshProfilePanel();
+  showToast('Friend added: ' + found.username, 'success');
+}
+
+function renderFriendsList() {
+  var el = document.getElementById('friendsList');
+  var friends = currentUser.friends || [];
+  if (!friends.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px 0">No friends yet. Add by Dungeon Number!</div>'; return; }
+  var users = getAllUsers();
+  var html = '';
+  for (var i = 0; i < friends.length; i++) {
+    var f = null;
+    for (var k in users) { if (users[k].dn === friends[i]) { f = users[k]; break; } }
+    if (!f) continue;
+    html += '<div class="friend-item">' +
+      '<div class="friend-avatar">&#128100;</div>' +
+      '<div class="friend-info"><div class="friend-name">' + esc(f.username) + '</div><div class="friend-dn">' + esc(f.dn) + '</div></div>' +
+      '<button onclick="startDMwith(\'' + esc(f.dn) + '\')" style="background:var(--red-dim);border:1px solid rgba(229,62,62,.3);color:var(--text);border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif">Chat</button>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════
+//  MESSAGING SYSTEM
+// ══════════════════════════════════════════════════════
+var activeConvoId = null;
+var msgPollInterval = null;
+var ncGroupMembers = []; // DNs of group members being built
+var ncTabMode = 'dm';
+
+// ── Storage helpers ──
+function getConvos() { return JSON.parse(localStorage.getItem('dnd_convos') || '[]'); }
+function saveConvos(c) { localStorage.setItem('dnd_convos', JSON.stringify(c)); }
+function getMessages(convoId) { return JSON.parse(localStorage.getItem('dnd_msgs_' + convoId) || '[]'); }
+function saveMessages(convoId, msgs) { localStorage.setItem('dnd_msgs_' + convoId, JSON.stringify(msgs)); }
+
+// ── Get convos for current user ──
+function myConvos() {
+  if (!currentUser) return [];
+  return getConvos().filter(function(c) { return c.members.indexOf(currentUser.dn) >= 0; });
+}
+
+// ── Create or find a DM convo ──
+function findOrCreateDM(otherDN) {
+  var convos = getConvos();
+  // Look for existing DM
+  for (var i = 0; i < convos.length; i++) {
+    var c = convos[i];
+    if (c.type === 'dm' && c.members.length === 2 &&
+        c.members.indexOf(currentUser.dn) >= 0 && c.members.indexOf(otherDN) >= 0) {
+      return c.id;
+    }
+  }
+  // Create new
+  var id = 'dm_' + Date.now();
+  convos.push({ id: id, type: 'dm', members: [currentUser.dn, otherDN], createdAt: Date.now(), lastMsg: '', lastTime: Date.now() });
+  saveConvos(convos);
+  return id;
+}
+
+// ── Create a group chat ──
+function createGroupChat(name, memberDNs, campaignId) {
+  var all = [currentUser.dn].concat(memberDNs);
+  // Deduplicate
+  var seen = {};
+  var unique = [];
+  for (var i = 0; i < all.length; i++) { if (!seen[all[i]]) { seen[all[i]] = true; unique.push(all[i]); } }
+  if (unique.length > 10) unique = unique.slice(0, 10);
+  var id = (campaignId ? 'camp_' + campaignId : 'grp_' + Date.now());
+  var convos = getConvos();
+  // Don't duplicate campaign chats
+  for (var j = 0; j < convos.length; j++) { if (convos[j].id === id) return id; }
+  convos.push({ id: id, type: 'group', name: name, members: unique, campaignId: campaignId || null, createdAt: Date.now(), lastMsg: '', lastTime: Date.now() });
+  saveConvos(convos);
+  // System message
+  var msgs = [{ id: Date.now(), senderDN: 'system', senderName: 'System', text: '⚔️ ' + name + ' was created!', time: Date.now() }];
+  saveMessages(id, msgs);
+  return id;
+}
+
+// ── Render sidebar convo list ──
+function renderConvoList(filter) {
+  var el = document.getElementById('msgConvoList');
+  var convos = myConvos();
+  if (filter) {
+    filter = filter.toLowerCase();
+    convos = convos.filter(function(c) { return getConvoDisplayName(c).toLowerCase().indexOf(filter) >= 0; });
+  }
+  // Sort by lastTime desc
+  convos.sort(function(a,b) { return (b.lastTime||0) - (a.lastTime||0); });
+  if (!convos.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:24px;color:var(--dim);font-size:14px">No conversations yet.<br>Hit + to start one!</div>';
+    return;
+  }
+  var html = '';
+  var users = getAllUsers();
+  for (var i = 0; i < convos.length; i++) {
+    var c = convos[i];
+    var name = getConvoDisplayName(c, users);
+    var avatar = c.type === 'group' ? '&#128101;' : '&#128100;';
+    var isActive = c.id === activeConvoId;
+    var time = c.lastTime ? fmtTime(c.lastTime) : '';
+    html += '<div class="msg-convo' + (isActive ? ' active' : '') + '" onclick="openConvo(\'' + c.id + '\')">' +
+      '<div class="msg-avatar' + (c.type === 'group' ? ' group' : '') + '">' + avatar + '</div>' +
+      '<div class="msg-convo-info">' +
+        '<div class="msg-convo-name">' + esc(name) + '</div>' +
+        '<div class="msg-convo-preview">' + esc(c.lastMsg || 'No messages yet') + '</div>' +
+      '</div>' +
+      '<div class="msg-convo-time">' + time + '</div>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function getConvoDisplayName(c, users) {
+  if (c.type === 'group') return c.name || 'Group Chat';
+  if (!users) users = getAllUsers();
+  var otherDN = c.members.find ? c.members.find(function(m) { return m !== (currentUser && currentUser.dn); })
+    : (function(){ for(var x=0;x<c.members.length;x++){if(c.members[x]!==(currentUser&&currentUser.dn))return c.members[x];} return ''; })();
+  for (var k in users) { if (users[k].dn === otherDN) return users[k].username; }
+  return otherDN || 'Unknown';
+}
+
+function fmtTime(ts) {
+  var d = new Date(ts);
+  var now = new Date();
+  if (d.toDateString() === now.toDateString()) {
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
+  return (d.getMonth()+1) + '/' + d.getDate();
+}
+
+// ── Open a conversation ──
+function openConvo(id) {
+  activeConvoId = id;
+  var convos = getConvos();
+  var convo = null;
+  for (var i = 0; i < convos.length; i++) { if (convos[i].id === id) { convo = convos[i]; break; } }
+  if (!convo) return;
+  document.getElementById('msgEmpty').style.display = 'none';
+  var chatView = document.getElementById('msgChatView');
+  chatView.style.display = 'flex';
+
+  // Topbar
+  var users = getAllUsers();
+  var name = getConvoDisplayName(convo, users);
+  var subText = '';
+  if (convo.type === 'group') {
+    subText = convo.members.length + ' members';
+  } else {
+    var otherDN = null;
+    for (var j = 0; j < convo.members.length; j++) { if (convo.members[j] !== currentUser.dn) { otherDN = convo.members[j]; break; } }
+    if (otherDN) { for (var k in users) { if (users[k].dn === otherDN) { subText = users[k].dn; break; } } }
+  }
+  var av = document.getElementById('msgTopAvatar');
+  av.textContent = '';
+  av.innerHTML = convo.type === 'group' ? '&#128101;' : '&#128100;';
+  av.className = 'msg-topbar-avatar' + (convo.type === 'group' ? ' group' : '');
+  document.getElementById('msgTopName').textContent = name;
+  document.getElementById('msgTopSub').textContent = subText;
+  document.getElementById('msgInfoBtn').style.display = convo.type === 'group' ? '' : 'none';
+
+  renderMessages(id);
+  renderConvoList();
+  // Start polling for new messages (simulate real-time)
+  if (msgPollInterval) clearInterval(msgPollInterval);
+  msgPollInterval = setInterval(function() { if (activeConvoId) renderMessages(activeConvoId, true); }, 1500);
+}
+
+// ── Render messages ──
+function renderMessages(convoId, silent) {
+  var msgs = getMessages(convoId);
+  var el = document.getElementById('msgMessages');
+  if (!silent || el.scrollTop + el.clientHeight >= el.scrollHeight - 40) {
+    var users = getAllUsers();
+    var html = '';
+    var lastDate = '';
+    for (var i = 0; i < msgs.length; i++) {
+      var m = msgs[i];
+      var dateStr = new Date(m.time).toDateString();
+      if (dateStr !== lastDate) {
+        html += '<div class="msg-day-divider"><span>' + formatDay(m.time) + '</span></div>';
+        lastDate = dateStr;
+      }
+      if (m.senderDN === 'system') {
+        html += '<div style="text-align:center;color:var(--dim);font-size:13px;margin:8px 0;font-style:italic">' + esc(m.text) + '</div>';
+        continue;
+      }
+      var mine = currentUser && m.senderDN === currentUser.dn;
+      var senderName = m.senderName || m.senderDN;
+      html += '<div class="msg-bubble-row' + (mine ? ' mine' : '') + '">';
+      if (!mine) html += '<div class="msg-bubble-avatar">&#128100;</div>';
+      html += '<div style="display:flex;flex-direction:column;' + (mine ? 'align-items:flex-end' : '') + '">';
+      if (!mine) html += '<div style="font-size:12px;color:var(--muted);margin-bottom:3px;padding-left:4px">' + esc(senderName) + '</div>';
+      html += '<div class="msg-bubble ' + (mine ? 'mine' : 'theirs') + '">' + escHTML(m.text) + '</div>';
+      html += '<div class="msg-bubble-meta' + (mine ? ' mine' : '') + '">' + fmtTime(m.time) + (mine ? ' ✓' : '') + '</div>';
+      html += '</div></div>';
+    }
+    el.innerHTML = html;
+    el.scrollTop = el.scrollHeight;
+  }
+}
+
+function formatDay(ts) {
+  var d = new Date(ts);
+  var now = new Date();
+  if (d.toDateString() === now.toDateString()) return 'Today';
+  var yest = new Date(now); yest.setDate(now.getDate()-1);
+  if (d.toDateString() === yest.toDateString()) return 'Yesterday';
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+
+// ── Send message ──
+function sendMessage() {
+  if (!activeConvoId || !currentUser) return;
+  var input = document.getElementById('msgInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var msgs = getMessages(activeConvoId);
+  var msg = { id: Date.now(), senderDN: currentUser.dn, senderName: currentUser.username, text: text, time: Date.now() };
+  msgs.push(msg);
+  saveMessages(activeConvoId, msgs);
+  // Update convo lastMsg
+  var convos = getConvos();
+  for (var i = 0; i < convos.length; i++) {
+    if (convos[i].id === activeConvoId) {
+      convos[i].lastMsg = text.length > 40 ? text.slice(0,40) + '…' : text;
+      convos[i].lastTime = Date.now();
+      break;
+    }
+  }
+  saveConvos(convos);
+  input.value = '';
+  input.style.height = '';
+  renderMessages(activeConvoId);
+  renderConvoList();
+}
+
+function handleMsgKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+function filterConvos(val) { renderConvoList(val); }
+
+// ── NEW CHAT MODAL ──
+function openNewChatModal() {
+  ncGroupMembers = [];
+  document.getElementById('ncDMInput').value = '';
+  document.getElementById('ncDMResult').textContent = '';
+  document.getElementById('ncGroupName').value = '';
+  document.getElementById('ncGroupInput').value = '';
+  document.getElementById('ncGroupError').textContent = '';
+  renderNCGroupMembers();
+  switchNCTab('dm');
+  document.getElementById('newChatModal').style.display = 'flex';
+}
+function closeNewChatModal() { document.getElementById('newChatModal').style.display = 'none'; }
+function switchNCTab(tab) {
+  ncTabMode = tab;
+  document.getElementById('ncTabDM').classList.toggle('active', tab === 'dm');
+  document.getElementById('ncTabGroup').classList.toggle('active', tab === 'group');
+  document.getElementById('ncDM').style.display    = tab === 'dm'    ? '' : 'none';
+  document.getElementById('ncGroup').style.display = tab === 'group' ? '' : 'none';
+}
+
+function lookupDN(val) {
+  val = val.trim().toUpperCase();
+  if (!val.startsWith('#DN-')) val = '#DN-' + val.replace(/^#?DN-?/i, '');
+  var users = getAllUsers();
+  for (var k in users) { if (users[k].dn === val) return users[k]; }
+  return null;
+}
+
+function startDM() {
+  var val = document.getElementById('ncDMInput').value;
+  var found = lookupDN(val);
+  var res = document.getElementById('ncDMResult');
+  if (!found) { res.style.color='#fc8181'; res.textContent = 'User not found.'; return; }
+  if (found.dn === currentUser.dn) { res.style.color='#fc8181'; res.textContent = 'Cannot DM yourself!'; return; }
+  res.style.color='#68d391'; res.textContent = '✓ Found: ' + found.username;
+  var id = findOrCreateDM(found.dn);
+  closeNewChatModal();
+  navigate('messages');
+  openConvo(id);
+}
+
+function startDMwith(dn) {
+  var id = findOrCreateDM(dn);
+  closeProfile();
+  navigate('messages');
+  setTimeout(function() { openConvo(id); }, 80);
+}
+
+function addGroupMember() {
+  var val = document.getElementById('ncGroupInput').value;
+  var errEl = document.getElementById('ncGroupError');
+  var found = lookupDN(val);
+  if (!found) { errEl.textContent = 'User not found.'; return; }
+  if (found.dn === currentUser.dn) { errEl.textContent = 'You are already in the group.'; return; }
+  if (ncGroupMembers.indexOf(found.dn) >= 0) { errEl.textContent = 'Already added.'; return; }
+  if (ncGroupMembers.length >= 9) { errEl.textContent = 'Max 10 members total (9 others + you).'; return; }
+  ncGroupMembers.push(found.dn);
+  errEl.textContent = '';
+  document.getElementById('ncGroupInput').value = '';
+  renderNCGroupMembers();
+}
+
+function removeGroupMember(dn) {
+  ncGroupMembers = ncGroupMembers.filter(function(d) { return d !== dn; });
+  renderNCGroupMembers();
+}
+
+function renderNCGroupMembers() {
+  var el = document.getElementById('ncGroupMembers');
+  var users = getAllUsers();
+  var html = '';
+  for (var i = 0; i < ncGroupMembers.length; i++) {
+    var dn = ncGroupMembers[i];
+    var name = dn;
+    for (var k in users) { if (users[k].dn === dn) { name = users[k].username; break; } }
+    html += '<span class="dn-chip">' + esc(name) + '<span class="dn-chip-remove" onclick="removeGroupMember(\'' + esc(dn) + '\')">&#10005;</span></span>';
+  }
+  el.innerHTML = html;
+  document.getElementById('ncGroupCount').textContent = ncGroupMembers.length + ' member' + (ncGroupMembers.length !== 1 ? 's' : '') + ' added (max 9 others + you)';
+}
+
+function startConversation() {
+  if (ncTabMode === 'dm') { startDM(); return; }
+  var name = document.getElementById('ncGroupName').value.trim();
+  if (!name) { document.getElementById('ncGroupError').textContent = 'Group name required.'; return; }
+  if (ncGroupMembers.length === 0) { document.getElementById('ncGroupError').textContent = 'Add at least one member.'; return; }
+  var id = createGroupChat(name, ncGroupMembers);
+  closeNewChatModal();
+  navigate('messages');
+  openConvo(id);
+}
+
+// ── GROUP INFO MODAL ──
+function openGroupInfoModal() {
+  if (!activeConvoId) return;
+  var convos = getConvos();
+  var convo = null;
+  for (var i = 0; i < convos.length; i++) { if (convos[i].id === activeConvoId) { convo = convos[i]; break; } }
+  if (!convo) return;
+  document.getElementById('giTitle').textContent = convo.name || 'Group Info';
+  var users = getAllUsers();
+  var html = '<div style="margin-bottom:16px"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Members (' + convo.members.length + ')</div>';
+  for (var j = 0; j < convo.members.length; j++) {
+    var dn = convo.members[j];
+    var uname = dn, udn = dn;
+    for (var k in users) { if (users[k].dn === dn) { uname = users[k].username; udn = users[k].dn; break; } }
+    var isMe = dn === currentUser.dn;
+    html += '<div class="friend-item"><div class="friend-avatar">&#128100;</div>' +
+      '<div class="friend-info"><div class="friend-name">' + esc(uname) + (isMe ? ' <span style="color:var(--muted);font-size:12px">(you)</span>' : '') + '</div><div class="friend-dn">' + esc(udn) + '</div></div></div>';
+  }
+  html += '</div>';
+  if (convo.campaignId) {
+    html += '<div style="background:var(--red-dim);border:1px solid rgba(229,62,62,.3);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--muted)">&#9876; Campaign chat — linked to campaign</div>';
+  }
+  document.getElementById('giBody').innerHTML = html;
+  document.getElementById('groupInfoModal').style.display = 'flex';
+}
+function closeGroupInfoModal() { document.getElementById('groupInfoModal').style.display = 'none'; }
+
+// ══════════════════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════════════════
+var campaigns = JSON.parse(localStorage.getItem('dnd_campaigns') || '[]');
+var characters = [
+  {name:'Thorin Ironbeard', cls:'Fighter / Level 5', str:18, dex:10, con:16, emoji:'&#9876;'},
+  {name:'Lyra Moonwhisper', cls:'Wizard / Level 4', str:8, dex:14, con:10, emoji:'&#128302;'},
+  {name:'Bramble Thistlewick', cls:'Rogue / Level 3', str:12, dex:18, con:12, emoji:'&#128329;'}
+];
+var tags = [];
+var selectedToken = null;
+var currentMapTool = 'place';
+var gridVisible = true;
+var compendiumTab = 'monsters';
+var toastTimer = null;
+
+var PLAYERS = ['Human','Elf','Dwarf','Halfling','Gnome','Half-Elf','Half-Orc','Tiefling','Dragonborn','Aasimar'];
+var PLAYER_EMOJIS = {
+  Human:'&#128113;', Elf:'&#129503;', Dwarf:'&#9935;', Halfling:'&#127804;',
+  Gnome:'&#128295;', 'Half-Elf':'&#127767;', 'Half-Orc':'&#128170;',
+  Tiefling:'&#128520;', Dragonborn:'&#128050;', Aasimar:'&#10024;'
+};
+
+var CDATA = {
+  monsters:[
+    {name:'Goblin',cr:'1/4',e:'&#128122;'},{name:'Orc',cr:'1/2',e:'&#128121;'},{name:'Skeleton',cr:'1/4',e:'&#128128;'},
+    {name:'Zombie',cr:'1/4',e:'&#129503;'},{name:'Kobold',cr:'1/8',e:'&#129422;'},{name:'Hobgoblin',cr:'1/2',e:'&#128548;'},
+    {name:'Bugbear',cr:'1',e:'&#128059;'},{name:'Gnoll',cr:'1/2',e:'&#128058;'},{name:'Lizardfolk',cr:'1/2',e:'&#129422;'},
+    {name:'Bandit',cr:'1/8',e:'&#128329;'},{name:'Werewolf',cr:'3',e:'&#128058;'},{name:'Ghoul',cr:'1',e:'&#128561;'},
+    {name:'Specter',cr:'1',e:'&#128123;'},{name:'Wight',cr:'3',e:'&#128128;'},{name:'Ogre',cr:'2',e:'&#128077;'},
+    {name:'Troll',cr:'5',e:'&#129424;'},{name:'Vampire Spawn',cr:'5',e:'&#129499;'},{name:'Mind Flayer',cr:'7',e:'&#129504;'},
+    {name:'Lich',cr:'21',e:'&#128128;'},{name:'Beholder',cr:'13',e:'&#128065;'},{name:'Hill Giant',cr:'5',e:'&#127956;'},
+    {name:'Ancient Red Dragon',cr:'24',e:'&#128009;'},{name:'Pit Fiend',cr:'20',e:'&#128520;'},{name:'Mimic',cr:'2',e:'&#128228;'}
+  ],
+  spells:[
+    {name:'Fireball',cr:'3rd',e:'&#128293;'},{name:'Magic Missile',cr:'1st',e:'&#10024;'},{name:'Cure Wounds',cr:'1st',e:'&#128154;'},
+    {name:'Invisibility',cr:'2nd',e:'&#128123;'},{name:'Counterspell',cr:'3rd',e:'&#128737;'},{name:'Polymorph',cr:'4th',e:'&#129422;'},
+    {name:'Lightning Bolt',cr:'3rd',e:'&#9889;'},{name:'Misty Step',cr:'2nd',e:'&#127787;'},{name:'Shield',cr:'1st',e:'&#128737;'},
+    {name:'Eldritch Blast',cr:'Cantrip',e:'&#128158;'},{name:'Banishment',cr:'4th',e:'&#9711;'},{name:'Wish',cr:'9th',e:'&#11088;'},
+    {name:'Meteor Swarm',cr:'9th',e:'&#9732;'},{name:'True Resurrection',cr:'9th',e:'&#10010;'},{name:'Prestidigitation',cr:'Cantrip',e:'&#10024;'}
+  ],
+  items:[
+    {name:'Vorpal Sword',cr:'Legendary',e:'&#9876;'},{name:'Staff of Power',cr:'Very Rare',e:'&#129668;'},{name:'Ring of Invisibility',cr:'Legendary',e:'&#128141;'},
+    {name:'Bag of Holding',cr:'Uncommon',e:'&#128116;'},{name:'Cloak of Elvenkind',cr:'Uncommon',e:'&#129405;'},{name:'Helm of Telepathy',cr:'Uncommon',e:'&#128134;'},
+    {name:'Boots of Speed',cr:'Rare',e:'&#128095;'},{name:'Amulet of Health',cr:'Rare',e:'&#128317;'},{name:'Deck of Many Things',cr:'Legendary',e:'&#127183;'},
+    {name:'Wand of Fireballs',cr:'Rare',e:'&#129668;'},{name:'Flame Tongue',cr:'Rare',e:'&#128329;'},{name:'Potion of Healing',cr:'Common',e:'&#129514;'}
+  ],
+  races:[
+    {name:'Human',cr:'Versatile',e:'&#129489;'},{name:'Elf',cr:'Graceful',e:'&#129503;'},{name:'Dwarf',cr:'Hardy',e:'&#9935;'},
+    {name:'Halfling',cr:'Lucky',e:'&#127804;'},{name:'Gnome',cr:'Inventive',e:'&#128295;'},{name:'Half-Elf',cr:'Diplomatic',e:'&#127767;'},
+    {name:'Half-Orc',cr:'Strong',e:'&#128170;'},{name:'Tiefling',cr:'Infernal',e:'&#128520;'},{name:'Dragonborn',cr:'Draconic',e:'&#128050;'},
+    {name:'Aasimar',cr:'Celestial',e:'&#10024;'},{name:'Genasi',cr:'Elemental',e:'&#127754;'},{name:'Firbolg',cr:'Gentle Giant',e:'&#127807;'}
+  ],
+  classes:[
+    {name:'Fighter',cr:'Martial',e:'&#9876;'},{name:'Wizard',cr:'Arcane',e:'&#128302;'},{name:'Rogue',cr:'Cunning',e:'&#128329;'},
+    {name:'Cleric',cr:'Divine',e:'&#10010;'},{name:'Ranger',cr:'Wilderness',e:'&#127993;'},{name:'Paladin',cr:'Holy',e:'&#128737;'},
+    {name:'Barbarian',cr:'Rage',e:'&#128548;'},{name:'Bard',cr:'Performance',e:'&#127929;'},{name:'Druid',cr:'Nature',e:'&#127807;'},
+    {name:'Monk',cr:'Ki',e:'&#128170;'},{name:'Sorcerer',cr:'Innate Magic',e:'&#10024;'},{name:'Warlock',cr:'Patron',e:'&#128128;'}
+  ]
+};
+
+// NAVIGATION
+function navigate(page) {
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+  var navItems = document.querySelectorAll('.nav-item');
+  for (var j = 0; j < navItems.length; j++) navItems[j].classList.remove('active');
+  var pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  var navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  document.body.className = '';
+  if (page === 'map') document.body.className = 'map-view';
+  if (page === 'messages') document.body.className = 'messages-view';
+  if (page === 'campaigns') renderCampaigns();
+  if (page === 'home') renderHome();
+  if (page === 'characters') renderCharacters();
+  if (page === 'map') renderMapSidebar();
+  if (page === 'compendium') { resetDetail(); document.getElementById('compendiumAIInput').value = ''; }
+  if (page === 'messages') { renderConvoList(); }
+  if (page === 'browse') renderBrowse();
+  if (page !== 'messages' && msgPollInterval) { clearInterval(msgPollInterval); msgPollInterval = null; }
+}
+
+// PROFILE
+function toggleProfile() {
+  var panel = document.getElementById('profilePanel');
+  var ov = document.getElementById('overlay');
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open'); ov.classList.remove('open');
+  } else {
+    panel.classList.add('open'); ov.classList.add('open');
+  }
+}
+function closeProfile() {
+  document.getElementById('profilePanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// TOAST
+function showToast(msg, type) {
+  if (!type) type = 'success';
+  var el = document.getElementById('toast');
+  el.textContent = (type === 'success' ? '&#10003; ' : '&#10005; ') + msg;
+  el.className = 'toast ' + type + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
+}
+
+// DICE
+function rollDie(sides, btn) {
+  var btns = document.querySelectorAll('.die-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  btn.classList.add('active');
+  var result = Math.floor(Math.random() * sides) + 1;
+  var el = document.getElementById('diceResult');
+  el.style.display = 'block';
+  var numEl = document.getElementById('diceResultNum');
+  numEl.textContent = result;
+  document.getElementById('diceResultLabel').textContent = 'd' + sides;
+  numEl.style.transform = 'scale(1.4)';
+  setTimeout(function() { numEl.style.transform = 'scale(1)'; }, 200);
+}
+
+// HOME
+function renderHome() {
+  var el = document.getElementById('recentCampaignsList');
+  if (!campaigns.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128221;</div><div>No campaigns yet.</div></div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < Math.min(campaigns.length, 3); i++) {
+    var c = campaigns[i];
+    html += '<div class="campaign-item" onclick="openCampaign(\'' + c.id + '\')">' +
+      '<div class="campaign-thumb">&#9876;</div>' +
+      '<div style="flex:1"><div style="font-family:\'Cinzel\',serif;font-size:14px;font-weight:600">' + esc(c.name) + '</div>' +
+      '<div style="font-size:13px;color:var(--muted)">0/' + c.maxPlayers + ' players</div></div>' +
+      '<span style="color:var(--dim)">&#8250;</span></div>';
+  }
+  el.innerHTML = html;
+}
+
+// CAMPAIGNS
+var _campaignTab = 'mine'; // 'mine' | 'joined'
+
+function renderCampaigns() {
+  var el = document.getElementById('campaignsListContainer');
+  var myDN = currentUser ? currentUser.dn : null;
+
+  var list;
+  if (_campaignTab === 'mine') {
+    // Only campaigns owned by current user
+    list = campaigns.filter(function(c) { return c.ownerDN === myDN; });
+  } else {
+    // Joined: DN is in players array but NOT the owner
+    list = campaigns.filter(function(c) {
+      if (c.ownerDN === myDN) return false;
+      var players = c.players || [];
+      for (var i = 0; i < players.length; i++) { if (players[i].dn === myDN) return true; }
+      return false;
+    });
+  }
+
+  if (!list.length) {
+    var msg = _campaignTab === 'mine'
+      ? 'No campaigns yet. Create one!'
+      : 'You haven\'t joined any campaigns yet.';
+    el.innerHTML = '<div class="empty-state" style="padding:60px"><div class="empty-icon">&#128221;</div><div>' + msg + '</div></div>';
+    return;
+  }
+  el.innerHTML = buildCampaignListHTML(list, true);
+}
+
+function buildCampaignListHTML(list, showBadge) {
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var c = list[i];
+    var isPublic = c.visibility !== 'private';
+    var badgeHTML = showBadge
+      ? '<span class="badge ' + (isPublic ? 'badge-pub' : 'badge-priv') + '">' + (isPublic ? '🌍 Public' : '🔒 Private') + '</span>'
+      : '';
+    var playerCount = (c.players || []).length;
+    html += '<div class="campaign-list-item" onclick="openCampaign(\'' + c.id + '\')">' +
+      '<div class="campaign-big-thumb">&#9876;</div>' +
+      '<div class="campaign-list-info">' +
+        '<div class="campaign-list-name-row"><span class="campaign-list-name">' + esc(c.name) + '</span>' + badgeHTML + '</div>' +
+        '<div class="campaign-list-desc">' + esc(c.desc || 'No description.') + '</div>' +
+        '<div class="campaign-list-meta"><span>&#128101; ' + playerCount + '/' + c.maxPlayers + '</span><span>&#128202; Lv ' + esc(c.levelRange || '1-5') + '</span><span>&#9876; ' + esc(c.difficulty) + '</span></div>' +
+      '</div><span style="color:var(--dim)">&#8250;</span></div>';
+  }
+  return html;
+}
+
+function switchCampaignTab(btn) {
+  var btns = document.querySelectorAll('#page-campaigns .tab-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  btn.classList.add('active');
+  _campaignTab = btn.textContent.indexOf('Joined') >= 0 ? 'joined' : 'mine';
+  renderCampaigns();
+}
+
+var _currentCampaignId = null;
+
+function openCampaign(id, fromBrowse) {
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === id) { c = campaigns[i]; break; } }
+  if (!c) return;
+  _currentCampaignId = id;
+
+  var myDN = currentUser ? currentUser.dn : null;
+  var isOwner = c.ownerDN === myDN;
+  var players = c.players || [];
+  var isPlayer = players.some ? players.some(function(p) { return p.dn === myDN; })
+    : (function(){ for(var x=0;x<players.length;x++){if(players[x].dn===myDN)return true;}return false; })();
+
+  // Back link
+  var backLink = document.getElementById('cdBackLink');
+  if (fromBrowse) { backLink.onclick = function(){ navigate('browse'); }; backLink.textContent = '← Back to Browse'; }
+  else { backLink.onclick = function(){ navigate('campaigns'); }; backLink.textContent = '← Back to Campaigns'; }
+
+  document.getElementById('cdTitle').textContent = c.name;
+  document.getElementById('cdDesc').textContent = c.desc || 'No description.';
+  document.getElementById('cdPlayers').textContent = players.length + '/' + c.maxPlayers;
+  document.getElementById('cdDifficulty').textContent = c.difficulty;
+  document.getElementById('cdLevel').textContent = 'Lv ' + (c.levelRange || '1-5');
+  document.getElementById('cdWorld').textContent = c.world || 'Homebrew';
+
+  // Visibility badge
+  var isPublic = c.visibility !== 'private';
+  var vBadge = document.getElementById('cdVisibilityBadge');
+  vBadge.textContent = isPublic ? '🌍 Public' : '🔒 Private';
+  vBadge.className = 'badge ' + (isPublic ? 'badge-pub' : 'badge-priv');
+
+  // Owner row
+  var ownerRow = document.getElementById('cdOwnerRow');
+  if (!isOwner && c.ownerDN) {
+    var users = getAllUsers();
+    var ownerName = c.ownerDN;
+    for (var k in users) { if (users[k].dn === c.ownerDN) { ownerName = users[k].username; break; } }
+    document.getElementById('cdOwner').textContent = ownerName + ' (' + c.ownerDN + ')';
+    ownerRow.style.display = '';
+  } else { ownerRow.style.display = 'none'; }
+
+  // Join button (shown to non-members on public campaigns)
+  var joinBtn = document.getElementById('cdJoinBtn');
+  joinBtn.style.display = (!isOwner && !isPlayer && isPublic) ? '' : 'none';
+
+  // Add player section (only for owner)
+  document.getElementById('cdAddPlayerSection').style.display = isOwner ? '' : 'none';
+
+  // Render players list
+  renderCampaignPlayers(c, isOwner);
+
+  navigate('campaign-detail');
+}
+
+function renderCampaignPlayers(c, isOwner) {
+  var el = document.getElementById('cdPlayersList');
+  var players = c.players || [];
+  if (!players.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:16px"><div style="color:var(--dim);font-size:14px">No players yet.</div></div>';
+    return;
+  }
+  var users = getAllUsers();
+  var html = '';
+  for (var i = 0; i < players.length; i++) {
+    var p = players[i];
+    var uname = p.username || p.dn;
+    // Try to look up latest username
+    for (var k in users) { if (users[k].dn === p.dn) { uname = users[k].username; break; } }
+    html += '<div class="player-item">' +
+      '<div class="friend-avatar">&#128100;</div>' +
+      '<div class="player-item-info"><div class="player-item-name">' + esc(uname) + '</div><div class="player-item-dn">' + esc(p.dn) + '</div></div>' +
+      (isOwner ? '<button onclick="removePlayerFromCampaign(\'' + esc(p.dn) + '\')" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif">Remove</button>' : '') +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function addPlayerToCampaign() {
+  var input = document.getElementById('cdAddPlayerInput');
+  var errEl = document.getElementById('cdAddPlayerError');
+  var val = input.value.trim().toUpperCase();
+  if (!val.startsWith('#DN-')) val = '#DN-' + val.replace(/^#?DN-?/i,'');
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
+  if (!c) return;
+  c.players = c.players || [];
+  // Check capacity
+  if (c.players.length >= c.maxPlayers) { errEl.textContent = 'Campaign is full!'; return; }
+  // Check if already added
+  for (var j = 0; j < c.players.length; j++) { if (c.players[j].dn === val) { errEl.textContent = 'Player already in campaign.'; return; } }
+  // Lookup
+  var users = getAllUsers();
+  var found = null;
+  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
+  if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
+  c.players.push({ dn: found.dn, username: found.username });
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  // Add to campaign group chat
+  var convos = getConvos();
+  for (var ci = 0; ci < convos.length; ci++) {
+    if (convos[ci].campaignId === c.id && convos[ci].members.indexOf(found.dn) < 0) {
+      convos[ci].members.push(found.dn);
+      // System message
+      var msgs = getMessages(convos[ci].id);
+      msgs.push({ id: Date.now(), senderDN: 'system', senderName: 'System', text: found.username + ' joined the party!', time: Date.now() });
+      saveMessages(convos[ci].id, msgs);
+      break;
+    }
+  }
+  saveConvos(convos);
+  errEl.textContent = '';
+  input.value = '';
+  document.getElementById('cdPlayers').textContent = c.players.length + '/' + c.maxPlayers;
+  renderCampaignPlayers(c, true);
+  showToast(found.username + ' added to campaign!', 'success');
+}
+
+function removePlayerFromCampaign(dn) {
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
+  if (!c) return;
+  c.players = (c.players || []).filter(function(p) { return p.dn !== dn; });
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  document.getElementById('cdPlayers').textContent = c.players.length + '/' + c.maxPlayers;
+  renderCampaignPlayers(c, true);
+  showToast('Player removed.', 'success');
+}
+
+function joinCampaign() {
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
+  if (!c || !currentUser) return;
+  c.players = c.players || [];
+  if (c.players.length >= c.maxPlayers) { showToast('Campaign is full!', 'error'); return; }
+  for (var j = 0; j < c.players.length; j++) { if (c.players[j].dn === currentUser.dn) { showToast('Already in campaign!', 'error'); return; } }
+  c.players.push({ dn: currentUser.dn, username: currentUser.username });
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  // Add to campaign group chat
+  var convos = getConvos();
+  for (var ci = 0; ci < convos.length; ci++) {
+    if (convos[ci].campaignId === c.id && convos[ci].members.indexOf(currentUser.dn) < 0) {
+      convos[ci].members.push(currentUser.dn);
+      var msgs = getMessages(convos[ci].id);
+      msgs.push({ id: Date.now(), senderDN: 'system', senderName: 'System', text: currentUser.username + ' joined the party!', time: Date.now() });
+      saveMessages(convos[ci].id, msgs);
+      break;
+    }
+  }
+  saveConvos(convos);
+  document.getElementById('cdJoinBtn').style.display = 'none';
+  document.getElementById('cdPlayers').textContent = c.players.length + '/' + c.maxPlayers;
+  renderCampaignPlayers(c, false);
+  showToast('You joined ' + c.name + '!', 'success');
+}
+
+function openCampaignChat() {
+  var campConvoId = 'camp_' + _currentCampaignId;
+  var convos = getConvos();
+  var found = false;
+  for (var i = 0; i < convos.length; i++) { if (convos[i].id === campConvoId) { found = true; break; } }
+  if (!found) { showToast('No party chat found for this campaign.', 'error'); return; }
+  navigate('messages');
+  setTimeout(function() { openConvo(campConvoId); }, 80);
+}
+
+function renderBrowse() {
+  var el = document.getElementById('browseCampaignsList');
+  if (!el) return;
+  var search = (document.getElementById('browseSearch') || {}).value || '';
+  search = search.toLowerCase();
+  var myDN = currentUser ? currentUser.dn : null;
+  // Show all public campaigns
+  var list = campaigns.filter(function(c) {
+    if (c.visibility === 'private') return false;
+    if (search && c.name.toLowerCase().indexOf(search) < 0 && (c.desc || '').toLowerCase().indexOf(search) < 0) return false;
+    return true;
+  });
+  if (!list.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:60px"><div class="empty-icon">&#127758;</div><div>' + (search ? 'No campaigns match your search.' : 'No public campaigns yet.') + '</div></div>';
+    return;
+  }
+  var html = '';
+  var users = getAllUsers();
+  for (var i = 0; i < list.length; i++) {
+    var c = list[i];
+    var playerCount = (c.players || []).length;
+    var isMyDN = c.ownerDN === myDN;
+    var ownerName = c.ownerDN || 'Unknown DM';
+    for (var k in users) { if (users[k].dn === c.ownerDN) { ownerName = users[k].username; break; } }
+    html += '<div class="campaign-list-item" onclick="openCampaign(\'' + c.id + '\', true)">' +
+      '<div class="campaign-big-thumb">&#9876;</div>' +
+      '<div class="campaign-list-info">' +
+        '<div class="campaign-list-name-row"><span class="campaign-list-name">' + esc(c.name) + '</span>' +
+        (isMyDN ? '<span class="badge badge-pub" style="background:rgba(74,124,89,.3)">Your Campaign</span>' : '') + '</div>' +
+        '<div class="campaign-list-desc">' + esc(c.desc || 'No description.') + '</div>' +
+        '<div class="campaign-list-meta">' +
+          '<span>&#128100; DM: ' + esc(ownerName) + '</span>' +
+          '<span>&#128101; ' + playerCount + '/' + c.maxPlayers + ' players</span>' +
+          '<span>&#128202; Lv ' + esc(c.levelRange || '1-5') + '</span>' +
+          '<span>&#9876; ' + esc(c.difficulty) + '</span>' +
+        '</div>' +
+      '</div><span style="color:var(--dim)">&#8250;</span></div>';
+  }
+  el.innerHTML = html;
+}
+
+// CREATE CAMPAIGN helpers
+var _ccVisibility = 'public';
+var _ccPlayers = []; // [{dn, username}]
+
+function setVisibility(v) {
+  _ccVisibility = v;
+  document.getElementById('visPublic').className  = 'vis-btn' + (v === 'public'  ? ' active public'  : '');
+  document.getElementById('visPrivate').className = 'vis-btn' + (v === 'private' ? ' active private' : '');
+}
+
+function addCampaignPlayer() {
+  var input = document.getElementById('ccPlayerInput');
+  var errEl = document.getElementById('ccPlayerError');
+  var val = input.value.trim().toUpperCase();
+  if (!val.startsWith('#DN-')) val = '#DN-' + val.replace(/^#?DN-?/i,'');
+  var users = getAllUsers();
+  var found = null;
+  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
+  if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
+  if (found.dn === (currentUser && currentUser.dn)) { errEl.textContent = 'You are automatically the DM!'; return; }
+  for (var j = 0; j < _ccPlayers.length; j++) { if (_ccPlayers[j].dn === found.dn) { errEl.textContent = 'Already added.'; return; } }
+  _ccPlayers.push({ dn: found.dn, username: found.username });
+  errEl.textContent = '';
+  input.value = '';
+  renderCCPlayers();
+}
+
+function removeCCPlayer(dn) {
+  _ccPlayers = _ccPlayers.filter(function(p) { return p.dn !== dn; });
+  renderCCPlayers();
+}
+
+function renderCCPlayers() {
+  var el = document.getElementById('ccPlayersList');
+  if (!_ccPlayers.length) { el.innerHTML = ''; return; }
+  var html = '';
+  for (var i = 0; i < _ccPlayers.length; i++) {
+    var p = _ccPlayers[i];
+    html += '<div class="player-item">' +
+      '<div class="friend-avatar">&#128100;</div>' +
+      '<div class="player-item-info"><div class="player-item-name">' + esc(p.username) + '</div><div class="player-item-dn">' + esc(p.dn) + '</div></div>' +
+      '<button onclick="removeCCPlayer(\'' + esc(p.dn) + '\')" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif">Remove</button>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function addTag() {
+  var input = document.getElementById('tagInput');
+  var val = input.value.trim();
+  if (!val) return;
+  for (var i = 0; i < tags.length; i++) { if (tags[i] === val) return; }
+  tags.push(val); renderTags(); input.value = '';
+}
+function removeTag(tag) {
+  var t2 = [];
+  for (var i = 0; i < tags.length; i++) { if (tags[i] !== tag) t2.push(tags[i]); }
+  tags = t2; renderTags();
+}
+function renderTags() {
+  var html = '';
+  for (var i = 0; i < tags.length; i++) {
+    html += '<span class="tag-pill">' + esc(tags[i]) + ' <span class="tag-remove" onclick="removeTag(\'' + esc(tags[i]) + '\')">&#10005;</span></span>';
+  }
+  document.getElementById('tagRow').innerHTML = html;
+}
+
+function createCampaign() {
+  var name = document.getElementById('ccName').value.trim();
+  if (!name) { showToast('Campaign name is required', 'error'); return; }
+  var c = {
+    id: Date.now().toString(), name: name,
+    desc: document.getElementById('ccDesc').value.trim(),
+    world: document.getElementById('ccWorld').value.trim(),
+    difficulty: document.getElementById('ccDifficulty').value,
+    maxPlayers: parseInt(document.getElementById('ccMaxPlayers').value) || 6,
+    levelRange: document.getElementById('ccLevelRange').value || '1-5',
+    schedule: document.getElementById('ccSchedule').value.trim(),
+    tags: tags.slice(),
+    visibility: _ccVisibility,
+    players: _ccPlayers.slice(),
+    ownerDN: currentUser ? currentUser.dn : null
+  };
+  campaigns.push(c);
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  // Auto-create group chat with all players
+  if (currentUser) {
+    var playerDNs = _ccPlayers.map(function(p) { return p.dn; });
+    createGroupChat('⚔️ ' + name, playerDNs, c.id);
+    showToast('Campaign created! A party chat was set up in Messages.', 'success');
+  } else {
+    showToast('Campaign created!', 'success');
+  }
+  // Reset form
+  document.getElementById('ccName').value = '';
+  document.getElementById('ccDesc').value = '';
+  document.getElementById('ccWorld').value = '';
+  document.getElementById('ccLevelRange').value = '';
+  document.getElementById('ccSchedule').value = '';
+  _ccPlayers = []; renderCCPlayers();
+  _ccVisibility = 'public'; setVisibility('public');
+  tags = []; renderTags();
+  refreshProfilePanel();
+  navigate('campaigns');
+}
+
+// CHARACTERS
+function renderCharacters() {
+  var html = '';
+  for (var i = 0; i < characters.length; i++) {
+    var c = characters[i];
+    html += '<div class="char-card">' +
+      '<div class="char-avatar">' + c.emoji + '</div>' +
+      '<div class="char-name">' + esc(c.name) + '</div>' +
+      '<div class="char-class-line">' + esc(c.cls) + '</div>' +
+      '<div class="char-stats">' +
+        '<div class="char-stat"><div class="char-stat-val">' + c.str + '</div><div class="char-stat-label">STR</div></div>' +
+        '<div class="char-stat"><div class="char-stat-val">' + c.dex + '</div><div class="char-stat-label">DEX</div></div>' +
+        '<div class="char-stat"><div class="char-stat-val">' + c.con + '</div><div class="char-stat-label">CON</div></div>' +
+      '</div></div>';
+  }
+  html += '<div class="new-char-card" onclick="showToast(\'Character creator coming soon\',\'success\')">' +
+    '<div style="font-size:32px">+</div><div>Create New Character</div></div>';
+  document.getElementById('charGrid').innerHTML = html;
+}
+
+// COMPENDIUM - powered by Open5e - powered by Open5e (free, no key needed)
+function renderCompendium(tab) {}  // no-op, grid removed
+function switchCompendiumTab(btn, tab) {}  // no-op
+function loadEntry(name, type, emoji, cardEl) {}  // no-op
+
+function resetDetail() {
+  document.getElementById('detailPlaceholder').style.display = 'flex';
+  document.getElementById('detailContent').style.display = 'none';
+  document.getElementById('detailContent').innerHTML = '';
+}
+
+function aiCompendiumSearch() {
+  var q = document.getElementById('compendiumAIInput').value.trim();
+  if (!q) return;
+  fetchEntry(q, guessEmoji(q));
+}
+
+function guessEmoji(n) {
+  n = n.toLowerCase();
+  if (n.indexOf('dragon') >= 0) return '🐉';
+  if (n.indexOf('fire') >= 0 || n.indexOf('flame') >= 0) return '🔥';
+  if (n.indexOf('ice') >= 0 || n.indexOf('frost') >= 0) return '❄️';
+  if (n.indexOf('lich') >= 0 || n.indexOf('skeleton') >= 0 || n.indexOf('undead') >= 0) return '💀';
+  if (n.indexOf('demon') >= 0 || n.indexOf('devil') >= 0 || n.indexOf('fiend') >= 0) return '😈';
+  if (n.indexOf('angel') >= 0 || n.indexOf('celestial') >= 0) return '✨';
+  if (n.indexOf('sword') >= 0 || n.indexOf('blade') >= 0) return '⚔️';
+  if (n.indexOf('wand') >= 0 || n.indexOf('staff') >= 0) return '🪄';
+  if (n.indexOf('ring') >= 0) return '💍';
+  if (n.indexOf('potion') >= 0) return '🧪';
+  if (n.indexOf('goblin') >= 0) return '👺';
+  if (n.indexOf('orc') >= 0) return '👹';
+  if (n.indexOf('vampire') >= 0) return '🧛';
+  if (n.indexOf('giant') >= 0) return '🏔️';
+  if (n.indexOf('spider') >= 0) return '🕷️';
+  if (n.indexOf('wolf') >= 0 || n.indexOf('werewolf') >= 0) return '🐺';
+  if (n.indexOf('beholder') >= 0) return '👁️';
+  if (n.indexOf('wizard') >= 0 || n.indexOf('mage') >= 0) return '🧙';
+  if (n.indexOf('paladin') >= 0) return '🛡️';
+  if (n.indexOf('rogue') >= 0) return '🗡️';
+  return '📖';
+}
+
+function showDetailLoading(name, emoji) {
+  document.getElementById('detailPlaceholder').style.display = 'none';
+  var c = document.getElementById('detailContent');
+  c.style.display = 'flex';
+  c.innerHTML = '<div class="detail-panel-header">' +
+    '<div style="font-size:36px;margin-bottom:8px">' + emoji + '</div>' +
+    '<div class="detail-panel-title">' + esc(name) + '</div>' +
+    '<div class="detail-panel-subtitle" style="color:var(--muted)">Consulting the archives...</div>' +
+    '</div><div class="detail-panel-body">' +
+    '<div class="shimmer" style="width:40%;margin-bottom:16px"></div>' +
+    '<div class="shimmer" style="width:100%"></div>' +
+    '<div class="shimmer" style="width:80%"></div>' +
+    '<div class="shimmer" style="width:90%"></div>' +
+    '<div style="margin-top:20px"></div>' +
+    '<div class="shimmer" style="width:40%;margin-bottom:12px"></div>' +
+    '<div class="shimmer" style="width:100%"></div>' +
+    '<div class="shimmer" style="width:75%"></div>' +
+    '</div>';
+}
+
+// Slugify name for direct Open5e lookup
+function toSlug(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+// Format speed object from Open5e
+function formatSpeed(spd) {
+  if (!spd) return '—';
+  if (typeof spd === 'string') return spd;
+  var parts = [];
+  if (spd.walk) parts.push(spd.walk + ' ft.');
+  if (spd.fly) parts.push('fly ' + spd.fly + ' ft.');
+  if (spd.swim) parts.push('swim ' + spd.swim + ' ft.');
+  if (spd.burrow) parts.push('burrow ' + spd.burrow + ' ft.');
+  if (spd.climb) parts.push('climb ' + spd.climb + ' ft.');
+  return parts.join(', ') || '—';
+}
+
+function modifier(score) {
+  var mod = Math.floor((score - 10) / 2);
+  return score + ' (' + (mod >= 0 ? '+' : '') + mod + ')';
+}
+
+// Build the detail info object from an Open5e monster
+function buildMonsterInfo(m) {
+  var spd = formatSpeed(m.speed);
+  return {
+    name: m.name,
+    emoji: guessEmoji(m.name),
+    subtitle: (m.size || '') + ' ' + (m.type || '') + (m.subtype ? ' (' + m.subtype + ')' : '') + ', ' + (m.alignment || 'unaligned'),
+    source: m.document__title || 'Open5e SRD',
+    stats: [
+      { label: 'HP', value: m.hit_points + (m.hit_dice ? ' (' + m.hit_dice + ')' : '') },
+      { label: 'AC', value: m.armor_class + (m.armor_desc ? ' (' + m.armor_desc + ')' : '') },
+      { label: 'Speed', value: spd },
+      { label: 'CR', value: m.challenge_rating || '—' }
+    ],
+    ability_scores: [
+      { label: 'STR', value: modifier(m.strength) },
+      { label: 'DEX', value: modifier(m.dexterity) },
+      { label: 'CON', value: modifier(m.constitution) },
+      { label: 'INT', value: modifier(m.intelligence) },
+      { label: 'WIS', value: modifier(m.wisdom) },
+      { label: 'CHA', value: modifier(m.charisma) }
+    ],
+    lore: m.desc || '',
+    description: '',
+    properties: [
+      { label: 'Senses', value: m.senses || '—' },
+      { label: 'Languages', value: m.languages || 'None' },
+      { label: 'Skills', value: m.skills ? Object.entries(m.skills).map(function(kv){ return kv[0]+' +'+kv[1]; }).join(', ') : '' },
+      { label: 'Saving Throws', value: ['strength_save','dexterity_save','constitution_save','intelligence_save','wisdom_save','charisma_save'].filter(function(k){ return m[k]; }).map(function(k){ return k.replace('_save','').slice(0,3).toUpperCase()+' +'+m[k]; }).join(', ') },
+      { label: 'Damage Resistances', value: m.damage_resistances || '' },
+      { label: 'Damage Immunities', value: m.damage_immunities || '' },
+      { label: 'Condition Immunities', value: m.condition_immunities || '' },
+      { label: 'Source', value: (m.document__title || '') + (m.page_no ? ', p.' + m.page_no : '') }
+    ],
+    special_abilities: m.special_abilities || [],
+    actions: (m.actions || []).concat(m.legendary_actions ? [{ name: '— Legendary Actions —', desc: m.legendary_desc || '' }].concat(m.legendary_actions) : []),
+    tags: [m.type, m.size, 'CR ' + m.challenge_rating].filter(Boolean)
+  };
+}
+
+// Build info for spells
+function buildSpellInfo(s) {
+  return {
+    name: s.name,
+    emoji: guessEmoji(s.name),
+    subtitle: (s.level_int === 0 ? 'Cantrip' : 'Level ' + s.level_int) + ' ' + (s.school || ''),
+    source: s.document__title || 'Open5e SRD',
+    stats: [
+      { label: 'Level', value: s.level || 'Cantrip' },
+      { label: 'Cast Time', value: s.casting_time || '—' },
+      { label: 'Range', value: s.range || '—' },
+      { label: 'Duration', value: s.duration || '—' }
+    ],
+    ability_scores: [],
+    lore: s.desc || '',
+    description: s.higher_level ? 'At Higher Levels: ' + s.higher_level : '',
+    properties: [
+      { label: 'School', value: s.school || '—' },
+      { label: 'Components', value: s.components || '—' },
+      { label: 'Material', value: s.material || '' },
+      { label: 'Concentration', value: s.concentration || 'No' },
+      { label: 'Ritual', value: s.ritual || 'No' },
+      { label: 'Classes', value: s.dnd_class || '—' },
+      { label: 'Source', value: s.document__title || '—' }
+    ],
+    special_abilities: [],
+    actions: [],
+    tags: [s.school, s.level, s.dnd_class].filter(Boolean)
+  };
+}
+
+// Build info for magic items
+function buildItemInfo(item) {
+  return {
+    name: item.name,
+    emoji: guessEmoji(item.name),
+    subtitle: (item.type || 'Magic Item') + (item.requires_attunement ? ' (Requires Attunement)' : ''),
+    source: item.document__title || 'Open5e SRD',
+    stats: [
+      { label: 'Rarity', value: item.rarity || '—' },
+      { label: 'Type', value: item.type || '—' },
+      { label: 'Attunement', value: item.requires_attunement ? 'Required' : 'Not Required' }
+    ],
+    ability_scores: [],
+    lore: item.desc || '',
+    description: '',
+    properties: [
+      { label: 'Rarity', value: item.rarity || '—' },
+      { label: 'Source', value: item.document__title || '—' }
+    ],
+    special_abilities: [],
+    actions: [],
+    tags: [item.type, item.rarity].filter(Boolean)
+  };
+}
+
+// Build info for playable races
+function buildRaceInfo(r) {
+  var traits = [];
+  if (r.traits) {
+    var traitList = Array.isArray(r.traits) ? r.traits : [];
+    for (var i = 0; i < traitList.length; i++) {
+      traits.push({ name: traitList[i].name || '', desc: traitList[i].desc || '' });
+    }
+  }
+  // Also parse desc for trait info if traits array is empty
+  var abilityBonuses = '';
+  if (r.ability_bonuses) abilityBonuses = r.ability_bonuses;
+  else if (r.asi_desc) abilityBonuses = r.asi_desc;
+
+  return {
+    name: r.name,
+    emoji: guessEmoji(r.name),
+    subtitle: 'Playable Race' + (r.document__title ? ' — ' + r.document__title : ''),
+    source: r.document__title || 'Open5e SRD',
+    stats: [
+      { label: 'Speed', value: (r.speed || '—') + ' ft.' },
+      { label: 'Size', value: r.size || '—' },
+      { label: 'Age', value: r.age ? r.age.split('.')[0] : '—' },
+      { label: 'Ability Bonus', value: abilityBonuses || '—' }
+    ],
+    ability_scores: [],
+    lore: r.desc || (r.alignment || '') + ' ' + (r.age || ''),
+    description: r.size_desc || '',
+    properties: [
+      { label: 'Size', value: r.size || '—' },
+      { label: 'Speed', value: (r.speed || '—') + ' ft.' },
+      { label: 'Languages', value: r.languages || '—' },
+      { label: 'Language Desc', value: r.language_desc || '' },
+      { label: 'Alignment', value: r.alignment || '—' },
+      { label: 'Age', value: r.age || '—' },
+      { label: 'Source', value: r.document__title || '—' }
+    ],
+    special_abilities: traits,
+    actions: [],
+    tags: ['Race', r.size, r.document__title].filter(Boolean)
+  };
+}
+
+// Build info for classes
+function buildClassInfo(cls) {
+  var features = [];
+  if (cls.archetype_desc) features.push({ name: 'Archetypes', desc: cls.archetype_desc });
+
+  return {
+    name: cls.name,
+    emoji: guessEmoji(cls.name),
+    subtitle: 'Character Class',
+    source: cls.document__title || 'Open5e SRD',
+    stats: [
+      { label: 'Hit Die', value: 'd' + (cls.hit_dice || '?') },
+      { label: 'HP at 1st', value: (cls.hit_dice || '?') + ' + CON modifier' },
+      { label: 'Primary', value: cls.primary_ability || '—' },
+      { label: 'Save Prof.', value: cls.saving_throws || '—' }
+    ],
+    ability_scores: [],
+    lore: cls.desc || '',
+    description: '',
+    properties: [
+      { label: 'Hit Die', value: 'd' + (cls.hit_dice || '?') },
+      { label: 'Saving Throws', value: cls.saving_throws || '—' },
+      { label: 'Armor', value: cls.prof_armor || '—' },
+      { label: 'Weapons', value: cls.prof_weapons || '—' },
+      { label: 'Tools', value: cls.prof_tools || 'None' },
+      { label: 'Skills', value: cls.prof_skills || '—' },
+      { label: 'Source', value: cls.document__title || '—' }
+    ],
+    special_abilities: features,
+    actions: [],
+    tags: ['Class', cls.document__title].filter(Boolean)
+  };
+}
+
+// ── Non-SRD monsters that WotC owns — hardcoded so they always work ──
+var NON_SRD = {
+  'beholder': { name:'Beholder', emoji:'👁️', subtitle:'Large Aberration, Lawful Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'180 (19d10+76)'},{label:'AC',value:'18 (natural armor)'},{label:'Speed',value:'0 ft., fly 20 ft. (hover)'},{label:'CR',value:'13'}],
+    ability_scores:[{label:'STR',value:'10 (+0)'},{label:'DEX',value:'14 (+2)'},{label:'CON',value:'18 (+4)'},{label:'INT',value:'17 (+3)'},{label:'WIS',value:'15 (+2)'},{label:'CHA',value:'17 (+3)'}],
+    lore:'The beholder is one of the most iconic and feared creatures in D&D. A floating orb of flesh dominated by a central eye and a massive fanged maw, it sports ten smaller eyestalks on its crown, each capable of firing a different magical ray. Beholders are supremely paranoid and xenophobic, even of other beholders, as each one considers its own form to be the only "true" form of beholderdom.',
+    description:'A beholder\'s spherical body is covered in chitinous plates and mottled flesh. Its huge central eye peers with cold, alien intelligence, while its eyestalks twitch and swivel independently.',
+    properties:[{label:'Senses',value:'Darkvision 120 ft., passive Perception 22'},{label:'Languages',value:'Deep Speech, Undercommon'},{label:'Saving Throws',value:'INT +8, WIS +7, CHA +8'},{label:'Condition Immunities',value:'Prone'},{label:'Source',value:'Monster Manual p.28'}],
+    special_abilities:[{name:'Antimagic Cone',desc:'The beholder\'s central eye creates a 150-foot cone of antimagic. At the start of each of its turns, the beholder decides which way the cone faces. The area works like the antimagic field spell.'},{name:'Eye Rays',desc:'The beholder shoots three of the following magical eye rays at random targets within 120 ft: Charm, Paralyzing, Fear, Slowing, Enervation, Telekinetic, Sleep, Petrification, Disintegration, Death rays.'}],
+    actions:[{name:'Bite',desc:'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 14 (4d6) piercing damage.'},{name:'Eye Rays',desc:'The beholder shoots three random magical eye rays at up to 3 targets it can see within 120 feet.'}],
+    tags:['Aberration','Legendary','Underdark','CR 13'] },
+  'mind flayer': { name:'Mind Flayer', emoji:'🧠', subtitle:'Medium Aberration, Lawful Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'71 (13d8+13)'},{label:'AC',value:'15 (natural armor)'},{label:'Speed',value:'30 ft.'},{label:'CR',value:'7'}],
+    ability_scores:[{label:'STR',value:'11 (+0)'},{label:'DEX',value:'12 (+1)'},{label:'CON',value:'12 (+1)'},{label:'INT',value:'19 (+4)'},{label:'WIS',value:'17 (+3)'},{label:'CHA',value:'17 (+3)'}],
+    lore:'Mind flayers, also called illithids, are terrifying aberrations from the Far Realm that feed on the brains of humanoids. They are the dominant species of vast underground empires, served by thralls and slaves. Their ultimate goal is the eventual domination of all sentient life through a process called ceremorphosis — implanting tadpoles into humanoid skulls to transform victims into new mind flayers.',
+    description:'An illithid stands roughly human-height, with a pale violet, octopus-like head bearing four tentacles around a lamprey-like mouth. Its sunken eyes glow white.',
+    properties:[{label:'Senses',value:'Darkvision 120 ft., passive Perception 13'},{label:'Languages',value:'Deep Speech, Undercommon, telepathy 120 ft.'},{label:'Skills',value:'Arcana +7, Deception +6, Insight +6, Perception +6, Persuasion +6, Stealth +4'},{label:'Source',value:'Monster Manual p.222'}],
+    special_abilities:[{name:'Magic Resistance',desc:'The mind flayer has advantage on saving throws against spells and other magical effects.'},{name:'Innate Spellcasting',desc:'The mind flayer can cast detect thoughts, levitate, dominate monster, plane shift (self only) using Intelligence as its spellcasting ability (save DC 15).'}],
+    actions:[{name:'Tentacles',desc:'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 15 (2d10+4) psychic damage. If the target is Medium or smaller, it is grappled (escape DC 15) and must succeed DC 15 INT save or be stunned until grapple ends.'},{name:'Extract Brain',desc:'Melee Weapon Attack: +7 to hit, reach 5 ft., one incapacitated humanoid grappled by the mind flayer. Hit: 55 (10d10) piercing damage. If this reduces the target to 0 HP, the mind flayer kills it by extracting and devouring its brain.'},{name:'Mind Blast (Recharge 5-6)',desc:'The mind flayer magically emits psychic energy in a 60-ft cone. Each creature must succeed DC 15 INT save or take 22 (4d8+4) psychic damage and be stunned for 1 minute.'}],
+    tags:['Aberration','Underdark','Psionic','CR 7'] },
+  'displacer beast': { name:'Displacer Beast', emoji:'🐾', subtitle:'Large Monstrosity, Lawful Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'85 (10d10+30)'},{label:'AC',value:'13 (natural armor)'},{label:'Speed',value:'40 ft.'},{label:'CR',value:'3'}],
+    ability_scores:[{label:'STR',value:'18 (+4)'},{label:'DEX',value:'15 (+2)'},{label:'CON',value:'16 (+3)'},{label:'INT',value:'6 (-2)'},{label:'WIS',value:'12 (+1)'},{label:'CHA',value:'8 (-1)'}],
+    lore:'The displacer beast is a predatory magical beast resembling a puma with six legs and two tentacles sprouting from its shoulders. It is named for its most distinctive ability: a passive illusion that makes it appear offset from its true location, making it extremely difficult to strike. Displacer beasts are highly territorial and are frequently used as guardians by evil creatures.',
+    description:'A massive black panther-like creature with six padded legs and two long tentacles ending in spined pads. Its eyes glow with malevolent intelligence.',
+    properties:[{label:'Senses',value:'Darkvision 60 ft., passive Perception 11'},{label:'Source',value:'Monster Manual p.81'}],
+    special_abilities:[{name:'Avoidance',desc:'If the displacer beast is subjected to an effect that allows it to make a saving throw to take only half damage, it instead takes no damage if it succeeds, and only half damage if it fails.'},{name:'Displacement',desc:'The displacer beast projects a magical illusion that makes it appear to be standing near its actual location, causing attack rolls against it to have disadvantage. If it is hit, this trait is disrupted until the start of its next turn.'}],
+    actions:[{name:'Multiattack',desc:'The displacer beast makes two attacks with its tentacles.'},{name:'Tentacle',desc:'Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 7 (1d6+4) bludgeoning damage plus 3 (1d6) piercing damage.'}],
+    tags:['Monstrosity','CR 3','Predator'] },
+  'carrion crawler': { name:'Carrion Crawler', emoji:'🐛', subtitle:'Large Monstrosity, Unaligned', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'51 (6d10+18)'},{label:'AC',value:'13 (natural armor)'},{label:'Speed',value:'30 ft., climb 30 ft.'},{label:'CR',value:'2'}],
+    ability_scores:[{label:'STR',value:'14 (+2)'},{label:'DEX',value:'13 (+1)'},{label:'CON',value:'16 (+3)'},{label:'INT',value:'1 (-5)'},{label:'WIS',value:'12 (+1)'},{label:'CHA',value:'5 (-3)'}],
+    lore:'Carrion crawlers are large worm-like predators that haunt dungeons and underground caverns, drawn by the smell of rotting flesh. They paralyze prey with their tentacles before consuming it.',
+    description:'A pale, multi-legged worm the size of a horse. Eight long tentacles ring its round, lamprey-like mouth.',
+    properties:[{label:'Senses',value:'Darkvision 60 ft., passive Perception 11'},{label:'Source',value:'Monster Manual p.37'}],
+    special_abilities:[{name:'Keen Smell',desc:'The carrion crawler has advantage on Wisdom (Perception) checks that rely on smell.'},{name:'Spider Climb',desc:'The carrion crawler can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.'}],
+    actions:[{name:'Multiattack',desc:'The carrion crawler makes two attacks: one with its tentacles and one with its bite.'},{name:'Tentacles',desc:'+8 to hit, reach 10 ft., up to 2 creatures. Hit: 4 (1d4+2) poison damage, and target must succeed DC 13 CON save or be poisoned and paralyzed for 1 minute.'},{name:'Bite',desc:'+4 to hit, reach 5 ft. Hit: 7 (2d4+2) piercing damage.'}],
+    tags:['Monstrosity','Underdark','CR 2'] },
+  'umber hulk': { name:'Umber Hulk', emoji:'🦀', subtitle:'Large Monstrosity, Chaotic Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'93 (11d10+33)'},{label:'AC',value:'18 (natural armor)'},{label:'Speed',value:'30 ft., burrow 20 ft.'},{label:'CR',value:'5'}],
+    ability_scores:[{label:'STR',value:'20 (+5)'},{label:'DEX',value:'13 (+1)'},{label:'CON',value:'16 (+3)'},{label:'INT',value:'9 (-1)'},{label:'WIS',value:'10 (+0)'},{label:'CHA',value:'10 (+0)'}],
+    lore:'Umber hulks are massive beetle-like predators that burrow through stone with their powerful mandibles. Their four eyes can produce a confusing gaze that disorients foes, often causing them to attack each other.',
+    description:'A hulking beetle-like creature with four compound eyes, powerful mandibles, and claws capable of tearing through solid rock.',
+    properties:[{label:'Senses',value:'Darkvision 120 ft., tremorsense 60 ft., passive Perception 10'},{label:'Source',value:'Monster Manual p.292'}],
+    special_abilities:[{name:'Confusing Gaze',desc:'When a creature starts its turn within 30 ft. and can see the umber hulk\'s eyes, it must succeed DC 15 CHA save or be confused until the start of its next turn (roll d8 to determine behavior).'}],
+    actions:[{name:'Multiattack',desc:'The umber hulk makes three attacks: two with its claws and one with its mandibles.'},{name:'Claw',desc:'+8 to hit, reach 5 ft. Hit: 9 (1d8+5) slashing damage.'},{name:'Mandibles',desc:'+8 to hit, reach 5 ft. Hit: 14 (2d8+5) slashing damage.'}],
+    tags:['Monstrosity','Underdark','CR 5'] },
+  'yuan-ti': { name:'Yuan-ti Pureblood', emoji:'🐍', subtitle:'Medium Humanoid (Yuan-ti), Neutral Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'40 (9d8)'},{label:'AC',value:'11'},{label:'Speed',value:'30 ft.'},{label:'CR',value:'1'}],
+    ability_scores:[{label:'STR',value:'11 (+0)'},{label:'DEX',value:'12 (+1)'},{label:'CON',value:'11 (+0)'},{label:'INT',value:'13 (+1)'},{label:'WIS',value:'12 (+1)'},{label:'CHA',value:'14 (+2)'}],
+    lore:'Yuan-ti are a race of serpentine humanoids who long ago transformed themselves through dark rituals. Purebloods are the most human-looking, able to pass in human society. Their ultimate goal is to bring about the apocalypse by spreading their god Sseth\'s influence.',
+    description:'Outwardly appearing nearly human, yuan-ti purebloods have subtle serpentine features: slightly scaled skin, slit pupils, or a forked tongue.',
+    properties:[{label:'Damage Immunities',value:'Poison'},{label:'Condition Immunities',value:'Poisoned'},{label:'Senses',value:'Darkvision 60 ft., passive Perception 11'},{label:'Source',value:'Monster Manual p.310'}],
+    special_abilities:[{name:'Magic Resistance',desc:'The yuan-ti has advantage on saving throws against spells and other magical effects.'},{name:'Innate Spellcasting',desc:'Animal friendship (snakes only) at will; suggestion 3/day. Spell save DC 12.'}],
+    actions:[{name:'Multiattack',desc:'The yuan-ti makes two melee attacks.'},{name:'Scimitar',desc:'+3 to hit, reach 5 ft. Hit: 4 (1d6+1) slashing damage.'},{name:'Shortbow',desc:'+3 to hit, range 80/320 ft. Hit: 4 (1d6+1) piercing damage plus 7 (2d6) poison damage (DC 12 CON save halves poison).'}],
+    tags:['Humanoid','Serpentine','CR 1'] },
+  'githyanki': { name:'Githyanki Warrior', emoji:'⚔️', subtitle:'Medium Humanoid (Gith), Lawful Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'49 (9d8+9)'},{label:'AC',value:'17 (half plate)'},{label:'Speed',value:'30 ft.'},{label:'CR',value:'3'}],
+    ability_scores:[{label:'STR',value:'15 (+2)'},{label:'DEX',value:'14 (+2)'},{label:'CON',value:'12 (+1)'},{label:'INT',value:'13 (+1)'},{label:'WIS',value:'13 (+1)'},{label:'CHA',value:'10 (+0)'}],
+    lore:'The githyanki are a martial race of astral warriors who escaped the mind flayer empire and now dwell in the Astral Plane. They raid the Material Plane aboard red dragon mounts, seeking silver swords and slaves.',
+    description:'Gaunt humanoids with angular features, yellowish skin, and long pointed ears. They wear ornate armor and carry silver blades crackling with psychic energy.',
+    properties:[{label:'Saving Throws',value:'CON +3, INT +3, WIS +3'},{label:'Senses',value:'Passive Perception 11'},{label:'Source',value:'Monster Manual p.160'}],
+    special_abilities:[{name:'Innate Spellcasting (Psionics)',desc:'Mage hand (lasts 1 min) at will. 3/day: jump, misty step, nondetection (self only). 1/day: plane shift, telekinesis.'}],
+    actions:[{name:'Multiattack',desc:'The githyanki makes two greatsword attacks.'},{name:'Greatsword',desc:'+4 to hit, reach 5 ft. Hit: 9 (2d6+2) slashing damage plus 9 (2d8) psychic damage.'}],
+    tags:['Humanoid','Astral Plane','Psionic','CR 3'] },
+  'slaad': { name:'Slaad (Red)', emoji:'🐸', subtitle:'Large Aberration, Chaotic Neutral', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'93 (11d10+33)'},{label:'AC',value:'14 (natural armor)'},{label:'Speed',value:'30 ft.'},{label:'CR',value:'5'}],
+    ability_scores:[{label:'STR',value:'16 (+3)'},{label:'DEX',value:'12 (+1)'},{label:'CON',value:'16 (+3)'},{label:'INT',value:'6 (-2)'},{label:'WIS',value:'6 (-2)'},{label:'CHA',value:'7 (-2)'}],
+    lore:'Slaadi are frog-like creatures from the plane of Limbo, embodiments of chaos. Red slaadi implant eggs in humanoid hosts; the eggs hatch into blue slaadi or, if the host has spellcasting ability, gray slaadi.',
+    description:'A massive, toad-like humanoid with mottled red skin, enormous claws, and a wide fang-filled maw. Its movements are erratic and unpredictable.',
+    properties:[{label:'Damage Resistances',value:'Acid, cold, fire, lightning, thunder'},{label:'Senses',value:'Darkvision 60 ft., passive Perception 8'},{label:'Source',value:'Monster Manual p.276'}],
+    special_abilities:[{name:'Regeneration',desc:'The slaad regains 10 HP at the start of its turn if it has at least 1 HP.'},{name:'Magic Resistance',desc:'Advantage on saves against spells and magical effects.'}],
+    actions:[{name:'Multiattack',desc:'The slaad makes three attacks: one with its bite and two with its claws.'},{name:'Claws',desc:'+6 to hit, reach 5 ft. Hit: 7 (1d8+3) slashing damage. If target is humanoid, it must succeed DC 14 CON save or be infected with a disease that eventually implants a slaad egg.'},{name:'Bite',desc:'+6 to hit, reach 5 ft. Hit: 8 (2d4+3) piercing damage.'}],
+    tags:['Aberration','Limbo','Chaos','CR 5'] },
+  'kuo-toa': { name:'Kuo-toa', emoji:'🐟', subtitle:'Medium Humanoid (Kuo-toa), Neutral Evil', source:'Monster Manual (not SRD)',
+    stats:[{label:'HP',value:'18 (4d8)'},{label:'AC',value:'13 (natural armor, shield)'},{label:'Speed',value:'30 ft., swim 30 ft.'},{label:'CR',value:'1/4'}],
+    ability_scores:[{label:'STR',value:'13 (+1)'},{label:'DEX',value:'10 (+0)'},{label:'CON',value:'11 (+0)'},{label:'INT',value:'11 (+0)'},{label:'WIS',value:'10 (+0)'},{label:'CHA',value:'8 (-1)'}],
+    lore:'Kuo-toa are degenerate fish-like humanoids dwelling in the Underdark. Once a proud civilization enslaved by mind flayers, they descended into madness. Their collective belief can literally create gods — if enough kuo-toa worship a fabricated deity long enough, it manifests as a real creature.',
+    description:'A humanoid with a fish-like head, bulging eyes, and clammy silver-grey skin covered in slime. It moves with an unsettling, jerky gait.',
+    properties:[{label:'Senses',value:'Darkvision 120 ft., passive Perception 14'},{label:'Skills',value:'Perception +4'},{label:'Condition Immunities',value:'Poisoned'},{label:'Source',value:'Monster Manual p.199'}],
+    special_abilities:[{name:'Amphibious',desc:'The kuo-toa can breathe air and water.'},{name:'Otherworldly Perception',desc:'The kuo-toa can sense the presence of any creature within 30 ft. that is invisible or on the Ethereal Plane. It can pinpoint such a creature that is moving.'},{name:'Slippery',desc:'The kuo-toa has advantage on ability checks and saving throws made to escape a grapple.'},{name:'Sunlight Sensitivity',desc:'Disadvantage on attack rolls and Perception checks in direct sunlight.'}],
+    actions:[{name:'Bite',desc:'+3 to hit, reach 5 ft. Hit: 3 (1d4+1) piercing damage.'},{name:'Spear',desc:'+3 to hit, reach 5 ft. or range 20/60 ft. Hit: 4 (1d6+1) piercing damage, or 5 (1d8+1) if two-handed.'}],
+    tags:['Humanoid','Underdark','CR 1/4'] },
+  'tarrasque': { name:'Tarrasque', emoji:'🦕', subtitle:'Gargantuan Monstrosity, Unaligned', source:'SRD',
+    stats:[{label:'HP',value:'676 (33d20+330)'},{label:'AC',value:'25 (natural armor)'},{label:'Speed',value:'40 ft.'},{label:'CR',value:'30'}],
+    ability_scores:[{label:'STR',value:'30 (+10)'},{label:'DEX',value:'11 (+0)'},{label:'CON',value:'30 (+10)'},{label:'INT',value:'3 (-4)'},{label:'WIS',value:'11 (+0)'},{label:'CHA',value:'11 (+0)'}],
+    lore:'The Tarrasque is perhaps the most feared creature in all of D&D — a virtually indestructible engine of destruction that sleeps beneath the earth for centuries, awakening only to feed. No magic can permanently kill it; when reduced to 0 HP it simply regenerates after a time. Only the Wish spell can prevent its return. Even gods fear to face it directly.',
+    description:'An enormous dinosaur-like monster standing 50 feet tall and 70 feet long. Its carapace deflects spells, its maw can swallow giants whole, and its sheer momentum topples city walls.',
+    properties:[{label:'Saving Throws',value:'INT +5, WIS +9, CHA +9'},{label:'Damage Immunities',value:'Fire, poison; bludgeoning/piercing/slashing from nonmagical attacks'},{label:'Condition Immunities',value:'Charmed, frightened, paralyzed, poisoned'},{label:'Senses',value:'Blindsight 120 ft., passive Perception 10'},{label:'Source',value:'Monster Manual p.286'}],
+    special_abilities:[{name:'Legendary Resistance (3/Day)',desc:'If the Tarrasque fails a saving throw, it can choose to succeed instead.'},{name:'Magic Resistance',desc:'The Tarrasque has advantage on saving throws against spells and magical effects.'},{name:'Reflective Carapace',desc:'Any time the Tarrasque is targeted by a magic missile spell, a line spell, or a spell that requires a ranged attack roll, roll a d6. On a 1-5, the Tarrasque is unaffected. On a 6, the Tarrasque is unaffected, and the effect is reflected back at the caster.'},{name:'Siege Monster',desc:'The Tarrasque deals double damage to objects and structures.'}],
+    actions:[{name:'Multiattack',desc:'The Tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail.'},{name:'Bite',desc:'+19 to hit, reach 10 ft. Hit: 36 (4d12+10) piercing damage. If the target is a creature, it is grappled (escape DC 20). Until this grapple ends, the target is restrained, and the Tarrasque can\'t bite another target.'},{name:'Swallow',desc:'The Tarrasque makes one bite attack against a Large or smaller creature it is grappling. If the attack hits, the target is swallowed and blinded/restrained inside the Tarrasque. A swallowed creature takes 56 (16d6) acid damage at the start of each of the Tarrasque\'s turns.'}],
+    tags:['Monstrosity','Legendary','CR 30','Apocalypse'] }
+};
+
+function getNonSRD(name) {
+  var lower = name.toLowerCase().trim();
+  if (NON_SRD[lower]) return NON_SRD[lower];
+  // partial match
+  for (var key in NON_SRD) {
+    if (lower.indexOf(key) >= 0 || key.indexOf(lower) >= 0) return NON_SRD[key];
+  }
+  return null;
+}
+
+function bestMatch(results, name) {
+  var lower = name.toLowerCase().trim();
+  // 1. Exact name match
+  for (var i = 0; i < results.length; i++) {
+    if (results[i].name && results[i].name.toLowerCase().trim() === lower) return results[i];
+  }
+  // 2. Result name starts with query
+  for (var j = 0; j < results.length; j++) {
+    if (results[j].name && results[j].name.toLowerCase().indexOf(lower) === 0) return results[j];
+  }
+  // 3. All query words appear in result name
+  var words = lower.split(/\s+/);
+  for (var k = 0; k < results.length; k++) {
+    if (!results[k].name) continue;
+    var rname = results[k].name.toLowerCase();
+    var allIn = true;
+    for (var w = 0; w < words.length; w++) {
+      if (rname.indexOf(words[w]) < 0) { allIn = false; break; }
+    }
+    if (allIn) return results[k];
+  }
+  // 4. Query is contained in result name
+  for (var m = 0; m < results.length; m++) {
+    if (results[m].name && results[m].name.toLowerCase().indexOf(lower) >= 0) return results[m];
+  }
+  return null;
+}
+
+// Build info for weapons — open5e /weapons/ endpoint (no version prefix)
+// Properties are plain strings: ["finesse","light"] NOT objects
+function buildWeaponInfo(w) {
+  var props = [];
+  if (w.properties && Array.isArray(w.properties)) {
+    props = w.properties.map(function(p) {
+      // v1 endpoint: p is a plain string e.g. "versatile (1d10)"
+      // v2 endpoint: p is an object {property:{name:...}, detail:...}
+      if (typeof p === 'string') return p;
+      if (p && p.property && p.property.name) return p.property.name + (p.detail ? ' (' + p.detail + ')' : '');
+      return '';
+    }).filter(Boolean);
+  }
+  // v1: damage_type is a plain string; v2: it's an object
+  var damageType = w.damage_type
+    ? (typeof w.damage_type === 'string' ? w.damage_type : (w.damage_type.name || ''))
+    : '—';
+  // Range: v1 has no range fields on melee weapons; ranged have it in properties string
+  var rangeStr = (w.range && w.range > 0) ? w.range + ' / ' + w.long_range + ' ft.' : 'Melee (5 ft.)';
+  var srcTitle = (w.document && w.document.display_name) || w.document__title || 'Open5e';
+  return {
+    name: w.name,
+    emoji: guessEmoji(w.name),
+    subtitle: (w.category || 'Weapon') + ' — ' + (w.damage_dice || '—') + ' ' + damageType,
+    source: srcTitle,
+    stats: [
+      { label: 'Damage',  value: (w.damage_dice || '—') + ' ' + damageType },
+      { label: 'Range',   value: rangeStr },
+      { label: 'Cost',    value: w.cost   || '—' },
+      { label: 'Weight',  value: w.weight || '—' }
+    ],
+    ability_scores: [],
+    lore: '',
+    description: props.length ? 'Properties: ' + props.join(', ') + '.' : '',
+    properties: [
+      { label: 'Category',   value: w.category  || '—' },
+      { label: 'Properties', value: props.join(', ') || 'None' },
+      { label: 'Cost',       value: w.cost      || '—' },
+      { label: 'Weight',     value: w.weight    || '—' },
+      { label: 'Source',     value: srcTitle }
+    ],
+    special_abilities: [],
+    actions: [],
+    tags: [w.category, damageType, 'Weapon'].filter(Boolean)
+  };
+}
+
+function fetchEntry(name, emoji) {
+  var btn = document.getElementById('aiSearchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '…';
+  showDetailLoading(name, emoji);
+
+  // Check hardcoded non-SRD entries first
+  var nonSrd = getNonSRD(name);
+  if (nonSrd) {
+    renderDetail(nonSrd);
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    return;
+  }
+
+  var slug = toSlug(name);
+  var enc = encodeURIComponent(name);
+  var v1  = 'https://api.open5e.com/v1/';
+  var wpn = 'https://api.open5e.com/weapons/'; // weapons use no version prefix
+
+  function safeGet(url, type) {
+    return fetch(url)
+      .then(function(r) { return r.ok ? r.json().then(function(d) { return { type: type, data: d }; }) : null; })
+      .catch(function() { return null; });
+  }
+
+  function safeSearch(url, type) {
+    return fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.results || !d.results.length) return null;
+        var match = bestMatch(d.results, name);
+        return match ? { type: type, data: match } : null;
+      })
+      .catch(function() { return null; });
+  }
+
+  // Step 1: direct slug lookup across all endpoints simultaneously
+  Promise.all([
+    safeGet(v1  + 'monsters/'   + slug + '/', 'monster'),
+    safeGet(v1  + 'spells/'     + slug + '/', 'spell'),
+    safeGet(v1  + 'magicitems/' + slug + '/', 'item'),
+    safeGet(v1  + 'races/'      + slug + '/', 'race'),
+    safeGet(v1  + 'classes/'    + slug + '/', 'class'),
+    safeGet(wpn + slug + '/', 'weapon')
+  ]).then(function(results) {
+    for (var i = 0; i < results.length; i++) {
+      if (results[i]) return results[i];
+    }
+    // Step 2: search all endpoints simultaneously
+    return Promise.all([
+      safeSearch(v1  + 'monsters/?search='   + enc + '&limit=20', 'monster'),
+      safeSearch(v1  + 'spells/?search='     + enc + '&limit=20', 'spell'),
+      safeSearch(v1  + 'magicitems/?search=' + enc + '&limit=20', 'item'),
+      safeSearch(v1  + 'races/?search='      + enc + '&limit=20', 'race'),
+      safeSearch(v1  + 'classes/?search='    + enc + '&limit=20', 'class'),
+      safeSearch(wpn + '?search='            + enc + '&limit=20', 'weapon')
+    ]).then(function(searchResults) {
+      for (var j = 0; j < searchResults.length; j++) {
+        if (searchResults[j]) return searchResults[j];
+      }
+      return null;
+    });
+  }).then(function(result) {
+    if (!result) throw new Error('"' + name + '" was not found. Check spelling, or try the full official name (e.g. "Ancient Red Dragon", "Cure Wounds", "Longsword").');
+    var info;
+    if (result.type === 'monster') info = buildMonsterInfo(result.data);
+    else if (result.type === 'spell')   info = buildSpellInfo(result.data);
+    else if (result.type === 'item')    info = buildItemInfo(result.data);
+    else if (result.type === 'race')    info = buildRaceInfo(result.data);
+    else if (result.type === 'class')   info = buildClassInfo(result.data);
+    else if (result.type === 'weapon')  info = buildWeaponInfo(result.data);
+    else info = buildMonsterInfo(result.data);
+    renderDetail(info);
+  }).catch(function(err) {
+    showDetailError(name, emoji, err.message);
+  }).finally(function() {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  });
+}
+
+function renderDetail(info) {
+  document.getElementById('detailPlaceholder').style.display = 'none';
+  var c = document.getElementById('detailContent');
+  c.style.display = 'flex';
+
+  var statsHTML = '';
+  if (info.stats) {
+    for (var i = 0; i < info.stats.length; i++) {
+      var s = info.stats[i];
+      statsHTML += '<div class="detail-stat-box"><div class="detail-stat-val">' + esc(String(s.value)) + '</div><div class="detail-stat-label">' + esc(s.label) + '</div></div>';
+    }
+  }
+
+  var abilityHTML = '';
+  if (info.ability_scores && info.ability_scores.length) {
+    for (var ab = 0; ab < info.ability_scores.length; ab++) {
+      var asc = info.ability_scores[ab];
+      abilityHTML += '<div class="detail-stat-box"><div class="detail-stat-val" style="font-size:15px">' + esc(String(asc.value)) + '</div><div class="detail-stat-label">' + esc(asc.label) + '</div></div>';
+    }
+  }
+
+  var propsHTML = '';
+  if (info.properties) {
+    for (var j = 0; j < info.properties.length; j++) {
+      var p = info.properties[j];
+      var val = String(p.value || '');
+      if (!val || val === 'N/A' || val === 'None' || val === '' || val === 'none') continue;
+      propsHTML += '<div class="detail-prop-row"><span class="detail-prop-label">' + esc(p.label) + '</span><span style="color:var(--text)">' + esc(val) + '</span></div>';
+    }
+  }
+
+  var actsHTML = '';
+  if (info.actions) {
+    for (var k = 0; k < info.actions.length; k++) {
+      var a = info.actions[k];
+      if (!a.name) continue;
+      actsHTML += '<div class="detail-action"><div class="detail-action-name">' + esc(a.name) + '</div><div class="detail-action-desc">' + esc(a.desc) + '</div></div>';
+    }
+  }
+
+  var specHTML = '';
+  if (info.special_abilities) {
+    for (var sa = 0; sa < info.special_abilities.length; sa++) {
+      var sp = info.special_abilities[sa];
+      if (!sp.name) continue;
+      specHTML += '<div class="detail-action"><div class="detail-action-name" style="color:#b8a060">' + esc(sp.name) + '</div><div class="detail-action-desc">' + esc(sp.desc) + '</div></div>';
+    }
+  }
+
+  var tagsHTML = '';
+  if (info.tags) {
+    for (var t = 0; t < info.tags.length; t++) {
+      if (!info.tags[t]) continue;
+      tagsHTML += '<span class="detail-tag">' + esc(String(info.tags[t])) + '</span>';
+    }
+  }
+
+  c.innerHTML =
+    '<div class="detail-panel-header">' +
+      '<div style="font-size:36px;margin-bottom:8px">' + (info.emoji || '&#128218;') + '</div>' +
+      '<div class="detail-panel-title">' + esc(info.name || '') + '</div>' +
+      '<div class="detail-panel-subtitle">' + esc(info.subtitle || '') + '</div>' +
+    '</div>' +
+    '<div class="detail-panel-body">' +
+      '<div class="source-badge" style="margin-bottom:16px">&#128218; ' + esc(info.source || 'Claude AI') + '</div>' +
+      (statsHTML ? '<div class="detail-section"><div class="detail-section-title">Core Stats</div><div class="detail-stat-grid">' + statsHTML + '</div></div>' : '') +
+      (abilityHTML ? '<div class="detail-section"><div class="detail-section-title">Ability Scores</div><div class="detail-stat-grid" style="grid-template-columns:repeat(6,1fr)">' + abilityHTML + '</div></div>' : '') +
+      (info.lore ? '<div class="detail-section"><div class="detail-section-title">Lore</div><div class="detail-text">' + esc(info.lore) + '</div></div>' : '') +
+      (info.description ? '<div class="detail-section"><div class="detail-section-title">Appearance</div><div class="detail-text">' + esc(info.description) + '</div></div>' : '') +
+      (propsHTML ? '<div class="detail-section"><div class="detail-section-title">Properties</div>' + propsHTML + '</div>' : '') +
+      (specHTML ? '<div class="detail-section"><div class="detail-section-title">Special Abilities &amp; Traits</div>' + specHTML + '</div>' : '') +
+      (actsHTML ? '<div class="detail-section"><div class="detail-section-title">Actions</div>' + actsHTML + '</div>' : '') +
+      (tagsHTML ? '<div class="detail-section"><div class="detail-section-title">Tags</div><div class="detail-tag-row">' + tagsHTML + '</div></div>' : '') +
+    '</div>';
+}
+
+function showDetailError(name, emoji, errMsg) {
+  document.getElementById('detailPlaceholder').style.display = 'none';
+  var c = document.getElementById('detailContent');
+  c.style.display = 'flex';
+  c.innerHTML = '<div class="detail-panel-header">' +
+    '<div style="font-size:36px;margin-bottom:8px">' + emoji + '</div>' +
+    '<div class="detail-panel-title">' + esc(name) + '</div>' +
+    '<div class="detail-panel-subtitle" style="color:var(--red)">Could not fetch information</div>' +
+    '</div><div class="detail-panel-body">' +
+    '<div class="detail-placeholder" style="padding:40px 0">' +
+    '<div style="font-size:36px">&#9888;</div>' +
+    '<div style="font-size:14px;color:var(--muted);margin-top:8px">The search failed. Please try again or try a different query.</div>' +
+    '<div style="font-size:12px;color:var(--dim);margin-top:4px;font-family:monospace">' + esc(errMsg || '') + '</div>' +
+    '<button class="btn-primary" style="margin-top:16px" onclick="aiCompendiumSearch()">&#8635; Retry Search</button>' +
+    '</div></div>';
+}
+
+// MAP BUILDER
+function renderMapSidebar() {
+  var monsters = CDATA.monsters;
+  var mhtml = '';
+  for (var i = 0; i < Math.min(monsters.length, 18); i++) {
+    var m = monsters[i];
+    var mn = m.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    mhtml += '<div class="token-item" onclick="selectToken(\'' + mn + '\',\'' + m.e + '\',this)">' +
+      '<span class="token-emoji">' + m.e + '</span>' + esc(m.name) + '</div>';
+  }
+  mhtml += '<div class="token-item" onclick="showToast(\'Add custom token\',\'success\')"><span class="token-emoji">+</span>Add Custom</div>';
+  document.getElementById('monsterTokens').innerHTML = mhtml;
+
+  var phtml = '';
+  for (var j = 0; j < PLAYERS.length; j++) {
+    var p = PLAYERS[j];
+    phtml += '<div class="token-item" onclick="selectToken(\'' + p + '\',\'' + PLAYER_EMOJIS[p] + '\',this)">' +
+      '<span class="token-emoji">' + PLAYER_EMOJIS[p] + '</span>' + p + '</div>';
+  }
+  document.getElementById('playerTokens').innerHTML = phtml;
+}
+
+function selectToken(name, emoji, el) {
+  var items = document.querySelectorAll('.token-item');
+  for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
+  el.classList.add('selected');
+  selectedToken = {name: name, emoji: emoji};
+  setMapTool('place');
+}
+
+function setMapTool(tool) {
+  currentMapTool = tool;
+  var tools = ['Place','Erase','Pan'];
+  for (var i = 0; i < tools.length; i++) {
+    var btn = document.getElementById('tool' + tools[i]);
+    if (btn) btn.classList.toggle('active', tools[i].toLowerCase() === tool);
+  }
+  document.getElementById('mapCanvas').style.cursor = tool === 'pan' ? 'grab' : 'crosshair';
+}
+
+function toggleGrid() {
+  gridVisible = !gridVisible;
+  document.getElementById('mapGrid').style.opacity = gridVisible ? '1' : '0';
+  document.getElementById('toolGrid').classList.toggle('active', gridVisible);
+}
+
+function placeToken(e) {
+  if (currentMapTool !== 'place' || !selectedToken) return;
+  var canvas = document.getElementById('mapCanvas');
+  var rect = canvas.getBoundingClientRect();
+  var el = document.createElement('div');
+  el.className = 'placed-token';
+  el.style.left = (e.clientX - rect.left) + 'px';
+  el.style.top = (e.clientY - rect.top) + 'px';
+  el.innerHTML = selectedToken.emoji;
+  el.title = selectedToken.name;
+  el.onclick = function(ev) { ev.stopPropagation(); if (currentMapTool === 'erase') el.remove(); };
+  canvas.appendChild(el);
+}
+
+function clearMap() {
+  var tokens = document.getElementById('mapCanvas').querySelectorAll('.placed-token');
+  for (var i = 0; i < tokens.length; i++) tokens[i].remove();
+}
+
+function switchMapTab(tab) {
+  document.getElementById('mapTabDungeon').classList.toggle('active', tab === 'dungeon');
+  document.getElementById('mapTabImage').classList.toggle('active', tab === 'image');
+}
+
+// UTIL
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escHTML(s) {
+  // Like esc but also converts newlines to <br>
+  return esc(s).replace(/\n/g,'<br>');
+}
+
+// INIT
+(function() {
+  // Pre-generate DN for registration
+  rerollDN();
+  // Hide app until logged in
+  document.getElementById('mainContent').style.display = 'none';
+  document.querySelector('.navbar').style.display = 'none';
+  // Check for existing session
+  var session = null;
+  try { session = JSON.parse(localStorage.getItem('dnd_session') || 'null'); } catch(e) {}
+  if (session && session.username) {
+    var users = getAllUsers();
+    var u = users[session.username.toLowerCase()];
+    if (u) {
+      currentUser = u;
+      bootApp();
+      return;
+    }
+  }
+  // Show auth screen
+  document.getElementById('authScreen').style.display = 'flex';
+})();
+</script>
+</body>
+</html>
