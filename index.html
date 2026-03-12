@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>D&D Campaign Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<!-- Agora Voice SDK -->
+<script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script>
   var firebaseConfig = {
@@ -574,6 +574,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
     <div style="display:flex;gap:12px;margin-bottom:20px" id="cdActions">
       <button class="btn-primary" onclick="navigate('map')">&#128506; Open Map Builder</button>
       <button class="btn-secondary" id="cdMsgBtn" onclick="openCampaignChat()">&#128172; Party Chat</button>
+      <button class="btn-secondary" id="cdVoiceBtn" onclick="openCampaignVoice()">&#127897; Voice Chat</button>
       <button class="btn-secondary" id="cdJoinBtn" style="display:none" onclick="joinCampaign()">+ Join Campaign</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -723,8 +724,58 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 
   <!-- VOICE -->
   <div class="page" id="page-voice">
-    <div class="page-header"><div class="page-title">Voice</div></div>
-    <div class="empty-state" style="padding:80px"><div class="empty-icon">&#127897;</div><div style="font-size:18px;margin-bottom:8px">Voice Chat</div><div>Coming soon.</div></div>
+    <div class="page-header">
+      <div class="page-title">&#127897; Voice Chat</div>
+    </div>
+    <div style="max-width:700px;margin:0 auto">
+      <!-- Channel Picker -->
+      <div class="section-card" style="margin-bottom:20px">
+        <div class="section-title">&#128266; Join a Voice Channel</div>
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <label class="form-label">Channel Name</label>
+            <input class="form-input" id="voiceChannelInput" placeholder="e.g. tavern, dungeon, party..." value="general">
+          </div>
+          <button class="btn-primary" id="voiceJoinBtn" onclick="voiceJoin()" style="height:42px">&#127897; Join Channel</button>
+          <button class="btn-secondary" id="voiceLeaveBtn" onclick="voiceLeave()" style="height:42px;display:none">&#128683; Leave</button>
+        </div>
+        <div id="voiceStatus" style="margin-top:12px;font-size:14px;color:var(--muted)">Not connected.</div>
+      </div>
+
+      <!-- Active call UI -->
+      <div class="section-card" id="voiceCallCard" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div>
+            <div class="section-title" style="margin-bottom:4px">&#128994; Connected — <span id="voiceChannelName">general</span></div>
+            <div style="font-size:13px;color:var(--muted)" id="voiceMemberCount">1 member</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <!-- Mic toggle -->
+            <button id="voiceMicBtn" onclick="voiceToggleMic()" style="
+              width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;
+              background:var(--red);color:white;font-size:22px;
+              display:flex;align-items:center;justify-content:center;
+              transition:background .15s;flex-shrink:0;" title="Toggle Mic">
+              🎤
+            </button>
+          </div>
+        </div>
+        <!-- Members in call -->
+        <div id="voiceMembers" style="display:flex;flex-wrap:wrap;gap:12px"></div>
+      </div>
+
+      <!-- Preset channels -->
+      <div class="section-card" style="margin-top:20px">
+        <div class="section-title" style="margin-bottom:16px">&#9917; Quick Channels</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="tab-btn" onclick="quickJoin('tavern')">&#127867; Tavern</button>
+          <button class="tab-btn" onclick="quickJoin('dungeon')">&#128565; Dungeon</button>
+          <button class="tab-btn" onclick="quickJoin('party')">&#9876; Party</button>
+          <button class="tab-btn" onclick="quickJoin('planning')">&#128221; Planning</button>
+          <button class="tab-btn" onclick="quickJoin('general')">&#128172; General</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ADMIN -->
@@ -2593,7 +2644,198 @@ function switchMapTab(tab) {
   document.getElementById('mapTabImage').classList.toggle('active', tab === 'image');
 }
 
-// UTIL
+
+// ══════════════════════════════════════════════════════
+//  VOICE CHAT  (Agora RTC)
+// ══════════════════════════════════════════════════════
+var AGORA_APP_ID = '11f43ba2e14c4cb1b7f4627226e27960';
+var agoraClient = null;
+var agoraLocalTrack = null;
+var agoraMicMuted = false;
+var agoraChannel = null;
+var agoraRemoteUsers = {}; // uid -> { username }
+var agoraUIDMap = {};      // uid -> username (stored in Firebase)
+
+function voiceFbRef(channel) { return db.ref('voice/' + channel); }
+
+function initAgoraClient() {
+  if (agoraClient) return;
+  agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+
+  // Remote user joined
+  agoraClient.on('user-published', function(user, mediaType) {
+    agoraClient.subscribe(user, mediaType).then(function() {
+      if (mediaType === 'audio') user.audioTrack.play();
+      agoraRemoteUsers[user.uid] = user;
+      renderVoiceMembers();
+    });
+  });
+
+  // Remote user left
+  agoraClient.on('user-unpublished', function(user) {
+    delete agoraRemoteUsers[user.uid];
+    renderVoiceMembers();
+  });
+
+  agoraClient.on('user-left', function(user) {
+    delete agoraRemoteUsers[user.uid];
+    // Clean up Firebase presence
+    voiceFbRef(agoraChannel).child(String(user.uid)).remove();
+    renderVoiceMembers();
+  });
+}
+
+function voiceJoin() {
+  var channel = document.getElementById('voiceChannelInput').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'') || 'general';
+  if (!currentUser) { showToast('Please sign in first', 'error'); return; }
+  if (agoraChannel) { voiceLeave(); }
+  agoraChannel = channel;
+  initAgoraClient();
+
+  document.getElementById('voiceStatus').textContent = 'Connecting...';
+  document.getElementById('voiceJoinBtn').disabled = true;
+
+  // Use UID derived from DN for consistency
+  var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
+
+  agoraClient.join(AGORA_APP_ID, channel, null, uid).then(function() {
+    return AgoraRTC.createMicrophoneAudioTrack();
+  }).then(function(track) {
+    agoraLocalTrack = track;
+    return agoraClient.publish([track]);
+  }).then(function() {
+    // Write presence to Firebase
+    voiceFbRef(channel).child(String(uid)).set({ username: currentUser.username, dn: currentUser.dn, muted: false });
+    voiceFbRef(channel).child(String(uid)).onDisconnect().remove();
+
+    agoraChannel = channel;
+    document.getElementById('voiceStatus').textContent = 'Connected to #' + channel;
+    document.getElementById('voiceChannelName').textContent = channel;
+    document.getElementById('voiceJoinBtn').style.display = 'none';
+    document.getElementById('voiceLeaveBtn').style.display = '';
+    document.getElementById('voiceCallCard').style.display = '';
+    document.getElementById('voiceJoinBtn').disabled = false;
+    agoraMicMuted = false;
+    updateMicBtn();
+    renderVoiceMembers();
+    // Listen for members
+    voiceFbRef(channel).on('value', function(snap) {
+      agoraUIDMap = snap.val() || {};
+      renderVoiceMembers();
+    });
+    showToast('Joined voice channel: ' + channel, 'success');
+  }).catch(function(e) {
+    document.getElementById('voiceStatus').textContent = 'Failed to connect: ' + e.message;
+    document.getElementById('voiceJoinBtn').disabled = false;
+    agoraChannel = null;
+    showToast('Voice connection failed', 'error');
+  });
+}
+
+function voiceLeave() {
+  if (!agoraChannel) return;
+  // Clean up Firebase presence
+  var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
+  voiceFbRef(agoraChannel).child(String(uid)).remove();
+  voiceFbRef(agoraChannel).off();
+
+  if (agoraLocalTrack) { agoraLocalTrack.stop(); agoraLocalTrack.close(); agoraLocalTrack = null; }
+  if (agoraClient) agoraClient.leave();
+  agoraRemoteUsers = {};
+  agoraUIDMap = {};
+  agoraChannel = null;
+  agoraMicMuted = false;
+
+  document.getElementById('voiceStatus').textContent = 'Not connected.';
+  document.getElementById('voiceJoinBtn').style.display = '';
+  document.getElementById('voiceLeaveBtn').style.display = 'none';
+  document.getElementById('voiceCallCard').style.display = 'none';
+  showToast('Left voice channel', 'success');
+}
+
+function voiceToggleMic() {
+  if (!agoraLocalTrack) return;
+  agoraMicMuted = !agoraMicMuted;
+  agoraLocalTrack.setMuted(agoraMicMuted);
+  // Update Firebase presence
+  if (agoraChannel && currentUser) {
+    var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
+    voiceFbRef(agoraChannel).child(String(uid)).update({ muted: agoraMicMuted });
+  }
+  updateMicBtn();
+  showToast(agoraMicMuted ? 'Mic muted' : 'Mic unmuted', 'success');
+}
+
+function updateMicBtn() {
+  var btn = document.getElementById('voiceMicBtn');
+  if (!btn) return;
+  if (agoraMicMuted) {
+    btn.innerHTML = '🔇';
+    btn.style.background = '#444';
+    btn.title = 'Unmute Mic';
+  } else {
+    btn.innerHTML = '🎤';
+    btn.style.background = 'var(--red)';
+    btn.title = 'Mute Mic';
+  }
+}
+
+function renderVoiceMembers() {
+  var el = document.getElementById('voiceMembers');
+  var count = document.getElementById('voiceMemberCount');
+  if (!el) return;
+  var members = agoraUIDMap || {};
+  var keys = Object.keys(members);
+  // Local user card
+  var html = '';
+  if (currentUser) {
+    var myUid = String(Math.abs(hashUID(currentUser.dn)) % 100000 + 1);
+    var myMuted = members[myUid] ? members[myUid].muted : agoraMicMuted;
+    html += voiceMemberCard(currentUser.username, myMuted, true);
+  }
+  // Remote users
+  for (var uid in members) {
+    if (currentUser && uid === String(Math.abs(hashUID(currentUser.dn)) % 100000 + 1)) continue;
+    var m = members[uid];
+    html += voiceMemberCard(m.username || ('User ' + uid), m.muted, false);
+  }
+  if (!html) html = '<div style="color:var(--dim);font-size:14px">Waiting for others to join...</div>';
+  el.innerHTML = html;
+  var total = keys.length;
+  if (count) count.textContent = total + ' member' + (total !== 1 ? 's' : '');
+}
+
+function voiceMemberCard(username, muted, isMe) {
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 20px;background:var(--bg3);border:1px solid ' + (isMe ? 'var(--red)' : 'var(--border)') + ';border-radius:12px;min-width:90px">' +
+    '<div style="width:48px;height:48px;border-radius:50%;background:var(--bg4);border:2px solid ' + (isMe ? 'var(--red)' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;font-size:22px">&#128100;</div>' +
+    '<div style="font-family:\'Cinzel\',serif;font-size:13px;font-weight:600;text-align:center;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(username) + (isMe ? '<br><span style="font-size:10px;color:var(--red)">(you)</span>' : '') + '</div>' +
+    '<div style="font-size:18px">' + (muted ? '🔇' : '🎤') + '</div>' +
+  '</div>';
+}
+
+function quickJoin(channel) {
+  document.getElementById('voiceChannelInput').value = channel;
+  voiceJoin();
+}
+
+function openCampaignVoice() {
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
+  var channelName = c ? c.name.toLowerCase().replace(/[^a-z0-9]/g,'-').slice(0,32) : 'party';
+  navigate('voice');
+  setTimeout(function() {
+    document.getElementById('voiceChannelInput').value = channelName;
+    voiceJoin();
+  }, 100);
+}
+
+function hashUID(str) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
+  return h;
+}
+
+// ── UTIL
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
