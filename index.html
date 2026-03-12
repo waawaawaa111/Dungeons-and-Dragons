@@ -21,6 +21,10 @@
   };
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database();
+  // Test connection on load
+  db.ref('.info/connected').on('value', function(snap) {
+    window._fbConnected = snap.val();
+  });
 </script>
 <style>
 :root {
@@ -394,6 +398,10 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
         <button onclick="rerollDN()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;" title="Reroll">&#8635;</button>
       </div>
       <button class="auth-btn" onclick="doRegister()" onkeydown="if(event.key==='Enter')doRegister()">Create Account</button>
+    </div>
+    <div id="authRulesHint" style="margin-top:16px;padding:12px;background:rgba(229,62,62,0.08);border:1px solid rgba(229,62,62,0.2);border-radius:8px;font-size:13px;color:var(--muted);line-height:1.6;display:none">
+      ⚠️ <strong style="color:var(--text)">Firebase rules not set?</strong> Go to <strong>console.firebase.google.com</strong> → your project → <strong>Realtime Database → Rules</strong> and set them to:<br>
+      <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--red)">{ "rules": { ".read": true, ".write": true } }</code><br>then click <strong>Publish</strong>.
     </div>
   </div>
 </div>
@@ -897,20 +905,39 @@ function doLogin() {
   var password  = document.getElementById('loginPassword').value;
   var errEl = document.getElementById('authError');
   if (!username || !password) { errEl.textContent = 'Please enter username and password.'; return; }
+
+  // Check Firebase connection first
+  if (window._fbConnected === false) {
+    errEl.textContent = 'No connection to database. Check your internet and that Firebase rules allow read/write.';
+    return;
+  }
+
   errEl.textContent = 'Signing in...';
   var key = username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+
+  // Set a timeout so it never hangs forever
+  var timedOut = false;
+  var timeout = setTimeout(function() {
+    timedOut = true;
+    errEl.textContent = 'Timed out — check your Firebase Database rules allow read/write (see instructions below).';
+    document.getElementById('authRulesHint').style.display = '';
+  }, 8000);
+
   fbUserRef(key).once('value').then(function(snap) {
+    if (timedOut) return;
+    clearTimeout(timeout);
     var u = snap.val();
     if (!u) { errEl.textContent = 'Username not found. Create an account first.'; return; }
     if (u.passwordHash !== hashPass(password)) { errEl.textContent = 'Incorrect password.'; return; }
     currentUser = u;
-    // Refresh full user cache
     fbUsersRef().once('value').then(function(s) {
       _allUsersCache = s.val() || {};
       bootApp();
     });
   }).catch(function(e) {
-    errEl.textContent = 'Connection error. Check your internet.';
+    if (timedOut) return;
+    clearTimeout(timeout);
+    errEl.textContent = 'Database error: ' + e.message + '. Make sure Firebase rules allow read/write.';
   });
 }
 
@@ -924,12 +951,27 @@ function doRegister() {
   if (!password) { errEl.textContent = 'Please enter a password.'; return; }
   if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
   if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
+
+  if (window._fbConnected === false) {
+    errEl.textContent = 'No connection to database. Check your internet and Firebase rules.';
+    return;
+  }
+
   errEl.textContent = 'Creating account...';
   var key = username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+
+  var timedOut = false;
+  var timeout = setTimeout(function() {
+    timedOut = true;
+    errEl.textContent = 'Timed out — check your Firebase Database rules allow read/write.';
+  }, 8000);
+
   fbUserRef(key).once('value').then(function(snap) {
-    if (snap.val()) { errEl.textContent = 'Username already taken.'; return; }
-    // Fetch all users to check DN uniqueness
+    if (timedOut) return;
+    if (snap.val()) { clearTimeout(timeout); errEl.textContent = 'Username already taken.'; return; }
     fbUsersRef().once('value').then(function(s) {
+      if (timedOut) return;
+      clearTimeout(timeout);
       var users = s.val() || {};
       _allUsersCache = users;
       var dn = _pendingDN || genDN();
@@ -942,7 +984,9 @@ function doRegister() {
       });
     });
   }).catch(function(e) {
-    errEl.textContent = 'Connection error. Check your internet.';
+    if (timedOut) return;
+    clearTimeout(timeout);
+    errEl.textContent = 'Database error: ' + e.message + '. Check Firebase rules allow read/write.';
   });
 }
 
