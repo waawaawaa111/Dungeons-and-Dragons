@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>D&D Campaign Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyDBFXlXXUpxNPfNkuBUM5o2dZbLhlM5Mw0",
+    authDomain: "dndcampaign-9ad96.firebaseapp.com",
+    databaseURL: "https://dndcampaign-9ad96-default-rtdb.firebaseio.com",
+    projectId: "dndcampaign-9ad96",
+    storageBucket: "dndcampaign-9ad96.firebasestorage.app",
+    messagingSenderId: "1056043086927",
+    appId: "1:1056043086927:web:895b131515abf7079fe63a",
+    measurementId: "G-LX42W7827L"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+</script>
 <style>
 :root {
   --bg:#0d0d0d; --bg2:#141414; --bg3:#1a1a1a; --bg4:#222;
@@ -253,13 +270,13 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .msg-bubble-row{display:flex;align-items:flex-end;gap:8px;margin:2px 0;}
 .msg-bubble-row.mine{flex-direction:row-reverse;}
 .msg-bubble-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;align-self:flex-end;}
-.msg-bubble{max-width:68%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.5;word-break:break-word;}
+.msg-bubble{max-width:75%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.5;word-break:break-word;}
 .msg-bubble.theirs{background:var(--bg3);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text);}
 .msg-bubble.mine{background:var(--red);color:white;border-bottom-right-radius:4px;}
 .msg-bubble-meta{font-size:11px;color:var(--dim);margin:2px 8px;display:flex;gap:6px;align-items:center;}
 .msg-bubble-meta.mine{justify-content:flex-end;}
 .msg-input-area{padding:16px 20px;border-top:1px solid var(--border);display:flex;align-items:flex-end;gap:10px;flex-shrink:0;background:var(--bg2);}
-.msg-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:13px 16px;font-family:'Crimson Text',serif;font-size:16px;outline:none;resize:none;min-height:48px;max-height:160px;overflow-y:auto;line-height:1.5;transition:border-color .15s;}
+.msg-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:13px 16px;font-family:'Crimson Text',serif;font-size:16px;outline:none;resize:none;min-height:48px;max-height:160px;overflow-y:auto;line-height:1.5;transition:border-color .15s;width:100%;}
 .msg-input:focus{border-color:var(--red);}
 .msg-input::placeholder{color:var(--dim);}
 .msg-send-btn{width:48px;height:48px;background:var(--red);color:white;border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
@@ -778,10 +795,11 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 
 <script>
 // ══════════════════════════════════════════════════════
-//  AUTH + USER SYSTEM
+//  AUTH + USER SYSTEM  (Firebase Realtime Database)
 // ══════════════════════════════════════════════════════
 var currentUser = null;   // { username, dn, passwordHash, race, friends:[] }
 var _pendingDN  = '';
+var _allUsersCache = {};  // local cache refreshed on login
 
 function genDN() {
   var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -791,17 +809,22 @@ function genDN() {
 }
 
 function hashPass(p) {
-  // Simple deterministic hash (not for real security — localStorage is client-side anyway)
   var h = 0;
   for (var i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i); h |= 0; }
   return h.toString(36);
 }
 
-function getAllUsers() {
-  return JSON.parse(localStorage.getItem('dnd_users') || '{}');
-}
+// Firebase user helpers
+function fbUsersRef() { return db.ref('users'); }
+function fbUserRef(key) { return db.ref('users/' + key); }
+
+function getAllUsers() { return _allUsersCache; }
+
 function saveAllUsers(users) {
-  localStorage.setItem('dnd_users', JSON.stringify(users));
+  // Merge-save changed users to Firebase (used for profile edits)
+  _allUsersCache = users;
+  // Write entire users object (small enough for this app)
+  fbUsersRef().set(users);
 }
 
 function rerollDN() {
@@ -823,13 +846,21 @@ function doLogin() {
   var password  = document.getElementById('loginPassword').value;
   var errEl = document.getElementById('authError');
   if (!username || !password) { errEl.textContent = 'Please enter username and password.'; return; }
-  var users = getAllUsers();
-  var key = username.toLowerCase();
-  if (!users[key]) { errEl.textContent = 'Username not found. Create an account first.'; return; }
-  if (users[key].passwordHash !== hashPass(password)) { errEl.textContent = 'Incorrect password.'; return; }
-  currentUser = users[key];
-  localStorage.setItem('dnd_session', JSON.stringify({ username: currentUser.username }));
-  bootApp();
+  errEl.textContent = 'Signing in...';
+  var key = username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+  fbUserRef(key).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) { errEl.textContent = 'Username not found. Create an account first.'; return; }
+    if (u.passwordHash !== hashPass(password)) { errEl.textContent = 'Incorrect password.'; return; }
+    currentUser = u;
+    // Refresh full user cache
+    fbUsersRef().once('value').then(function(s) {
+      _allUsersCache = s.val() || {};
+      bootApp();
+    });
+  }).catch(function(e) {
+    errEl.textContent = 'Connection error. Check your internet.';
+  });
 }
 
 function doRegister() {
@@ -842,22 +873,35 @@ function doRegister() {
   if (!password) { errEl.textContent = 'Please enter a password.'; return; }
   if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
   if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
-  var users = getAllUsers();
-  if (users[username.toLowerCase()]) { errEl.textContent = 'Username already taken.'; return; }
-  // Check DN not taken
-  var dn = _pendingDN || genDN();
-  for (var k in users) { if (users[k].dn === dn) { dn = genDN(); } }
-  var newUser = { username: username, dn: dn, passwordHash: hashPass(password), race: 'Human', friends: [] };
-  users[username.toLowerCase()] = newUser;
-  saveAllUsers(users);
-  currentUser = newUser;
-  localStorage.setItem('dnd_session', JSON.stringify({ username: username }));
-  bootApp();
+  errEl.textContent = 'Creating account...';
+  var key = username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+  fbUserRef(key).once('value').then(function(snap) {
+    if (snap.val()) { errEl.textContent = 'Username already taken.'; return; }
+    // Fetch all users to check DN uniqueness
+    fbUsersRef().once('value').then(function(s) {
+      var users = s.val() || {};
+      _allUsersCache = users;
+      var dn = _pendingDN || genDN();
+      for (var k in users) { if (users[k].dn === dn) { dn = genDN(); } }
+      var newUser = { username: username, dn: dn, passwordHash: hashPass(password), race: 'Human', friends: [] };
+      fbUserRef(key).set(newUser).then(function() {
+        _allUsersCache[key] = newUser;
+        currentUser = newUser;
+        bootApp();
+      });
+    });
+  }).catch(function(e) {
+    errEl.textContent = 'Connection error. Check your internet.';
+  });
 }
 
 function doSignOut() {
-  localStorage.removeItem('dnd_session');
   currentUser = null;
+  _allUsersCache = {};
+  // Detach any Firebase listeners
+  if (_msgListener) { db.ref('messages/' + activeConvoId).off('value', _msgListener); _msgListener = null; }
+  if (_convosListener) { db.ref('convos').off('value', _convosListener); _convosListener = null; }
+  activeConvoId = null;
   document.getElementById('authScreen').style.display = 'flex';
   document.getElementById('mainContent').style.display = 'none';
   document.querySelector('.navbar').style.display = 'none';
@@ -873,6 +917,8 @@ function bootApp() {
   document.getElementById('mainContent').style.display = 'block';
   document.querySelector('.navbar').style.display = 'flex';
   refreshProfilePanel();
+  // Start listening for convo updates
+  startConvosListener();
   navigate('home');
 }
 
@@ -888,9 +934,9 @@ function refreshProfilePanel() {
 function saveProfileRace() {
   if (!currentUser) return;
   currentUser.race = document.getElementById('profileRace').value;
-  var users = getAllUsers();
-  users[currentUser.username.toLowerCase()] = currentUser;
-  saveAllUsers(users);
+  var key = currentUser.username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+  _allUsersCache[key] = currentUser;
+  fbUserRef(key).set(currentUser);
 }
 
 // ── FRIENDS ──
@@ -898,21 +944,24 @@ function addFriend() {
   var input = document.getElementById('addFriendInput');
   var val = input.value.trim().toUpperCase();
   if (!val.startsWith('#DN-')) val = '#DN-' + val.replace('#DN-','');
-  var users = getAllUsers();
-  // Find user by DN
-  var found = null;
-  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
-  if (!found) { showToast('Dungeon Number not found', 'error'); return; }
-  if (found.dn === currentUser.dn) { showToast('You cannot add yourself!', 'error'); return; }
-  if ((currentUser.friends || []).indexOf(found.dn) >= 0) { showToast('Already friends!', 'error'); return; }
-  currentUser.friends = currentUser.friends || [];
-  currentUser.friends.push(found.dn);
-  var allUsers = getAllUsers();
-  allUsers[currentUser.username.toLowerCase()] = currentUser;
-  saveAllUsers(allUsers);
-  input.value = '';
-  refreshProfilePanel();
-  showToast('Friend added: ' + found.username, 'success');
+  // Refresh users from Firebase first
+  fbUsersRef().once('value').then(function(snap) {
+    var users = snap.val() || {};
+    _allUsersCache = users;
+    var found = null;
+    for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
+    if (!found) { showToast('Dungeon Number not found', 'error'); return; }
+    if (found.dn === currentUser.dn) { showToast('You cannot add yourself!', 'error'); return; }
+    if ((currentUser.friends || []).indexOf(found.dn) >= 0) { showToast('Already friends!', 'error'); return; }
+    currentUser.friends = currentUser.friends || [];
+    currentUser.friends.push(found.dn);
+    var key = currentUser.username.toLowerCase().replace(/[.#$\[\]]/g, '_');
+    _allUsersCache[key] = currentUser;
+    fbUserRef(key).set(currentUser);
+    input.value = '';
+    refreshProfilePanel();
+    showToast('Friend added: ' + found.username, 'success');
+  });
 }
 
 function renderFriendsList() {
@@ -935,62 +984,102 @@ function renderFriendsList() {
 }
 
 // ══════════════════════════════════════════════════════
-//  MESSAGING SYSTEM
+//  MESSAGING SYSTEM  (Firebase Realtime Database)
 // ══════════════════════════════════════════════════════
 var activeConvoId = null;
-var msgPollInterval = null;
-var ncGroupMembers = []; // DNs of group members being built
+var ncGroupMembers = [];
 var ncTabMode = 'dm';
+var _convosListener = null;
+var _msgListener = null;
+var _convosCache = {};   // keyed by convoId
 
-// ── Storage helpers ──
-function getConvos() { return JSON.parse(localStorage.getItem('dnd_convos') || '[]'); }
-function saveConvos(c) { localStorage.setItem('dnd_convos', JSON.stringify(c)); }
-function getMessages(convoId) { return JSON.parse(localStorage.getItem('dnd_msgs_' + convoId) || '[]'); }
-function saveMessages(convoId, msgs) { localStorage.setItem('dnd_msgs_' + convoId, JSON.stringify(msgs)); }
+// ── Firebase refs ──
+function fbConvosRef() { return db.ref('convos'); }
+function fbConvoRef(id) { return db.ref('convos/' + id); }
+function fbMsgsRef(convoId) { return db.ref('messages/' + convoId); }
 
-// ── Get convos for current user ──
+// ── Start real-time convos listener (fires when any convo changes) ──
+function startConvosListener() {
+  if (_convosListener) fbConvosRef().off('value', _convosListener);
+  _convosListener = fbConvosRef().on('value', function(snap) {
+    var all = snap.val() || {};
+    _convosCache = all;
+    renderConvoList();
+  });
+}
+
+// ── Get convos for current user from cache ──
 function myConvos() {
   if (!currentUser) return [];
-  return getConvos().filter(function(c) { return c.members.indexOf(currentUser.dn) >= 0; });
+  var result = [];
+  for (var id in _convosCache) {
+    var c = _convosCache[id];
+    if (c.members && c.members.indexOf(currentUser.dn) >= 0) result.push(c);
+  }
+  return result;
 }
+
+// ── Compat helpers so old code (campaigns, etc.) still works ──
+function getConvos() {
+  var result = [];
+  for (var id in _convosCache) result.push(_convosCache[id]);
+  return result;
+}
+function saveConvos(convos) {
+  // Write each convo to Firebase
+  for (var i = 0; i < convos.length; i++) {
+    fbConvoRef(convos[i].id).set(convos[i]);
+    _convosCache[convos[i].id] = convos[i];
+  }
+}
+function getMessages(convoId) {
+  // Synchronous fallback — real data comes via listener
+  return [];
+}
+function saveMessages(convoId, msgs) {
+  // Convert array to object keyed by msg id for Firebase
+  var obj = {};
+  for (var i = 0; i < msgs.length; i++) obj[msgs[i].id] = msgs[i];
+  fbMsgsRef(convoId).set(obj);
+}
+
 
 // ── Create or find a DM convo ──
 function findOrCreateDM(otherDN) {
-  var convos = getConvos();
-  // Look for existing DM
-  for (var i = 0; i < convos.length; i++) {
-    var c = convos[i];
-    if (c.type === 'dm' && c.members.length === 2 &&
+  // Check cache first
+  for (var id in _convosCache) {
+    var c = _convosCache[id];
+    if (c.type === 'dm' && c.members && c.members.length === 2 &&
         c.members.indexOf(currentUser.dn) >= 0 && c.members.indexOf(otherDN) >= 0) {
       return c.id;
     }
   }
   // Create new
-  var id = 'dm_' + Date.now();
-  convos.push({ id: id, type: 'dm', members: [currentUser.dn, otherDN], createdAt: Date.now(), lastMsg: '', lastTime: Date.now() });
-  saveConvos(convos);
-  return id;
+  var newId = 'dm_' + Date.now();
+  var convo = { id: newId, type: 'dm', members: [currentUser.dn, otherDN], createdAt: Date.now(), lastMsg: '', lastTime: Date.now() };
+  fbConvoRef(newId).set(convo);
+  _convosCache[newId] = convo;
+  return newId;
 }
 
 // ── Create a group chat ──
 function createGroupChat(name, memberDNs, campaignId) {
   var all = [currentUser.dn].concat(memberDNs);
-  // Deduplicate
-  var seen = {};
-  var unique = [];
+  var seen = {}, unique = [];
   for (var i = 0; i < all.length; i++) { if (!seen[all[i]]) { seen[all[i]] = true; unique.push(all[i]); } }
   if (unique.length > 10) unique = unique.slice(0, 10);
   var id = (campaignId ? 'camp_' + campaignId : 'grp_' + Date.now());
-  var convos = getConvos();
-  // Don't duplicate campaign chats
-  for (var j = 0; j < convos.length; j++) { if (convos[j].id === id) return id; }
-  convos.push({ id: id, type: 'group', name: name, members: unique, campaignId: campaignId || null, createdAt: Date.now(), lastMsg: '', lastTime: Date.now() });
-  saveConvos(convos);
+  // Don't duplicate
+  if (_convosCache[id]) return id;
+  var convo = { id: id, type: 'group', name: name, members: unique, campaignId: campaignId || null, createdAt: Date.now(), lastMsg: '', lastTime: Date.now() };
+  fbConvoRef(id).set(convo);
+  _convosCache[id] = convo;
   // System message
-  var msgs = [{ id: Date.now(), senderDN: 'system', senderName: 'System', text: '⚔️ ' + name + ' was created!', time: Date.now() }];
-  saveMessages(id, msgs);
+  var sysMsg = { id: Date.now(), senderDN: 'system', senderName: 'System', text: '⚔️ ' + name + ' was created!', time: Date.now() };
+  fbMsgsRef(id).child(String(sysMsg.id)).set(sysMsg);
   return id;
 }
+
 
 // ── Render sidebar convo list ──
 function renderConvoList(filter) {
@@ -1046,10 +1135,13 @@ function fmtTime(ts) {
 
 // ── Open a conversation ──
 function openConvo(id) {
+  // Detach previous message listener
+  if (_msgListener && activeConvoId) {
+    fbMsgsRef(activeConvoId).off('value', _msgListener);
+    _msgListener = null;
+  }
   activeConvoId = id;
-  var convos = getConvos();
-  var convo = null;
-  for (var i = 0; i < convos.length; i++) { if (convos[i].id === id) { convo = convos[i]; break; } }
+  var convo = _convosCache[id];
   if (!convo) return;
   document.getElementById('msgEmpty').style.display = 'none';
   var chatView = document.getElementById('msgChatView');
@@ -1067,52 +1159,57 @@ function openConvo(id) {
     if (otherDN) { for (var k in users) { if (users[k].dn === otherDN) { subText = users[k].dn; break; } } }
   }
   var av = document.getElementById('msgTopAvatar');
-  av.textContent = '';
   av.innerHTML = convo.type === 'group' ? '&#128101;' : '&#128100;';
   av.className = 'msg-topbar-avatar' + (convo.type === 'group' ? ' group' : '');
   document.getElementById('msgTopName').textContent = name;
   document.getElementById('msgTopSub').textContent = subText;
   document.getElementById('msgInfoBtn').style.display = convo.type === 'group' ? '' : 'none';
 
-  renderMessages(id);
   renderConvoList();
-  // Start polling for new messages (simulate real-time)
-  if (msgPollInterval) clearInterval(msgPollInterval);
-  msgPollInterval = setInterval(function() { if (activeConvoId) renderMessages(activeConvoId, true); }, 1500);
+
+  // Attach real-time message listener
+  _msgListener = fbMsgsRef(id).on('value', function(snap) {
+    if (activeConvoId !== id) return;
+    var raw = snap.val() || {};
+    var msgs = [];
+    for (var mid in raw) msgs.push(raw[mid]);
+    msgs.sort(function(a,b) { return a.time - b.time; });
+    renderMessagesFromArray(msgs);
+  });
 }
 
-// ── Render messages ──
-function renderMessages(convoId, silent) {
-  var msgs = getMessages(convoId);
+// ── Render messages from array ──
+function renderMessages(convoId, silent) { /* legacy no-op — real rendering via listener */ }
+
+function renderMessagesFromArray(msgs) {
   var el = document.getElementById('msgMessages');
-  if (!silent || el.scrollTop + el.clientHeight >= el.scrollHeight - 40) {
-    var users = getAllUsers();
-    var html = '';
-    var lastDate = '';
-    for (var i = 0; i < msgs.length; i++) {
-      var m = msgs[i];
-      var dateStr = new Date(m.time).toDateString();
-      if (dateStr !== lastDate) {
-        html += '<div class="msg-day-divider"><span>' + formatDay(m.time) + '</span></div>';
-        lastDate = dateStr;
-      }
-      if (m.senderDN === 'system') {
-        html += '<div style="text-align:center;color:var(--dim);font-size:13px;margin:8px 0;font-style:italic">' + esc(m.text) + '</div>';
-        continue;
-      }
-      var mine = currentUser && m.senderDN === currentUser.dn;
-      var senderName = m.senderName || m.senderDN;
-      html += '<div class="msg-bubble-row' + (mine ? ' mine' : '') + '">';
-      if (!mine) html += '<div class="msg-bubble-avatar">&#128100;</div>';
-      html += '<div style="display:flex;flex-direction:column;' + (mine ? 'align-items:flex-end' : '') + '">';
-      if (!mine) html += '<div style="font-size:12px;color:var(--muted);margin-bottom:3px;padding-left:4px">' + esc(senderName) + '</div>';
-      html += '<div class="msg-bubble ' + (mine ? 'mine' : 'theirs') + '">' + escHTML(m.text) + '</div>';
-      html += '<div class="msg-bubble-meta' + (mine ? ' mine' : '') + '">' + fmtTime(m.time) + (mine ? ' ✓' : '') + '</div>';
-      html += '</div></div>';
+  var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 60;
+  var users = getAllUsers();
+  var html = '';
+  var lastDate = '';
+  for (var i = 0; i < msgs.length; i++) {
+    var m = msgs[i];
+    var dateStr = new Date(m.time).toDateString();
+    if (dateStr !== lastDate) {
+      html += '<div class="msg-day-divider"><span>' + formatDay(m.time) + '</span></div>';
+      lastDate = dateStr;
     }
-    el.innerHTML = html;
-    el.scrollTop = el.scrollHeight;
+    if (m.senderDN === 'system') {
+      html += '<div style="text-align:center;color:var(--dim);font-size:13px;margin:8px 0;font-style:italic">' + esc(m.text) + '</div>';
+      continue;
+    }
+    var mine = currentUser && m.senderDN === currentUser.dn;
+    var senderName = m.senderName || m.senderDN;
+    html += '<div class="msg-bubble-row' + (mine ? ' mine' : '') + '">';
+    if (!mine) html += '<div class="msg-bubble-avatar">&#128100;</div>';
+    html += '<div style="display:flex;flex-direction:column;' + (mine ? 'align-items:flex-end' : '') + '">';
+    if (!mine) html += '<div style="font-size:12px;color:var(--muted);margin-bottom:3px;padding-left:4px">' + esc(senderName) + '</div>';
+    html += '<div class="msg-bubble ' + (mine ? 'mine' : 'theirs') + '">' + escHTML(m.text) + '</div>';
+    html += '<div class="msg-bubble-meta' + (mine ? ' mine' : '') + '">' + fmtTime(m.time) + (mine ? ' ✓' : '') + '</div>';
+    html += '</div></div>';
   }
+  el.innerHTML = html;
+  if (atBottom) el.scrollTop = el.scrollHeight;
 }
 
 function formatDay(ts) {
@@ -1130,24 +1227,19 @@ function sendMessage() {
   var input = document.getElementById('msgInput');
   var text = input.value.trim();
   if (!text) return;
-  var msgs = getMessages(activeConvoId);
-  var msg = { id: Date.now(), senderDN: currentUser.dn, senderName: currentUser.username, text: text, time: Date.now() };
-  msgs.push(msg);
-  saveMessages(activeConvoId, msgs);
-  // Update convo lastMsg
-  var convos = getConvos();
-  for (var i = 0; i < convos.length; i++) {
-    if (convos[i].id === activeConvoId) {
-      convos[i].lastMsg = text.length > 40 ? text.slice(0,40) + '…' : text;
-      convos[i].lastTime = Date.now();
-      break;
-    }
+  var now = Date.now();
+  var msg = { id: now, senderDN: currentUser.dn, senderName: currentUser.username, text: text, time: now };
+  // Push message to Firebase
+  fbMsgsRef(activeConvoId).child(String(now)).set(msg);
+  // Update convo lastMsg metadata
+  var lastMsg = text.length > 40 ? text.slice(0,40) + '…' : text;
+  fbConvoRef(activeConvoId).update({ lastMsg: lastMsg, lastTime: now });
+  if (_convosCache[activeConvoId]) {
+    _convosCache[activeConvoId].lastMsg = lastMsg;
+    _convosCache[activeConvoId].lastTime = now;
   }
-  saveConvos(convos);
   input.value = '';
   input.style.height = '';
-  renderMessages(activeConvoId);
-  renderConvoList();
 }
 
 function handleMsgKey(e) {
@@ -1183,22 +1275,31 @@ function switchNCTab(tab) {
 function lookupDN(val) {
   val = val.trim().toUpperCase();
   if (!val.startsWith('#DN-')) val = '#DN-' + val.replace(/^#?DN-?/i, '');
-  var users = getAllUsers();
+  var users = _allUsersCache;
   for (var k in users) { if (users[k].dn === val) return users[k]; }
   return null;
 }
 
+function lookupDNAsync(val, cb) {
+  fbUsersRef().once('value').then(function(snap) {
+    _allUsersCache = snap.val() || {};
+    cb(lookupDN(val));
+  });
+}
+
 function startDM() {
   var val = document.getElementById('ncDMInput').value;
-  var found = lookupDN(val);
   var res = document.getElementById('ncDMResult');
-  if (!found) { res.style.color='#fc8181'; res.textContent = 'User not found.'; return; }
-  if (found.dn === currentUser.dn) { res.style.color='#fc8181'; res.textContent = 'Cannot DM yourself!'; return; }
-  res.style.color='#68d391'; res.textContent = '✓ Found: ' + found.username;
-  var id = findOrCreateDM(found.dn);
-  closeNewChatModal();
-  navigate('messages');
-  openConvo(id);
+  res.style.color = 'var(--muted)'; res.textContent = 'Looking up user...';
+  lookupDNAsync(val, function(found) {
+    if (!found) { res.style.color='#fc8181'; res.textContent = 'User not found.'; return; }
+    if (found.dn === currentUser.dn) { res.style.color='#fc8181'; res.textContent = 'Cannot DM yourself!'; return; }
+    res.style.color='#68d391'; res.textContent = '✓ Found: ' + found.username;
+    var id = findOrCreateDM(found.dn);
+    closeNewChatModal();
+    navigate('messages');
+    openConvo(id);
+  });
 }
 
 function startDMwith(dn) {
@@ -1211,15 +1312,17 @@ function startDMwith(dn) {
 function addGroupMember() {
   var val = document.getElementById('ncGroupInput').value;
   var errEl = document.getElementById('ncGroupError');
-  var found = lookupDN(val);
-  if (!found) { errEl.textContent = 'User not found.'; return; }
-  if (found.dn === currentUser.dn) { errEl.textContent = 'You are already in the group.'; return; }
-  if (ncGroupMembers.indexOf(found.dn) >= 0) { errEl.textContent = 'Already added.'; return; }
-  if (ncGroupMembers.length >= 9) { errEl.textContent = 'Max 10 members total (9 others + you).'; return; }
-  ncGroupMembers.push(found.dn);
-  errEl.textContent = '';
-  document.getElementById('ncGroupInput').value = '';
-  renderNCGroupMembers();
+  errEl.textContent = 'Looking up...';
+  lookupDNAsync(val, function(found) {
+    if (!found) { errEl.textContent = 'User not found.'; return; }
+    if (found.dn === currentUser.dn) { errEl.textContent = 'You are already in the group.'; return; }
+    if (ncGroupMembers.indexOf(found.dn) >= 0) { errEl.textContent = 'Already added.'; return; }
+    if (ncGroupMembers.length >= 9) { errEl.textContent = 'Max 10 members total (9 others + you).'; return; }
+    ncGroupMembers.push(found.dn);
+    errEl.textContent = '';
+    document.getElementById('ncGroupInput').value = '';
+    renderNCGroupMembers();
+  });
 }
 
 function removeGroupMember(dn) {
@@ -1360,7 +1463,6 @@ function navigate(page) {
   if (page === 'compendium') { resetDetail(); document.getElementById('compendiumAIInput').value = ''; }
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
-  if (page !== 'messages' && msgPollInterval) { clearInterval(msgPollInterval); msgPollInterval = null; }
 }
 
 // PROFILE
@@ -1568,35 +1670,30 @@ function addPlayerToCampaign() {
   for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
   if (!c) return;
   c.players = c.players || [];
-  // Check capacity
   if (c.players.length >= c.maxPlayers) { errEl.textContent = 'Campaign is full!'; return; }
-  // Check if already added
   for (var j = 0; j < c.players.length; j++) { if (c.players[j].dn === val) { errEl.textContent = 'Player already in campaign.'; return; } }
-  // Lookup
-  var users = getAllUsers();
-  var found = null;
-  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
-  if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
-  c.players.push({ dn: found.dn, username: found.username });
-  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
-  // Add to campaign group chat
-  var convos = getConvos();
-  for (var ci = 0; ci < convos.length; ci++) {
-    if (convos[ci].campaignId === c.id && convos[ci].members.indexOf(found.dn) < 0) {
-      convos[ci].members.push(found.dn);
-      // System message
-      var msgs = getMessages(convos[ci].id);
-      msgs.push({ id: Date.now(), senderDN: 'system', senderName: 'System', text: found.username + ' joined the party!', time: Date.now() });
-      saveMessages(convos[ci].id, msgs);
-      break;
+  errEl.textContent = 'Looking up...';
+  lookupDNAsync(val, function(found) {
+    if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
+    c.players.push({ dn: found.dn, username: found.username });
+    localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+    // Add to campaign group chat in Firebase
+    var campConvoId = 'camp_' + c.id;
+    if (_convosCache[campConvoId]) {
+      var members = _convosCache[campConvoId].members || [];
+      if (members.indexOf(found.dn) < 0) {
+        members.push(found.dn);
+        fbConvoRef(campConvoId).update({ members: members });
+        var sysMsg = { id: Date.now(), senderDN: 'system', senderName: 'System', text: found.username + ' joined the party!', time: Date.now() };
+        fbMsgsRef(campConvoId).child(String(sysMsg.id)).set(sysMsg);
+      }
     }
-  }
-  saveConvos(convos);
-  errEl.textContent = '';
-  input.value = '';
-  document.getElementById('cdPlayers').textContent = c.players.length + '/' + c.maxPlayers;
-  renderCampaignPlayers(c, true);
-  showToast(found.username + ' added to campaign!', 'success');
+    errEl.textContent = '';
+    input.value = '';
+    document.getElementById('cdPlayers').textContent = c.players.length + '/' + c.maxPlayers;
+    renderCampaignPlayers(c, true);
+    showToast(found.username + ' added to campaign!', 'success');
+  });
 }
 
 function removePlayerFromCampaign(dn) {
@@ -1703,16 +1800,16 @@ function addCampaignPlayer() {
   var errEl = document.getElementById('ccPlayerError');
   var val = input.value.trim().toUpperCase();
   if (!val.startsWith('#DN-')) val = '#DN-' + val.replace(/^#?DN-?/i,'');
-  var users = getAllUsers();
-  var found = null;
-  for (var k in users) { if (users[k].dn === val) { found = users[k]; break; } }
-  if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
-  if (found.dn === (currentUser && currentUser.dn)) { errEl.textContent = 'You are automatically the DM!'; return; }
-  for (var j = 0; j < _ccPlayers.length; j++) { if (_ccPlayers[j].dn === found.dn) { errEl.textContent = 'Already added.'; return; } }
-  _ccPlayers.push({ dn: found.dn, username: found.username });
-  errEl.textContent = '';
-  input.value = '';
-  renderCCPlayers();
+  errEl.textContent = 'Looking up...';
+  lookupDNAsync(val, function(found) {
+    if (!found) { errEl.textContent = 'Dungeon Number not found.'; return; }
+    if (found.dn === (currentUser && currentUser.dn)) { errEl.textContent = 'You are automatically the DM!'; return; }
+    for (var j = 0; j < _ccPlayers.length; j++) { if (_ccPlayers[j].dn === found.dn) { errEl.textContent = 'Already added.'; return; } }
+    _ccPlayers.push({ dn: found.dn, username: found.username });
+    errEl.textContent = '';
+    input.value = '';
+    renderCCPlayers();
+  });
 }
 
 function removeCCPlayer(dn) {
@@ -2512,19 +2609,7 @@ function escHTML(s) {
   // Hide app until logged in
   document.getElementById('mainContent').style.display = 'none';
   document.querySelector('.navbar').style.display = 'none';
-  // Check for existing session
-  var session = null;
-  try { session = JSON.parse(localStorage.getItem('dnd_session') || 'null'); } catch(e) {}
-  if (session && session.username) {
-    var users = getAllUsers();
-    var u = users[session.username.toLowerCase()];
-    if (u) {
-      currentUser = u;
-      bootApp();
-      return;
-    }
-  }
-  // Show auth screen
+  // Always require login — no session restore
   document.getElementById('authScreen').style.display = 'flex';
 })();
 </script>
