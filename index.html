@@ -456,7 +456,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
   <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#127897; Voice</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#9881; Admin</button>
-  <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
+  <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
 </nav>
 
 <!-- AUTH SCREEN -->
@@ -1165,6 +1165,36 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- PWA MANUAL INSTALL MODAL -->
+<div class="pfp-modal" id="pwaManualModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="pfp-card" style="max-width:480px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">&#8659; Install D&amp;D Manager</div>
+      <button onclick="document.getElementById('pwaManualModal').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px">&#10005;</button>
+    </div>
+    <div style="font-size:14px;color:var(--muted);line-height:1.8">
+      <div style="margin-bottom:16px;color:var(--text);font-size:15px">Install this app on your device in seconds:</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px">
+        <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--red);margin-bottom:8px">CHROME / EDGE (Windows)</div>
+        <div>1. Click the <strong style="color:var(--text)">&#8285; three dots menu</strong> (top right)</div>
+        <div>2. Click <strong style="color:var(--text)">"Save and share"</strong></div>
+        <div>3. Click <strong style="color:var(--text)">"Install page as app"</strong></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px">
+        <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--red);margin-bottom:8px">CHROME (Android)</div>
+        <div>1. Tap the <strong style="color:var(--text)">&#8285; three dots menu</strong></div>
+        <div>2. Tap <strong style="color:var(--text)">"Add to Home screen"</strong></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
+        <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--red);margin-bottom:8px">SAFARI (iPhone)</div>
+        <div>1. Tap the <strong style="color:var(--text)">&#9633; Share button</strong></div>
+        <div>2. Tap <strong style="color:var(--text)">"Add to Home Screen"</strong></div>
+      </div>
+    </div>
+    <button class="auth-btn" style="margin-top:20px" onclick="document.getElementById('pwaManualModal').style.display='none'">Got it!</button>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -3575,12 +3605,12 @@ function pwaInstall() {
   if (window._pwaPrompt) {
     window._pwaPrompt.prompt();
     window._pwaPrompt.userChoice.then(function(r) {
-      if (r.outcome === 'accepted') showToast('Installing app...', 'success');
+      if (r.outcome === 'accepted') showToast('Installing...', 'success');
       window._pwaPrompt = null;
-      document.getElementById('pwaInstallBtn').style.display = 'none';
     });
   } else {
-    showToast('Open this page in Chrome and refresh to install', 'error');
+    // Show manual install modal
+    document.getElementById('pwaManualModal').style.display = 'flex';
   }
 }
 function esc(s) {
