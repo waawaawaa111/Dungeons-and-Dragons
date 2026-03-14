@@ -332,6 +332,102 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast.success{border-left:3px solid #2d6a4f;}
 .toast.error{border-left:3px solid var(--red);}
+
+/* ── DISCORD-STYLE VOICE ── */
+.vc-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;}
+.vc-sidebar{width:240px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.vc-sidebar-header{padding:16px;border-bottom:1px solid var(--border);}
+.vc-sidebar-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--text);letter-spacing:.06em;}
+.vc-sidebar-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.vc-channel-section{padding:8px 8px 4px;font-size:11px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;}
+.vc-channel{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:4px;cursor:pointer;color:var(--muted);font-size:15px;font-family:'Crimson Text',serif;transition:all .15s;margin:1px 4px;}
+.vc-channel:hover{background:var(--bg3);color:var(--text);}
+.vc-channel.active{background:rgba(229,62,62,.15);color:var(--text);}
+.vc-channel-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.vc-member-row{display:flex;align-items:center;gap:8px;padding:4px 8px 4px 28px;border-radius:4px;margin:1px 4px;font-size:13px;color:var(--muted);}
+.vc-member-avatar{width:24px;height:24px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;overflow:hidden;}
+.vc-member-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.vc-member-name{flex:1;font-size:13px;font-family:'Crimson Text',serif;}
+.vc-member-icons{display:flex;gap:4px;font-size:12px;}
+.vc-main{flex:1;display:flex;flex-direction:column;background:var(--bg);}
+.vc-topbar{height:48px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;}
+.vc-topbar-channel{font-family:'Cinzel',serif;font-size:15px;font-weight:700;}
+.vc-topbar-sep{color:var(--dim);}
+.vc-topbar-status{font-size:13px;color:var(--muted);}
+.vc-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:32px;}
+.vc-members-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:800px;}
+.vc-user-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;min-width:110px;transition:border-color .2s;}
+.vc-user-card.speaking{border-color:var(--red);box-shadow:0 0 0 2px rgba(229,62,62,.2);}
+.vc-user-card.me{border-color:#444;}
+.vc-avatar{width:64px;height:64px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;position:relative;}
+.vc-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.vc-avatar.speaking{border-color:var(--red);}
+.vc-avatar.deafened{border-color:#444;}
+.vc-user-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;text-align:center;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vc-user-dn{font-size:11px;color:var(--red);font-family:monospace;text-align:center;}
+.vc-user-status{display:flex;gap:6px;font-size:14px;}
+.vc-bottombar{height:64px;background:#0a0a0a;border-top:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;flex-shrink:0;}
+.vc-user-info{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.vc-bottom-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;flex-shrink:0;}
+.vc-bottom-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.vc-bottom-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vc-bottom-dn{font-size:11px;color:var(--red);font-family:monospace;}
+.vc-ctrl-btn{width:36px;height:36px;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.vc-ctrl-btn:hover{background:var(--bg3);color:var(--text);}
+.vc-ctrl-btn.active{background:var(--red);color:white;}
+.vc-ctrl-btn.danger{background:rgba(229,62,62,.15);color:var(--red);}
+.vc-ctrl-btn.danger:hover{background:var(--red);color:white;}
+.vc-not-connected{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--dim);flex:1;}
+.vc-dice-area{background:var(--bg2);border-top:1px solid var(--border);padding:12px 16px;display:none;}
+.vc-dice-area.visible{display:flex;}
+.vc-dice-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.vc-dice-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;font-family:'Crimson Text',serif;font-size:13px;transition:all .15s;}
+.vc-dice-btn:hover{background:var(--red);border-color:var(--red);color:white;}
+.vc-dice-log{flex:1;max-height:60px;overflow-y:auto;padding:0 8px;font-size:13px;color:var(--muted);}
+.vc-roll-entry{padding:2px 0;border-bottom:1px solid rgba(42,42,42,.4);}
+.vc-roll-entry .roll-val{color:var(--red);font-family:'Cinzel',serif;font-weight:700;}
+
+/* ── CHARACTER SHEET ── */
+.cs-layout{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start;}
+.cs-sidebar{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:70px;}
+.cs-avatar-wrap{text-align:center;margin-bottom:16px;}
+.cs-avatar{width:80px;height:80px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;cursor:pointer;}
+.cs-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.cs-name{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--red);}
+.cs-class{font-size:14px;color:var(--muted);margin-top:4px;}
+.cs-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;}
+.cs-stat{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 6px;text-align:center;}
+.cs-stat-val{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);}
+.cs-stat-mod{font-size:11px;color:var(--muted);}
+.cs-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.cs-hp-bar{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
+.cs-hp-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.cs-hp-row{display:flex;align-items:center;gap:8px;}
+.cs-hp-val{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:#5cb88a;}
+.cs-hp-track{flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.cs-hp-fill{height:100%;background:#2d6a4f;border-radius:3px;transition:width .3s;}
+.cs-section{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+.cs-section-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.cs-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-family:'Crimson Text',serif;font-size:15px;outline:none;transition:border-color .15s;margin-bottom:8px;}
+.cs-input:focus{border-color:var(--red);}
+.cs-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-family:'Crimson Text',serif;font-size:15px;outline:none;resize:vertical;min-height:80px;transition:border-color .15s;}
+.cs-textarea:focus{border-color:var(--red);}
+.cs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cs-field{margin-bottom:12px;}
+.cs-label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+.cs-skill-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:14px;}
+.cs-skill-prof{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;transition:all .15s;}
+.cs-skill-prof.on{background:var(--red);border-color:var(--red);}
+.cs-roll-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;transition:all .15s;margin-left:auto;}
+.cs-roll-btn:hover{background:var(--red);border-color:var(--red);color:white;}
+.cs-roll-log{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;max-height:200px;overflow-y:auto;}
+.cs-roll-entry{padding:4px 0;border-bottom:1px solid rgba(42,42,42,.5);font-size:14px;display:flex;justify-content:space-between;}
+.cs-roll-entry:last-child{border-bottom:none;}
+.cs-roll-result{font-family:'Cinzel',serif;color:var(--red);font-weight:700;}
+.cs-save-btn{width:100%;background:var(--red);color:white;border:none;padding:10px;border-radius:8px;cursor:pointer;font-family:'Cinzel',serif;font-size:14px;letter-spacing:.06em;margin-top:8px;transition:background .15s;}
+.cs-save-btn:hover{background:var(--red-dark);}
+.pfp-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
+.pfp-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:420px;}
 </style>
 </head>
 <body>
@@ -420,7 +516,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
     </div>
   </div>
   <div class="profile-avatar-wrap">
-    <div class="profile-avatar" id="profileAvatar">&#128100;</div>
+    <div class="profile-avatar" id="profileAvatar" onclick="openPfpModal()" style="cursor:pointer;" title="Change picture">&#128100;</div>
+    <div style="font-size:11px;color:var(--dim);margin-top:4px;cursor:pointer;" onclick="openPfpModal()">Change Picture</div>
     <div class="profile-username" id="profileUsername">Adventurer</div>
     <div class="profile-id" id="profileDN">#DN-4ENWOZ</div>
   </div>
@@ -733,56 +830,224 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   </div>
 
   <!-- VOICE -->
-  <div class="page" id="page-voice">
-    <div class="page-header">
-      <div class="page-title">&#127897; Voice Chat</div>
+  <div class="page" id="page-voice" style="padding:0;max-width:none;">
+    <div class="vc-layout">
+      <!-- LEFT SIDEBAR -->
+      <div class="vc-sidebar">
+        <div class="vc-sidebar-header">
+          <div class="vc-sidebar-title">&#9876; Voice Channels</div>
+          <div class="vc-sidebar-sub" id="vcSidebarSub">Not connected</div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:8px 0;">
+          <div class="vc-channel-section">Channels <span style="cursor:pointer;font-size:14px;color:var(--muted)">+</span></div>
+          <div class="vc-channel" id="vcc-general" onclick="quickJoin('general')">
+            <span class="vc-channel-icon">&#9655;</span>general
+          </div>
+          <div class="vc-channel" id="vcc-tavern" onclick="quickJoin('tavern')">
+            <span class="vc-channel-icon">&#9655;</span>tavern
+          </div>
+          <div class="vc-channel" id="vcc-dungeon" onclick="quickJoin('dungeon')">
+            <span class="vc-channel-icon">&#9655;</span>dungeon
+          </div>
+          <div class="vc-channel" id="vcc-party" onclick="quickJoin('party')">
+            <span class="vc-channel-icon">&#9655;</span>party
+          </div>
+          <div class="vc-channel" id="vcc-planning" onclick="quickJoin('planning')">
+            <span class="vc-channel-icon">&#9655;</span>planning
+          </div>
+          <div class="vc-channel-section" style="margin-top:8px">Custom</div>
+          <div style="padding:4px 8px;display:flex;gap:6px;">
+            <input class="form-input" id="voiceChannelInput" placeholder="channel name..." value="general" style="font-size:13px;padding:6px 10px;">
+            <button class="btn-primary" onclick="voiceJoin()" style="padding:6px 10px;font-size:13px;">&#9655;</button>
+          </div>
+          <!-- In-channel member list -->
+          <div id="vcSidebarMembers" style="margin-top:8px;"></div>
+        </div>
+        <!-- Bottom user bar -->
+        <div class="vc-bottombar">
+          <div class="vc-user-info">
+            <div class="vc-bottom-avatar" id="vcBottomAvatar">&#9876;</div>
+            <div>
+              <div class="vc-bottom-name" id="vcBottomName">—</div>
+              <div class="vc-bottom-dn" id="vcBottomDN">—</div>
+            </div>
+          </div>
+          <button class="vc-ctrl-btn" id="vcMicBtn" onclick="voiceToggleMic()" title="Mute / Unmute">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <button class="vc-ctrl-btn" id="vcDeafBtn" onclick="voiceToggleDeaf()" title="Deafen / Undeafen">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </button>
+          <button class="vc-ctrl-btn danger" id="vcLeaveBtn" onclick="voiceLeave()" title="Disconnect" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.42 19.42 0 0 1 4.43 9.68 19.79 19.79 0 0 1 1.36 1a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11z"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- MAIN AREA -->
+      <div class="vc-main">
+        <div class="vc-topbar">
+          <span style="font-size:14px;color:var(--muted)">&#9655;</span>
+          <span class="vc-topbar-channel" id="vcTopChannel">general</span>
+          <span class="vc-topbar-sep">&#8212;</span>
+          <span class="vc-topbar-status" id="vcTopStatus">Not connected</span>
+        </div>
+        <!-- Not connected state -->
+        <div class="vc-not-connected" id="vcNotConnected">
+          <div style="font-size:64px;opacity:.1;line-height:1">&#9794;</div>
+          <div style="font-family:'Cinzel',serif;font-size:20px;color:var(--muted)">No Voice Connected</div>
+          <div style="font-size:14px">Pick a channel on the left to join</div>
+        </div>
+        <!-- Connected state -->
+        <div id="vcConnected" style="display:none;flex-direction:column;flex:1;">
+          <div class="vc-content" id="vcMembersGrid">
+            <div class="vc-members-grid" id="vcCards"></div>
+          </div>
+          <!-- Dice area -->
+          <div class="vc-dice-area visible" id="vcDiceArea">
+            <div class="vc-dice-btns">
+              <span style="font-size:12px;color:var(--dim);margin-right:4px;font-family:'Cinzel',serif;">ROLL</span>
+              <button class="vc-dice-btn" onclick="vcRollDice(4)">d4</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(6)">d6</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(8)">d8</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(10)">d10</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(12)">d12</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(20)">d20</button>
+              <button class="vc-dice-btn" onclick="vcRollDice(100)">d100</button>
+            </div>
+            <div class="vc-dice-log" id="vcDiceLog"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div style="max-width:700px;margin:0 auto">
-      <!-- Channel Picker -->
-      <div class="section-card" style="margin-bottom:20px">
-        <div class="section-title">&#128266; Join a Voice Channel</div>
-        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
-          <div style="flex:1;min-width:200px">
-            <label class="form-label">Channel Name</label>
-            <input class="form-input" id="voiceChannelInput" placeholder="e.g. tavern, dungeon, party..." value="general">
-          </div>
-          <button class="btn-primary" id="voiceJoinBtn" onclick="voiceJoin()" style="height:42px">&#127897; Join Channel</button>
-          <button class="btn-secondary" id="voiceLeaveBtn" onclick="voiceLeave()" style="height:42px;display:none">&#128683; Leave</button>
-        </div>
-        <div id="voiceStatus" style="margin-top:12px;font-size:14px;color:var(--muted)">Not connected.</div>
-      </div>
+  </div>
 
-      <!-- Active call UI -->
-      <div class="section-card" id="voiceCallCard" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-          <div>
-            <div class="section-title" style="margin-bottom:4px">&#128994; Connected — <span id="voiceChannelName">general</span></div>
-            <div style="font-size:13px;color:var(--muted)" id="voiceMemberCount">1 member</div>
+  <!-- CHARACTER SHEET -->
+  <div class="page" id="page-charsheet">
+    <div class="back-link" onclick="navigate('characters')">&#8592; Back to Characters</div>
+    <div class="page-title" style="margin-bottom:24px">Character Sheet</div>
+    <div class="cs-layout" id="csLayout">
+      <!-- Sidebar -->
+      <div class="cs-sidebar">
+        <div class="cs-avatar-wrap">
+          <div class="cs-avatar" id="csAvatarDisplay" onclick="openCsAvatarModal()" title="Click to change portrait">&#9876;</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px;cursor:pointer" onclick="openCsAvatarModal()">Change Portrait</div>
+        </div>
+        <div class="cs-field">
+          <div class="cs-label">Character Name</div>
+          <input class="cs-input" id="csName" placeholder="Thorin Ironbeard...">
+        </div>
+        <div class="cs-row">
+          <div class="cs-field">
+            <div class="cs-label">Class</div>
+            <input class="cs-input" id="csClass" placeholder="Fighter...">
           </div>
-          <div style="display:flex;gap:10px;align-items:center">
-            <!-- Mic toggle -->
-            <button id="voiceMicBtn" onclick="voiceToggleMic()" style="
-              width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;
-              background:var(--red);color:white;font-size:22px;
-              display:flex;align-items:center;justify-content:center;
-              transition:background .15s;flex-shrink:0;" title="Toggle Mic">
-              🎤
-            </button>
+          <div class="cs-field">
+            <div class="cs-label">Level</div>
+            <input class="cs-input" id="csLevel" type="number" min="1" max="20" value="1" style="width:100%">
           </div>
         </div>
-        <!-- Members in call -->
-        <div id="voiceMembers" style="display:flex;flex-wrap:wrap;gap:12px"></div>
+        <div class="cs-row">
+          <div class="cs-field">
+            <div class="cs-label">Race</div>
+            <input class="cs-input" id="csRace" placeholder="Human...">
+          </div>
+          <div class="cs-field">
+            <div class="cs-label">Background</div>
+            <input class="cs-input" id="csBackground" placeholder="Soldier...">
+          </div>
+        </div>
+        <div class="cs-hp-bar">
+          <div class="cs-hp-label">Hit Points</div>
+          <div class="cs-hp-row">
+            <input class="cs-input" id="csHpCurrent" type="number" value="10" style="width:52px;margin:0;text-align:center;font-family:'Cinzel',serif;font-size:18px;color:#5cb88a;">
+            <span style="color:var(--dim);padding:0 4px">/</span>
+            <input class="cs-input" id="csHpMax" type="number" value="10" style="width:52px;margin:0;text-align:center;" oninput="updateHpBar()">
+          </div>
+        </div>
+        <div class="cs-row">
+          <div class="cs-field">
+            <div class="cs-label">AC</div>
+            <input class="cs-input" id="csAC" type="number" value="10" style="text-align:center;">
+          </div>
+          <div class="cs-field">
+            <div class="cs-label">Speed</div>
+            <input class="cs-input" id="csSpeed" value="30 ft." style="text-align:center;">
+          </div>
+        </div>
+        <div class="cs-field">
+          <div class="cs-label">Proficiency Bonus</div>
+          <input class="cs-input" id="csProf" type="number" value="2" style="width:60px;text-align:center;">
+        </div>
+        <button class="cs-save-btn" onclick="saveCharSheet()">&#9660; Save Sheet</button>
       </div>
-
-      <!-- Preset channels -->
-      <div class="section-card" style="margin-top:20px">
-        <div class="section-title" style="margin-bottom:16px">&#9917; Quick Channels</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="tab-btn" onclick="quickJoin('tavern')">&#127867; Tavern</button>
-          <button class="tab-btn" onclick="quickJoin('dungeon')">&#128565; Dungeon</button>
-          <button class="tab-btn" onclick="quickJoin('party')">&#9876; Party</button>
-          <button class="tab-btn" onclick="quickJoin('planning')">&#128221; Planning</button>
-          <button class="tab-btn" onclick="quickJoin('general')">&#128172; General</button>
+      <!-- Main content -->
+      <div>
+        <!-- Ability Scores -->
+        <div class="cs-section">
+          <div class="cs-section-title">Ability Scores</div>
+          <div class="cs-stat-grid">
+            <div class="cs-stat">
+              <div class="cs-stat-label">STR</div>
+              <input class="cs-input" id="csSTR" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modSTR">+0</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-label">DEX</div>
+              <input class="cs-input" id="csDEX" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modDEX">+0</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-label">CON</div>
+              <input class="cs-input" id="csCON" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modCON">+0</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-label">INT</div>
+              <input class="cs-input" id="csINT" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modINT">+0</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-label">WIS</div>
+              <input class="cs-input" id="csWIS" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modWIS">+0</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-label">CHA</div>
+              <input class="cs-input" id="csCHA" type="number" min="1" max="30" value="10" style="text-align:center;font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--red);padding:4px;margin:0;border:none;background:transparent;width:100%;" oninput="updateModifiers()">
+              <div class="cs-stat-mod" id="modCHA">+0</div>
+            </div>
+          </div>
+        </div>
+        <!-- Skills -->
+        <div class="cs-section">
+          <div class="cs-section-title">Skills</div>
+          <div id="csSkillsList"></div>
+        </div>
+        <!-- Attacks -->
+        <div class="cs-section">
+          <div class="cs-section-title">Attacks &amp; Spellcasting</div>
+          <div id="csAttacksList"></div>
+          <button class="btn-secondary" style="margin-top:8px;padding:6px 14px;font-size:13px;" onclick="addAttack()">+ Add Attack</button>
+        </div>
+        <!-- Equipment -->
+        <div class="cs-section">
+          <div class="cs-section-title">Equipment</div>
+          <textarea class="cs-textarea" id="csEquipment" placeholder="List your weapons, armor, and items..."></textarea>
+        </div>
+        <!-- Features -->
+        <div class="cs-section">
+          <div class="cs-section-title">Features &amp; Traits</div>
+          <textarea class="cs-textarea" id="csFeatures" placeholder="Class features, racial traits, feats..."></textarea>
+        </div>
+        <!-- Backstory -->
+        <div class="cs-section">
+          <div class="cs-section-title">Backstory</div>
+          <textarea class="cs-textarea" id="csBackstory" placeholder="Your character's history..."></textarea>
+        </div>
+        <!-- Roll Log -->
+        <div class="cs-section">
+          <div class="cs-section-title">Roll History</div>
+          <div class="cs-roll-log" id="csRollLog"><div style="color:var(--dim);font-size:14px;">No rolls yet.</div></div>
         </div>
       </div>
     </div>
@@ -794,6 +1059,43 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
     <div class="section-card"><div class="section-title">&#9881; Administration Panel</div><p style="color:var(--muted);font-size:15px">Manage users, campaigns, and site settings.</p></div>
   </div>
 
+</div>
+
+<!-- PFP MODAL -->
+<div class="pfp-modal" id="pfpModal" style="display:none" onclick="if(event.target===this)closePfpModal()">
+  <div class="pfp-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700">Change Profile Picture</div>
+      <button onclick="closePfpModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;">&#10005;</button>
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Image URL</label>
+      <input class="auth-input" id="pfpUrlInput" placeholder="https://example.com/image.png...">
+    </div>
+    <div style="text-align:center;margin:16px 0">
+      <div id="pfpPreview" style="width:80px;height:80px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);margin:0 auto;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;">&#9876;</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:8px">Preview</div>
+    </div>
+    <button class="auth-btn" onclick="savePfp()">Save Picture</button>
+  </div>
+</div>
+
+<!-- CS AVATAR MODAL -->
+<div class="pfp-modal" id="csAvatarModal" style="display:none" onclick="if(event.target===this)closeCsAvatarModal()">
+  <div class="pfp-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700">Character Portrait</div>
+      <button onclick="closeCsAvatarModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;">&#10005;</button>
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Image URL</label>
+      <input class="auth-input" id="csAvatarUrlInput" placeholder="https://example.com/portrait.png..." oninput="previewCsAvatar()">
+    </div>
+    <div style="text-align:center;margin:16px 0">
+      <div id="csAvatarPreview" style="width:80px;height:80px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);margin:0 auto;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;">&#9876;</div>
+    </div>
+    <button class="auth-btn" onclick="saveCsAvatar()">Save Portrait</button>
+  </div>
 </div>
 
 <!-- NEW CHAT MODAL -->
@@ -1019,14 +1321,6 @@ function bootApp() {
   navigate('home');
 }
 
-function refreshProfilePanel() {
-  if (!currentUser) return;
-  document.getElementById('profileUsername').textContent = currentUser.username;
-  document.getElementById('profileDN').textContent = currentUser.dn;
-  document.getElementById('pStatFriends').textContent = (currentUser.friends || []).length;
-  document.getElementById('pStatCampaigns').textContent = campaigns.length;
-  renderFriendsList();
-}
 
 function saveProfileRace() {
   if (!currentUser) return;
@@ -1989,24 +2283,7 @@ function createCampaign() {
 }
 
 // CHARACTERS
-function renderCharacters() {
-  var html = '';
-  for (var i = 0; i < characters.length; i++) {
-    var c = characters[i];
-    html += '<div class="char-card">' +
-      '<div class="char-avatar">' + c.emoji + '</div>' +
-      '<div class="char-name">' + esc(c.name) + '</div>' +
-      '<div class="char-class-line">' + esc(c.cls) + '</div>' +
-      '<div class="char-stats">' +
-        '<div class="char-stat"><div class="char-stat-val">' + c.str + '</div><div class="char-stat-label">STR</div></div>' +
-        '<div class="char-stat"><div class="char-stat-val">' + c.dex + '</div><div class="char-stat-label">DEX</div></div>' +
-        '<div class="char-stat"><div class="char-stat-val">' + c.con + '</div><div class="char-stat-label">CON</div></div>' +
-      '</div></div>';
-  }
-  html += '<div class="new-char-card" onclick="showToast(\'Character creator coming soon\',\'success\')">' +
-    '<div style="font-size:32px">+</div><div>Create New Character</div></div>';
-  document.getElementById('charGrid').innerHTML = html;
-}
+function renderCharacters() { loadCharacters(); }
 
 // COMPENDIUM - powered by Open5e - powered by Open5e (free, no key needed)
 function renderCompendium(tab) {}  // no-op, grid removed
@@ -2692,87 +2969,134 @@ function switchMapTab(tab) {
 
 
 // ══════════════════════════════════════════════════════
-//  VOICE CHAT  (Agora RTC)
+//  VOICE CHAT  (Agora RTC — Discord style)
 // ══════════════════════════════════════════════════════
 var AGORA_APP_ID = '11f43ba2e14c4cb1b7f4627226e27960';
 var agoraClient = null;
 var agoraLocalTrack = null;
 var agoraMicMuted = false;
+var agoraDeafened = false;
 var agoraChannel = null;
-var agoraRemoteUsers = {}; // uid -> { username }
-var agoraUIDMap = {};      // uid -> username (stored in Firebase)
+var agoraRemoteUsers = {};
+var agoraUIDMap = {};
+var vcDiceListener = null;
+
+// ── Sound effects via Web Audio API ──
+function playSound(type) {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if (type === 'join') {
+      o.frequency.setValueAtTime(523, ctx.currentTime);
+      o.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      o.start(); o.stop(ctx.currentTime + 0.4);
+    } else if (type === 'leave') {
+      o.frequency.setValueAtTime(659, ctx.currentTime);
+      o.frequency.setValueAtTime(523, ctx.currentTime + 0.1);
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      o.start(); o.stop(ctx.currentTime + 0.4);
+    } else if (type === 'mute') {
+      o.frequency.setValueAtTime(400, ctx.currentTime);
+      g.gain.setValueAtTime(0.1, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      o.start(); o.stop(ctx.currentTime + 0.2);
+    } else if (type === 'deafen') {
+      o.frequency.setValueAtTime(300, ctx.currentTime);
+      g.gain.setValueAtTime(0.1, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      o.start(); o.stop(ctx.currentTime + 0.25);
+    } else if (type === 'dice') {
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(800, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.15);
+      g.gain.setValueAtTime(0.12, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      o.start(); o.stop(ctx.currentTime + 0.2);
+    }
+  } catch(e) {}
+}
 
 function voiceFbRef(channel) { return db.ref('voice/' + channel); }
+function vcDiceFbRef(channel) { return db.ref('vcdice/' + channel); }
+
+function vcUID() {
+  return Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
+}
 
 function initAgoraClient() {
   if (agoraClient) return;
   agoraClient = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
 
-  // Remote user joined
   agoraClient.on('user-published', function(user, mediaType) {
     agoraClient.subscribe(user, mediaType).then(function() {
-      if (mediaType === 'audio') user.audioTrack.play();
+      if (mediaType === 'audio' && !agoraDeafened) user.audioTrack.play();
       agoraRemoteUsers[user.uid] = user;
-      renderVoiceMembers();
+      renderVcCards();
+      renderVcSidebarMembers();
     });
   });
 
-  // Remote user left
   agoraClient.on('user-unpublished', function(user) {
     delete agoraRemoteUsers[user.uid];
-    renderVoiceMembers();
+    renderVcCards(); renderVcSidebarMembers();
   });
 
   agoraClient.on('user-left', function(user) {
     delete agoraRemoteUsers[user.uid];
-    // Clean up Firebase presence
     voiceFbRef(agoraChannel).child(String(user.uid)).remove();
-    renderVoiceMembers();
+    renderVcCards(); renderVcSidebarMembers();
   });
 }
 
 function voiceJoin() {
   var channel = document.getElementById('voiceChannelInput').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'') || 'general';
   if (!currentUser) { showToast('Please sign in first', 'error'); return; }
-  if (agoraChannel) { voiceLeave(); }
+  if (agoraChannel) voiceLeave();
   agoraChannel = channel;
   initAgoraClient();
+  document.getElementById('vcTopStatus').textContent = 'Connecting...';
 
-  document.getElementById('voiceStatus').textContent = 'Connecting...';
-  document.getElementById('voiceJoinBtn').disabled = true;
-
-  // Use UID derived from DN for consistency
-  var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
-
+  var uid = vcUID();
   agoraClient.join(AGORA_APP_ID, channel, null, uid).then(function() {
     return AgoraRTC.createMicrophoneAudioTrack();
   }).then(function(track) {
     agoraLocalTrack = track;
     return agoraClient.publish([track]);
   }).then(function() {
-    // Write presence to Firebase
-    voiceFbRef(channel).child(String(uid)).set({ username: currentUser.username, dn: currentUser.dn, muted: false });
+    var pfp = currentUser.pfp || '';
+    voiceFbRef(channel).child(String(uid)).set({ username: currentUser.username, dn: currentUser.dn, muted: false, deafened: false, pfp: pfp });
     voiceFbRef(channel).child(String(uid)).onDisconnect().remove();
 
-    agoraChannel = channel;
-    document.getElementById('voiceStatus').textContent = 'Connected to #' + channel;
-    document.getElementById('voiceChannelName').textContent = channel;
-    document.getElementById('voiceJoinBtn').style.display = 'none';
-    document.getElementById('voiceLeaveBtn').style.display = '';
-    document.getElementById('voiceCallCard').style.display = '';
-    document.getElementById('voiceJoinBtn').disabled = false;
-    agoraMicMuted = false;
-    updateMicBtn();
-    renderVoiceMembers();
-    // Listen for members
     voiceFbRef(channel).on('value', function(snap) {
       agoraUIDMap = snap.val() || {};
-      renderVoiceMembers();
+      renderVcCards(); renderVcSidebarMembers();
     });
-    showToast('Joined voice channel: ' + channel, 'success');
+
+    // Dice listener
+    if (vcDiceListener) vcDiceFbRef(channel).off('value', vcDiceListener);
+    vcDiceListener = vcDiceFbRef(channel).limitToLast(20).on('value', function(snap) {
+      renderVcDiceLog(snap.val() || {});
+    });
+
+    agoraMicMuted = false; agoraDeafened = false;
+    updateVcBtns();
+    document.getElementById('vcNotConnected').style.display = 'none';
+    document.getElementById('vcConnected').style.display = 'flex';
+    document.getElementById('vcLeaveBtn').style.display = '';
+    document.getElementById('vcTopChannel').textContent = channel;
+    document.getElementById('vcTopStatus').textContent = 'Connected';
+    document.getElementById('vcSidebarSub').textContent = '# ' + channel;
+    updateVcChannelHighlight(channel);
+    updateVcBottomBar();
+    playSound('join');
+    showToast('Joined #' + channel, 'success');
   }).catch(function(e) {
-    document.getElementById('voiceStatus').textContent = 'Failed to connect: ' + e.message;
-    document.getElementById('voiceJoinBtn').disabled = false;
+    document.getElementById('vcTopStatus').textContent = 'Failed: ' + e.message;
     agoraChannel = null;
     showToast('Voice connection failed', 'error');
   });
@@ -2780,22 +3104,23 @@ function voiceJoin() {
 
 function voiceLeave() {
   if (!agoraChannel) return;
-  // Clean up Firebase presence
-  var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
+  var uid = vcUID();
   voiceFbRef(agoraChannel).child(String(uid)).remove();
   voiceFbRef(agoraChannel).off();
-
+  if (vcDiceListener) { vcDiceFbRef(agoraChannel).off('value', vcDiceListener); vcDiceListener = null; }
   if (agoraLocalTrack) { agoraLocalTrack.stop(); agoraLocalTrack.close(); agoraLocalTrack = null; }
   if (agoraClient) agoraClient.leave();
-  agoraRemoteUsers = {};
-  agoraUIDMap = {};
-  agoraChannel = null;
-  agoraMicMuted = false;
-
-  document.getElementById('voiceStatus').textContent = 'Not connected.';
-  document.getElementById('voiceJoinBtn').style.display = '';
-  document.getElementById('voiceLeaveBtn').style.display = 'none';
-  document.getElementById('voiceCallCard').style.display = 'none';
+  agoraRemoteUsers = {}; agoraUIDMap = {};
+  agoraChannel = null; agoraMicMuted = false; agoraDeafened = false;
+  document.getElementById('vcNotConnected').style.display = 'flex';
+  document.getElementById('vcConnected').style.display = 'none';
+  document.getElementById('vcLeaveBtn').style.display = 'none';
+  document.getElementById('vcTopStatus').textContent = 'Not connected';
+  document.getElementById('vcSidebarSub').textContent = 'Not connected';
+  document.getElementById('vcSidebarMembers').innerHTML = '';
+  updateVcChannelHighlight('');
+  updateVcBtns();
+  playSound('leave');
   showToast('Left voice channel', 'success');
 }
 
@@ -2803,60 +3128,144 @@ function voiceToggleMic() {
   if (!agoraLocalTrack) return;
   agoraMicMuted = !agoraMicMuted;
   agoraLocalTrack.setMuted(agoraMicMuted);
-  // Update Firebase presence
-  if (agoraChannel && currentUser) {
-    var uid = Math.abs(hashUID(currentUser.dn)) % 100000 + 1;
-    voiceFbRef(agoraChannel).child(String(uid)).update({ muted: agoraMicMuted });
-  }
-  updateMicBtn();
-  showToast(agoraMicMuted ? 'Mic muted' : 'Mic unmuted', 'success');
+  if (agoraChannel) voiceFbRef(agoraChannel).child(String(vcUID())).update({ muted: agoraMicMuted });
+  updateVcBtns(); updateVcBottomBar();
+  playSound('mute');
 }
 
-function updateMicBtn() {
-  var btn = document.getElementById('voiceMicBtn');
-  if (!btn) return;
-  if (agoraMicMuted) {
-    btn.innerHTML = '🔇';
-    btn.style.background = '#444';
-    btn.title = 'Unmute Mic';
-  } else {
-    btn.innerHTML = '🎤';
-    btn.style.background = 'var(--red)';
-    btn.title = 'Mute Mic';
+function voiceToggleDeaf() {
+  agoraDeafened = !agoraDeafened;
+  // Mute all remote audio tracks
+  for (var uid in agoraRemoteUsers) {
+    var u = agoraRemoteUsers[uid];
+    if (u.audioTrack) { if (agoraDeafened) u.audioTrack.stop(); else u.audioTrack.play(); }
+  }
+  if (agoraChannel) voiceFbRef(agoraChannel).child(String(vcUID())).update({ deafened: agoraDeafened });
+  updateVcBtns(); updateVcBottomBar();
+  playSound('deafen');
+}
+
+function updateVcBtns() {
+  var micBtn = document.getElementById('vcMicBtn');
+  var deafBtn = document.getElementById('vcDeafBtn');
+  if (micBtn) micBtn.classList.toggle('active', agoraMicMuted);
+  if (deafBtn) deafBtn.classList.toggle('active', agoraDeafened);
+}
+
+function updateVcBottomBar() {
+  if (!currentUser) return;
+  var av = document.getElementById('vcBottomAvatar');
+  var nm = document.getElementById('vcBottomName');
+  var dn = document.getElementById('vcBottomDN');
+  if (nm) nm.textContent = currentUser.username;
+  if (dn) dn.textContent = currentUser.dn;
+  if (av) {
+    if (currentUser.pfp) av.innerHTML = '<img src="' + esc(currentUser.pfp) + '" onerror="this.parentNode.innerHTML=\'&#9876;\'">';
+    else av.innerHTML = '&#9876;';
   }
 }
 
-function renderVoiceMembers() {
-  var el = document.getElementById('voiceMembers');
-  var count = document.getElementById('voiceMemberCount');
+function updateVcChannelHighlight(ch) {
+  var channels = ['general','tavern','dungeon','party','planning'];
+  for (var i = 0; i < channels.length; i++) {
+    var el = document.getElementById('vcc-' + channels[i]);
+    if (el) el.classList.toggle('active', channels[i] === ch);
+  }
+}
+
+function renderVcCards() {
+  var el = document.getElementById('vcCards');
+  if (!el) return;
+  var html = '';
+  var members = agoraUIDMap || {};
+  // My card first
+  if (currentUser) {
+    var myUid = String(vcUID());
+    var me = members[myUid] || {};
+    html += vcUserCard(currentUser.username, currentUser.dn, currentUser.pfp || '', me.muted || agoraMicMuted, me.deafened || agoraDeafened, true);
+  }
+  for (var uid in members) {
+    if (currentUser && uid === String(vcUID())) continue;
+    var m = members[uid];
+    html += vcUserCard(m.username || ('User ' + uid), m.dn || '', m.pfp || '', m.muted, m.deafened, false);
+  }
+  if (!html) html = '<div style="color:var(--dim);font-size:15px;text-align:center">Waiting for others...</div>';
+  el.innerHTML = html;
+}
+
+function vcUserCard(username, dn, pfp, muted, deafened, isMe) {
+  var avatarInner = pfp
+    ? '<img src="' + esc(pfp) + '" onerror="this.parentNode.innerHTML=\'&#9876;\'">'
+    : '&#9876;';
+  var statusIcons = '';
+  if (muted) statusIcons += '<span title="Muted" style="color:var(--red)">&#9767;</span>';
+  if (deafened) statusIcons += '<span title="Deafened" style="color:#888">&#9996;</span>';
+  return '<div class="vc-user-card' + (isMe ? ' me' : '') + '">' +
+    '<div class="vc-avatar' + (muted ? ' deafened' : '') + '">' + avatarInner + '</div>' +
+    '<div class="vc-user-name">' + esc(username) + (isMe ? ' <span style="font-size:10px;color:var(--red)">(you)</span>' : '') + '</div>' +
+    '<div class="vc-user-dn">' + esc(dn) + '</div>' +
+    '<div class="vc-user-status">' + (statusIcons || '<span style="color:#2d6a4f;font-size:12px">&#9679; live</span>') + '</div>' +
+  '</div>';
+}
+
+function renderVcSidebarMembers() {
+  var el = document.getElementById('vcSidebarMembers');
   if (!el) return;
   var members = agoraUIDMap || {};
-  var keys = Object.keys(members);
-  // Local user card
   var html = '';
   if (currentUser) {
-    var myUid = String(Math.abs(hashUID(currentUser.dn)) % 100000 + 1);
-    var myMuted = members[myUid] ? members[myUid].muted : agoraMicMuted;
-    html += voiceMemberCard(currentUser.username, myMuted, true);
+    var myUid = String(vcUID());
+    var me = members[myUid] || {};
+    html += vcSidebarMember(currentUser.username, currentUser.dn, currentUser.pfp || '', me.muted || agoraMicMuted, me.deafened || agoraDeafened);
   }
-  // Remote users
   for (var uid in members) {
-    if (currentUser && uid === String(Math.abs(hashUID(currentUser.dn)) % 100000 + 1)) continue;
+    if (currentUser && uid === String(vcUID())) continue;
     var m = members[uid];
-    html += voiceMemberCard(m.username || ('User ' + uid), m.muted, false);
+    html += vcSidebarMember(m.username || ('User ' + uid), m.dn || '', m.pfp || '', m.muted, m.deafened);
   }
-  if (!html) html = '<div style="color:var(--dim);font-size:14px">Waiting for others to join...</div>';
   el.innerHTML = html;
-  var total = keys.length;
-  if (count) count.textContent = total + ' member' + (total !== 1 ? 's' : '');
 }
 
-function voiceMemberCard(username, muted, isMe) {
-  return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 20px;background:var(--bg3);border:1px solid ' + (isMe ? 'var(--red)' : 'var(--border)') + ';border-radius:12px;min-width:90px">' +
-    '<div style="width:48px;height:48px;border-radius:50%;background:var(--bg4);border:2px solid ' + (isMe ? 'var(--red)' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;font-size:22px">&#128100;</div>' +
-    '<div style="font-family:\'Cinzel\',serif;font-size:13px;font-weight:600;text-align:center;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(username) + (isMe ? '<br><span style="font-size:10px;color:var(--red)">(you)</span>' : '') + '</div>' +
-    '<div style="font-size:18px">' + (muted ? '🔇' : '🎤') + '</div>' +
+function vcSidebarMember(username, dn, pfp, muted, deafened) {
+  var avatarInner = pfp
+    ? '<img src="' + esc(pfp) + '" onerror="this.parentNode.innerHTML=\'&#9876;\'">'
+    : '&#9876;';
+  return '<div class="vc-member-row">' +
+    '<div class="vc-member-avatar">' + avatarInner + '</div>' +
+    '<div class="vc-member-name">' + esc(username) + '</div>' +
+    '<div class="vc-member-icons">' +
+      (muted ? '<span title="Muted" style="color:var(--red)">&#9767;</span>' : '') +
+      (deafened ? '<span title="Deafened">&#9996;</span>' : '') +
+    '</div>' +
   '</div>';
+}
+
+// ── Voice Dice ──
+function vcRollDice(sides) {
+  if (!agoraChannel || !currentUser) { showToast('Join a voice channel first', 'error'); return; }
+  var result = Math.floor(Math.random() * sides) + 1;
+  var entry = { user: currentUser.username, dn: currentUser.dn, sides: sides, result: result, time: Date.now() };
+  vcDiceFbRef(agoraChannel).push(entry);
+  playSound('dice');
+}
+
+function renderVcDiceLog(rolls) {
+  var el = document.getElementById('vcDiceLog');
+  if (!el) return;
+  var keys = Object.keys(rolls).sort(function(a,b) { return (rolls[b].time||0) - (rolls[a].time||0); });
+  var html = '';
+  for (var i = 0; i < Math.min(keys.length, 10); i++) {
+    var r = rolls[keys[i]];
+    var isCrit = r.sides === 20 && r.result === 20;
+    var isFail = r.sides === 20 && r.result === 1;
+    html += '<div class="vc-roll-entry">' +
+      '<span style="color:var(--muted)">' + esc(r.user) + '</span>' +
+      ' rolled d' + r.sides + ': ' +
+      '<span class="roll-val" style="' + (isCrit ? 'color:#ffd700' : isFail ? 'color:#888' : '') + '">' + r.result + '</span>' +
+      (isCrit ? ' &#9733; CRIT!' : isFail ? ' &#9785; FAIL' : '') +
+    '</div>';
+  }
+  el.innerHTML = html || '<div style="color:var(--dim)">No rolls yet</div>';
 }
 
 function quickJoin(channel) {
@@ -2879,6 +3288,276 @@ function hashUID(str) {
   var h = 0;
   for (var i = 0; i < str.length; i++) { h = ((h << 5) - h) + str.charCodeAt(i); h |= 0; }
   return h;
+}
+
+// ══════════════════════════════════════════════════════
+//  PROFILE PICTURE
+// ══════════════════════════════════════════════════════
+function openPfpModal() {
+  document.getElementById('pfpUrlInput').value = currentUser.pfp || '';
+  previewPfp();
+  document.getElementById('pfpModal').style.display = 'flex';
+}
+function closePfpModal() { document.getElementById('pfpModal').style.display = 'none'; }
+
+function previewPfp() {
+  var url = document.getElementById('pfpUrlInput').value.trim();
+  var prev = document.getElementById('pfpPreview');
+  if (url) prev.innerHTML = '<img src="' + esc(url) + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#9876;\'">';
+  else prev.innerHTML = '&#9876;';
+}
+
+function savePfp() {
+  var url = document.getElementById('pfpUrlInput').value.trim();
+  currentUser.pfp = url;
+  var key = currentUser.username.toLowerCase().replace(/[.#$\[\]]/g,'_');
+  _allUsersCache[key] = currentUser;
+  fbUserRef(key).set(currentUser);
+  refreshProfilePanel();
+  closePfpModal();
+  showToast('Profile picture updated!', 'success');
+}
+
+function refreshProfilePanel() {
+  if (!currentUser) return;
+  document.getElementById('profileUsername').textContent = currentUser.username;
+  document.getElementById('profileDN').textContent = currentUser.dn;
+  document.getElementById('pStatFriends').textContent = (currentUser.friends || []).length;
+  document.getElementById('pStatCampaigns').textContent = campaigns.length;
+  // Update avatar
+  var av = document.getElementById('profileAvatar');
+  if (av) {
+    if (currentUser.pfp) av.innerHTML = '<img src="' + esc(currentUser.pfp) + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#128100;\'">';
+    else av.innerHTML = '&#128100;';
+  }
+  updateVcBottomBar();
+  renderFriendsList();
+}
+
+// ══════════════════════════════════════════════════════
+//  CHARACTER SHEET
+// ══════════════════════════════════════════════════════
+var _currentCharId = null;
+var _csAttacks = [];
+var _csSkillProfs = {};
+var _csRollLog = [];
+
+var CS_SKILLS = [
+  {name:'Acrobatics',stat:'DEX'},{name:'Animal Handling',stat:'WIS'},{name:'Arcana',stat:'INT'},
+  {name:'Athletics',stat:'STR'},{name:'Deception',stat:'CHA'},{name:'History',stat:'INT'},
+  {name:'Insight',stat:'WIS'},{name:'Intimidation',stat:'CHA'},{name:'Investigation',stat:'INT'},
+  {name:'Medicine',stat:'WIS'},{name:'Nature',stat:'INT'},{name:'Perception',stat:'WIS'},
+  {name:'Performance',stat:'CHA'},{name:'Persuasion',stat:'CHA'},{name:'Religion',stat:'INT'},
+  {name:'Sleight of Hand',stat:'DEX'},{name:'Stealth',stat:'DEX'},{name:'Survival',stat:'WIS'}
+];
+
+function statMod(val) { return Math.floor(((parseInt(val)||10) - 10) / 2); }
+function modStr(n) { return (n >= 0 ? '+' : '') + n; }
+
+function updateModifiers() {
+  var stats = ['STR','DEX','CON','INT','WIS','CHA'];
+  for (var i = 0; i < stats.length; i++) {
+    var val = document.getElementById('cs' + stats[i]).value;
+    var mod = statMod(val);
+    document.getElementById('mod' + stats[i]).textContent = modStr(mod);
+  }
+}
+
+function updateHpBar() {
+  var cur = parseInt(document.getElementById('csHpCurrent').value) || 0;
+  var max = parseInt(document.getElementById('csHpMax').value) || 1;
+  var pct = Math.max(0, Math.min(100, (cur/max)*100));
+  var fill = document.getElementById('csHpFill');
+  if (fill) fill.style.width = pct + '%';
+}
+
+function renderCsSkills() {
+  var el = document.getElementById('csSkillsList');
+  if (!el) return;
+  var prof = parseInt(document.getElementById('csProf').value) || 2;
+  var html = '';
+  for (var i = 0; i < CS_SKILLS.length; i++) {
+    var sk = CS_SKILLS[i];
+    var statVal = document.getElementById('cs' + sk.stat) ? document.getElementById('cs' + sk.stat).value : 10;
+    var mod = statMod(statVal);
+    var isProficient = _csSkillProfs[sk.name];
+    var total = mod + (isProficient ? prof : 0);
+    var skId = sk.name.replace(/ /g,'_');
+    html += '<div class="cs-skill-row">' +
+      '<div class="cs-skill-prof' + (isProficient ? ' on' : '') + '" onclick="toggleSkillProf(\'' + sk.name + '\')" title="Proficient"></div>' +
+      '<span style="color:var(--muted);font-size:12px;width:32px;text-align:right;margin-right:6px">' + modStr(total) + '</span>' +
+      '<span style="flex:1">' + sk.name + '</span>' +
+      '<span style="font-size:12px;color:var(--dim);margin-right:8px">(' + sk.stat + ')</span>' +
+      '<button class="cs-roll-btn" onclick="csRollSkill(\'' + sk.name + '\',' + total + ')">Roll</button>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function toggleSkillProf(skillName) {
+  _csSkillProfs[skillName] = !_csSkillProfs[skillName];
+  renderCsSkills();
+}
+
+function csRollSkill(skillName, bonus) {
+  var roll = Math.floor(Math.random() * 20) + 1;
+  var total = roll + bonus;
+  var entry = { type: skillName, roll: roll, bonus: bonus, total: total, time: Date.now(), username: currentUser ? currentUser.username : '?' };
+  _csRollLog.unshift(entry);
+  if (_csRollLog.length > 50) _csRollLog.pop();
+  renderCsRollLog();
+  // Push to Firebase for DM to see
+  if (currentUser && _currentCharId) {
+    db.ref('charrolls/' + currentUser.dn).push(entry);
+  }
+  showToast(skillName + ': ' + roll + (bonus !== 0 ? (bonus > 0 ? '+' : '') + bonus : '') + ' = ' + total, 'success');
+}
+
+function renderCsRollLog() {
+  var el = document.getElementById('csRollLog');
+  if (!el) return;
+  if (!_csRollLog.length) { el.innerHTML = '<div style="color:var(--dim);font-size:14px">No rolls yet.</div>'; return; }
+  var html = '';
+  for (var i = 0; i < _csRollLog.length; i++) {
+    var r = _csRollLog[i];
+    var isCrit = r.roll === 20;
+    var isFail = r.roll === 1;
+    html += '<div class="cs-roll-entry">' +
+      '<span style="color:var(--muted)">' + esc(r.type) + '</span>' +
+      '<span class="cs-roll-result" style="' + (isCrit ? 'color:#ffd700' : isFail ? 'color:#888' : '') + '">' +
+        r.roll + (r.bonus ? (r.bonus > 0 ? '+' : '') + r.bonus + '=' + r.total : '') +
+        (isCrit ? ' &#9733;' : isFail ? ' &#9785;' : '') +
+      '</span>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function addAttack() {
+  _csAttacks.push({ name: '', bonus: '', damage: '', type: '' });
+  renderCsAttacks();
+}
+
+function renderCsAttacks() {
+  var el = document.getElementById('csAttacksList');
+  if (!el) return;
+  if (!_csAttacks.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px">No attacks yet.</div>'; return; }
+  var html = '<div style="display:grid;grid-template-columns:1fr 60px 80px 80px 32px;gap:6px;margin-bottom:6px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em"><span>Name</span><span>Bonus</span><span>Damage</span><span>Type</span><span></span></div>';
+  for (var i = 0; i < _csAttacks.length; i++) {
+    var a = _csAttacks[i];
+    html += '<div style="display:grid;grid-template-columns:1fr 60px 80px 80px 32px;gap:6px;margin-bottom:4px">' +
+      '<input class="cs-input" style="margin:0" value="' + esc(a.name) + '" placeholder="Longsword" oninput="_csAttacks[' + i + '].name=this.value">' +
+      '<input class="cs-input" style="margin:0;text-align:center" value="' + esc(a.bonus) + '" placeholder="+5" oninput="_csAttacks[' + i + '].bonus=this.value">' +
+      '<input class="cs-input" style="margin:0;text-align:center" value="' + esc(a.damage) + '" placeholder="1d8+3" oninput="_csAttacks[' + i + '].damage=this.value">' +
+      '<input class="cs-input" style="margin:0;text-align:center" value="' + esc(a.type) + '" placeholder="Slash" oninput="_csAttacks[' + i + '].type=this.value">' +
+      '<button onclick="removeAttack(' + i + ')" style="background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:4px;cursor:pointer;font-size:14px;">&#10005;</button>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function removeAttack(i) { _csAttacks.splice(i,1); renderCsAttacks(); }
+
+function openNewCharSheet() {
+  _currentCharId = 'char_' + Date.now();
+  _csAttacks = []; _csSkillProfs = {}; _csRollLog = [];
+  // Reset all fields
+  var fields = ['csName','csClass','csRace','csBackground','csEquipment','csFeatures','csBackstory'];
+  for (var i = 0; i < fields.length; i++) { var el = document.getElementById(fields[i]); if(el) el.value = ''; }
+  ['csSTR','csDEX','csCON','csINT','csWIS','csCHA'].forEach(function(f){var e=document.getElementById(f);if(e)e.value=10;});
+  document.getElementById('csLevel').value = 1;
+  document.getElementById('csHpCurrent').value = 10;
+  document.getElementById('csHpMax').value = 10;
+  document.getElementById('csAC').value = 10;
+  document.getElementById('csSpeed').value = '30 ft.';
+  document.getElementById('csProf').value = 2;
+  document.getElementById('csAvatarDisplay').innerHTML = '&#9876;';
+  updateModifiers(); renderCsSkills(); renderCsAttacks(); renderCsRollLog();
+  navigate('charsheet');
+}
+
+function openCharSheet(charId) {
+  _currentCharId = charId;
+  var data = JSON.parse(localStorage.getItem('cs_' + charId) || 'null');
+  if (!data) { openNewCharSheet(); _currentCharId = charId; return; }
+  _csAttacks = data.attacks || [];
+  _csSkillProfs = data.skillProfs || {};
+  _csRollLog = data.rollLog || [];
+  var fields = ['csName','csClass','csRace','csBackground','csEquipment','csFeatures','csBackstory','csLevel','csHpCurrent','csHpMax','csAC','csSpeed','csProf'];
+  for (var i = 0; i < fields.length; i++) {
+    var el = document.getElementById(fields[i]);
+    if (el && data[fields[i]] !== undefined) el.value = data[fields[i]];
+  }
+  ['STR','DEX','CON','INT','WIS','CHA'].forEach(function(s){
+    var e = document.getElementById('cs'+s); if(e && data['cs'+s]) e.value = data['cs'+s];
+  });
+  var av = document.getElementById('csAvatarDisplay');
+  if (av) { av.innerHTML = data.portrait ? '<img src="'+esc(data.portrait)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#9876;\'">' : '&#9876;'; }
+  updateModifiers(); renderCsSkills(); renderCsAttacks(); renderCsRollLog();
+  navigate('charsheet');
+}
+
+function saveCharSheet() {
+  var data = { attacks: _csAttacks, skillProfs: _csSkillProfs, rollLog: _csRollLog };
+  var fields = ['csName','csClass','csRace','csBackground','csEquipment','csFeatures','csBackstory','csLevel','csHpCurrent','csHpMax','csAC','csSpeed','csProf'];
+  for (var i = 0; i < fields.length; i++) {
+    var el = document.getElementById(fields[i]); if (el) data[fields[i]] = el.value;
+  }
+  ['STR','DEX','CON','INT','WIS','CHA'].forEach(function(s){
+    var e = document.getElementById('cs'+s); if(e) data['cs'+s] = e.value;
+  });
+  var av = document.getElementById('csAvatarDisplay');
+  if (av && av.querySelector('img')) data.portrait = av.querySelector('img').src;
+  localStorage.setItem('cs_' + _currentCharId, JSON.stringify(data));
+  // Push to Firebase so DM can see it
+  if (currentUser) db.ref('charsheets/' + currentUser.dn + '/' + _currentCharId).set(Object.assign({}, data, { ownerDN: currentUser.dn, ownerName: currentUser.username, updatedAt: Date.now() }));
+  showToast('Character sheet saved!', 'success');
+  // Refresh characters page
+  loadCharacters();
+}
+
+function loadCharacters() {
+  var html = '';
+  // Scan localStorage for chars
+  for (var k in localStorage) {
+    if (k.startsWith('cs_')) {
+      var d = null; try { d = JSON.parse(localStorage.getItem(k)); } catch(e) {}
+      if (!d) continue;
+      var cid = k.replace('cs_','');
+      var pfp = d.portrait ? '<img src="'+esc(d.portrait)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display=\'none\'">' : '&#9876;';
+      html += '<div class="char-card" onclick="openCharSheet(\'' + cid + '\')">' +
+        '<div class="char-avatar">' + pfp + '</div>' +
+        '<div class="char-name">' + esc(d.csName || 'Unnamed') + '</div>' +
+        '<div class="char-class-line">' + esc((d.csClass || '?') + ' / Level ' + (d.csLevel || 1)) + '</div>' +
+        '<div class="char-stats">' +
+          '<div class="char-stat"><div class="char-stat-val">' + (d.csSTR||10) + '</div><div class="char-stat-label">STR</div></div>' +
+          '<div class="char-stat"><div class="char-stat-val">' + (d.csDEX||10) + '</div><div class="char-stat-label">DEX</div></div>' +
+          '<div class="char-stat"><div class="char-stat-val">' + (d.csCON||10) + '</div><div class="char-stat-label">CON</div></div>' +
+        '</div></div>';
+    }
+  }
+  html += '<div class="new-char-card" onclick="openNewCharSheet()"><div style="font-size:32px">+</div><div>Create New Character</div></div>';
+  var el = document.getElementById('charGrid'); if (el) el.innerHTML = html;
+}
+
+// CS Avatar
+function openCsAvatarModal() {
+  document.getElementById('csAvatarUrlInput').value = '';
+  document.getElementById('csAvatarPreview').innerHTML = '&#9876;';
+  document.getElementById('csAvatarModal').style.display = 'flex';
+}
+function closeCsAvatarModal() { document.getElementById('csAvatarModal').style.display = 'none'; }
+function previewCsAvatar() {
+  var url = document.getElementById('csAvatarUrlInput').value.trim();
+  var prev = document.getElementById('csAvatarPreview');
+  if (url) prev.innerHTML = '<img src="'+esc(url)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#9876;\'">';
+  else prev.innerHTML = '&#9876;';
+}
+function saveCsAvatar() {
+  var url = document.getElementById('csAvatarUrlInput').value.trim();
+  var av = document.getElementById('csAvatarDisplay');
+  if (av) { av.innerHTML = url ? '<img src="'+esc(url)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#9876;\'">' : '&#9876;'; }
+  closeCsAvatarModal();
 }
 
 // ── UTIL
