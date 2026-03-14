@@ -751,11 +751,20 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
           <button class="map2-tool-btn active" id="mt-draw" onclick="setMapTool2('draw')" title="Draw Wall">&#9632;</button>
           <button class="map2-tool-btn" id="mt-room" onclick="setMapTool2('room')" title="Draw Room">&#9633;</button>
           <button class="map2-tool-btn" id="mt-floor" onclick="setMapTool2('floor')" title="Paint Floor">&#9724;</button>
+          <button class="map2-tool-btn" id="mt-bucket" onclick="setMapTool2('bucket')" title="Paint Bucket Fill">&#9798;</button>
           <button class="map2-tool-btn" id="mt-erase" onclick="setMapTool2('erase')" title="Erase">&#10006;</button>
           <button class="map2-tool-btn" id="mt-token" onclick="setMapTool2('token')" title="Place Token">&#9651;</button>
           <button class="map2-tool-btn" id="mt-fog" onclick="setMapTool2('fog')" title="Fog of War">&#9729;</button>
           <button class="map2-tool-btn" id="mt-reveal" onclick="setMapTool2('reveal')" title="Reveal Fog">&#9728;</button>
           <button class="map2-tool-btn" id="mt-pan" onclick="setMapTool2('pan')" title="Pan">&#9995;</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">BRUSH SIZE</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <button onclick="changeBrush(-1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">&#8722;</button>
+            <span id="map2BrushLabel" style="font-size:13px;color:var(--text);text-align:center;flex:1;">1</span>
+            <button onclick="changeBrush(1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">+</button>
+          </div>
         </div>
         <div class="map2-toolbar-section">
           <div class="map2-section-label">FLOOR</div>
@@ -790,8 +799,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
         <div class="map2-toolbar-section">
           <div class="map2-section-label">GRID SIZE</div>
           <div style="display:flex;align-items:center;gap:6px">
-            <input type="range" id="map2GridSize" min="24" max="80" value="40" oninput="changeGridSize(this.value)" style="flex:1">
-            <span id="map2GridSizeLabel" style="font-size:12px;color:var(--muted);width:28px">40</span>
+            <input type="range" id="map2GridSize" min="16" max="80" value="28" oninput="changeGridSize(this.value)" style="flex:1">
+            <span id="map2GridSizeLabel" style="font-size:12px;color:var(--muted);width:28px">28</span>
           </div>
         </div>
         <div class="map2-toolbar-section">
@@ -1012,6 +1021,22 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
               <button class="vc-dice-btn" onclick="vcRollDice(100)">d100</button>
             </div>
             <div class="vc-dice-log" id="vcDiceLog"></div>
+            <!-- Ambient Music -->
+            <div style="border-left:1px solid var(--border);padding-left:12px;margin-left:8px;display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:12px;color:var(--dim);font-family:'Cinzel',serif;">MUSIC</span>
+              <select id="vcMusicSelect" onchange="vcSelectTrack(this.value)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;font-size:12px;font-family:'Crimson Text',serif;cursor:pointer;">
+                <option value="">— Off —</option>
+                <option value="tavern">Tavern</option>
+                <option value="dungeon">Dungeon</option>
+                <option value="battle">Battle</option>
+                <option value="forest">Forest</option>
+                <option value="mystery">Mystery</option>
+                <option value="boss">Boss Fight</option>
+              </select>
+              <button class="vc-ctrl-btn" id="vcMusicPlayBtn" onclick="vcMusicToggle()" title="Play/Pause" style="width:28px;height:28px;font-size:13px;">&#9654;</button>
+              <input type="range" id="vcMusicVol" min="0" max="1" step="0.05" value="0.3" oninput="vcMusicSetVol(this.value)" style="width:60px;">
+              <span style="font-size:11px;color:var(--dim);min-width:50px;" id="vcMusicLabel">Off</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1020,8 +1045,16 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 
   <!-- CHARACTER SHEET -->
   <div class="page" id="page-charsheet">
-    <div class="back-link" onclick="navigate('characters')">&#8592; Back to Characters</div>
-    <div class="page-title" style="margin-bottom:24px">Character Sheet</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div class="back-link" onclick="navigate('characters')" style="margin-bottom:8px">&#8592; Back to Characters</div>
+        <div class="page-title">Character Sheet</div>
+      </div>
+      <button class="btn-secondary" onclick="openSheetUploadModal()" style="gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload &amp; AI Transcribe
+      </button>
+    </div>
     <div class="cs-layout" id="csLayout">
       <!-- Sidebar -->
       <div class="cs-sidebar">
@@ -1252,6 +1285,37 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- SHEET UPLOAD MODAL -->
+<div class="pfp-modal" id="sheetUploadModal" style="display:none" onclick="if(event.target===this)closeSheetUploadModal()">
+  <div class="pfp-card" style="max-width:520px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">&#9651; Upload &amp; Transcribe Sheet</div>
+      <button onclick="closeSheetUploadModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px">&#10005;</button>
+    </div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">Upload a photo or scan of your character sheet and the AI will read it and fill in all the fields automatically.</div>
+    <!-- Upload zone -->
+    <div id="sheetUploadZone" style="border:2px dashed var(--border);border-radius:10px;padding:32px;text-align:center;cursor:pointer;margin-bottom:16px;transition:border-color .2s;" onclick="document.getElementById('sheetFileInput').click()" ondragover="event.preventDefault();this.style.borderColor='var(--red)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleSheetDrop(event)">
+      <div style="font-size:36px;opacity:.3;margin-bottom:8px">&#128444;</div>
+      <div style="font-size:15px;color:var(--muted)">Click or drag to upload image</div>
+      <div style="font-size:12px;color:var(--dim);margin-top:4px">PNG, JPG, WEBP supported</div>
+      <input type="file" id="sheetFileInput" accept="image/*" style="display:none" onchange="handleSheetFile(this.files[0])">
+    </div>
+    <!-- Preview -->
+    <div id="sheetPreviewWrap" style="display:none;margin-bottom:16px;text-align:center">
+      <img id="sheetPreviewImg" style="max-width:100%;max-height:200px;border-radius:8px;border:1px solid var(--border);">
+    </div>
+    <!-- Status -->
+    <div id="sheetUploadStatus" style="font-size:14px;color:var(--muted);min-height:20px;margin-bottom:12px;text-align:center;"></div>
+    <!-- Buttons -->
+    <div style="display:flex;gap:10px;">
+      <button class="btn-secondary" onclick="closeSheetUploadModal()" style="flex:1">Cancel</button>
+      <button class="btn-primary" id="sheetTranscribeBtn" onclick="transcribeSheet()" style="flex:2;justify-content:center;" disabled>
+        &#9651; Transcribe with AI
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- PWA MANUAL INSTALL MODAL -->
 <div class="pfp-modal" id="pwaManualModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -3027,8 +3091,9 @@ function showDetailError(name, emoji, errMsg) {
 // ══════════════════════════════════════════════════════
 //  MAP BUILDER 2.0  (Canvas-based, Supabase sync)
 // ══════════════════════════════════════════════════════
-var MAP_CELL = 40;
+var MAP_CELL = 28;
 var map2Tool = 'draw';
+var map2BrushSize = 1;
 var map2WallColor = '#c8b89a';
 var map2FloorColor = '#2a2018';
 var map2View = 'dm'; // 'dm' or 'player'
@@ -3171,6 +3236,11 @@ function map2MouseDown(e) {
     map2RoomStart = pos;
     return;
   }
+  if (map2Tool === 'bucket') {
+    map2BucketFill(pos.col, pos.row);
+    map2Painting = false;
+    return;
+  }
   map2ApplyTool(pos, e);
 }
 
@@ -3257,25 +3327,96 @@ function map2Wheel(e) {
 }
 
 function map2ApplyTool(pos, e) {
-  var key = cellKey(pos.col, pos.row);
-  if (!map2Cells[key]) map2Cells[key] = {};
-  var cell = map2Cells[key];
-
-  if (map2Tool === 'draw') {
-    cell.wall = true; cell.wallColor = map2WallColor;
-  } else if (map2Tool === 'floor') {
-    cell.floor = map2FloorColor;
-  } else if (map2Tool === 'erase') {
-    delete map2Cells[key];
-    // Also remove any token at this cell
-    map2PlacedTokens = map2PlacedTokens.filter(function(t){return !(t.col===pos.col&&t.row===pos.row);});
-    renderMap2PlacedTokens();
-  } else if (map2Tool === 'fog') {
-    cell.fog = true;
-  } else if (map2Tool === 'reveal') {
-    cell.fog = false;
+  // Apply brush in a square around pos based on brush size
+  var half = Math.floor(map2BrushSize / 2);
+  for (var dc = -half; dc <= half; dc++) {
+    for (var dr = -half; dr <= half; dr++) {
+      var c = pos.col + dc, r = pos.row + dr;
+      var key = cellKey(c, r);
+      if (!map2Cells[key]) map2Cells[key] = {};
+      var cell = map2Cells[key];
+      if (map2Tool === 'draw') {
+        cell.wall = true; cell.wallColor = map2WallColor;
+      } else if (map2Tool === 'floor') {
+        cell.floor = map2FloorColor;
+      } else if (map2Tool === 'erase') {
+        delete map2Cells[key];
+        map2PlacedTokens = map2PlacedTokens.filter(function(t){return !(t.col===c&&t.row===r);});
+        renderMap2PlacedTokens();
+      } else if (map2Tool === 'fog') {
+        cell.fog = true;
+      } else if (map2Tool === 'reveal') {
+        cell.fog = false;
+      }
+    }
   }
   map2Draw();
+}
+
+function changeBrush(delta) {
+  map2BrushSize = Math.max(1, Math.min(9, map2BrushSize + delta));
+  document.getElementById('map2BrushLabel').textContent = map2BrushSize + 'x' + map2BrushSize;
+}
+
+// ── Paint Bucket flood fill ──
+function map2BucketFill(startCol, startRow) {
+  // Determine what we're filling based on tool mode
+  var targetFloor = null;
+  var startKey = cellKey(startCol, startRow);
+  var startCell = map2Cells[startKey] || {};
+
+  // Get the "identity" of the starting cell to know what counts as same
+  var startFloorVal = startCell.floor || null;
+  var startIsWall = startCell.wall || false;
+
+  // We fill floor color into non-wall, non-filled cells
+  // BFS flood fill
+  var visited = {};
+  var queue = [{col: startCol, row: startRow}];
+  visited[startKey] = true;
+  var count = 0;
+  var MAX_FILL = 2000; // safety cap
+
+  while (queue.length > 0 && count < MAX_FILL) {
+    var cur = queue.shift();
+    count++;
+    var ck = cellKey(cur.col, cur.row);
+    if (!map2Cells[ck]) map2Cells[ck] = {};
+    var cell = map2Cells[ck];
+
+    // Apply fill
+    if (map2Tool === 'bucket') {
+      cell.floor = map2FloorColor;
+      cell.wall = false;
+    } else if (map2Tool === 'fog') {
+      cell.fog = true;
+    } else if (map2Tool === 'reveal') {
+      cell.fog = false;
+    }
+
+    // Expand to 4 neighbours
+    var neighbours = [
+      {col: cur.col-1, row: cur.row},
+      {col: cur.col+1, row: cur.row},
+      {col: cur.col,   row: cur.row-1},
+      {col: cur.col,   row: cur.row+1},
+    ];
+    for (var i = 0; i < neighbours.length; i++) {
+      var n = neighbours[i];
+      var nk = cellKey(n.col, n.row);
+      if (visited[nk]) continue;
+      visited[nk] = true;
+      var nc = map2Cells[nk] || {};
+      // Don't cross walls
+      if (nc.wall) continue;
+      // Only fill cells with same floor type as start
+      var nFloor = nc.floor || null;
+      if (nFloor !== startFloorVal) continue;
+      queue.push(n);
+    }
+  }
+  map2Draw();
+  showToast('Filled ' + count + ' cells', 'success');
 }
 
 function drawRoom(start, end) {
@@ -4162,6 +4303,212 @@ function saveCsAvatar() {
   closeCsAvatarModal();
 }
 
+// ══════════════════════════════════════════════════════
+//  AMBIENT MUSIC  (Web Audio API procedural generation)
+// ══════════════════════════════════════════════════════
+var vcMusicCtx = null;
+var vcMusicNodes = [];
+var vcMusicPlaying = false;
+var vcMusicCurrentTrack = '';
+var vcMusicGain = null;
+
+var VC_TRACKS = {
+  tavern:  { label:'Tavern',     tempo:0.8,  notes:[261,294,330,349,392,440],        mood:'bright' },
+  dungeon: { label:'Dungeon',    tempo:0.4,  notes:[110,123,130,146,155],            mood:'dark'   },
+  battle:  { label:'Battle',     tempo:1.2,  notes:[196,220,246,261,294,330,370],    mood:'tense'  },
+  forest:  { label:'Forest',     tempo:0.5,  notes:[330,370,392,440,494,523],        mood:'airy'   },
+  mystery: { label:'Mystery',    tempo:0.35, notes:[155,165,185,196,220,247],        mood:'eerie'  },
+  boss:    { label:'Boss Fight', tempo:1.4,  notes:[110,123,138,146,164,185,196],    mood:'intense'},
+};
+
+function vcInitAudio() {
+  if (!vcMusicCtx) vcMusicCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!vcMusicGain) {
+    vcMusicGain = vcMusicCtx.createGain();
+    vcMusicGain.gain.value = parseFloat(document.getElementById('vcMusicVol') ? document.getElementById('vcMusicVol').value : 0.3);
+    vcMusicGain.connect(vcMusicCtx.destination);
+  }
+}
+
+function vcSelectTrack(val) {
+  vcMusicCurrentTrack = val;
+  var lbl = document.getElementById('vcMusicLabel');
+  if (lbl) lbl.textContent = val ? (VC_TRACKS[val] ? VC_TRACKS[val].label : val) : 'Off';
+  if (vcMusicPlaying) { vcMusicStop(); if (val) vcMusicStart(); }
+  else if (val) { vcMusicStart(); }
+}
+
+function vcMusicToggle() {
+  if (vcMusicPlaying) vcMusicStop();
+  else if (vcMusicCurrentTrack) vcMusicStart();
+  else showToast('Select a track first', 'error');
+}
+
+function vcMusicStart() {
+  if (!vcMusicCurrentTrack) return;
+  vcInitAudio();
+  vcMusicPlaying = true;
+  var btn = document.getElementById('vcMusicPlayBtn');
+  if (btn) btn.innerHTML = '&#9646;&#9646;';
+  vcMusicSchedule();
+}
+
+function vcMusicStop() {
+  vcMusicPlaying = false;
+  vcMusicNodes.forEach(function(n) { try { n.stop(); } catch(e){} });
+  vcMusicNodes = [];
+  var btn = document.getElementById('vcMusicPlayBtn');
+  if (btn) btn.innerHTML = '&#9654;';
+}
+
+var _vcMusicTimeout = null;
+function vcMusicSchedule() {
+  if (!vcMusicPlaying || !vcMusicCurrentTrack) return;
+  var track = VC_TRACKS[vcMusicCurrentTrack];
+  if (!track) return;
+  var notes = track.notes;
+  var tempo = track.tempo;
+  var mood = track.mood;
+  var now = vcMusicCtx.currentTime;
+  var noteLen = 1.2 / tempo;
+
+  // Play 4-8 note phrase
+  var phraseLen = 4 + Math.floor(Math.random() * 5);
+  for (var i = 0; i < phraseLen; i++) {
+    var noteIdx = Math.floor(Math.random() * notes.length);
+    var freq = notes[noteIdx];
+    var startTime = now + i * noteLen * 0.6;
+    var osc = vcMusicCtx.createOscillator();
+    var env = vcMusicCtx.createGain();
+    osc.connect(env);
+    env.connect(vcMusicGain);
+    osc.type = (mood === 'dark' || mood === 'eerie') ? 'sawtooth' : (mood === 'tense' || mood === 'intense') ? 'square' : 'sine';
+    osc.frequency.value = freq;
+    // Slight detune for richness
+    osc.detune.value = (Math.random() - 0.5) * 12;
+    env.gain.setValueAtTime(0, startTime);
+    env.gain.linearRampToValueAtTime(0.18, startTime + 0.05);
+    env.gain.exponentialRampToValueAtTime(0.001, startTime + noteLen * 0.8);
+    osc.start(startTime);
+    osc.stop(startTime + noteLen);
+    vcMusicNodes.push(osc);
+  }
+  // Schedule next phrase
+  var nextIn = phraseLen * noteLen * 0.6 * 1000 + Math.random() * 800;
+  _vcMusicTimeout = setTimeout(function() { if (vcMusicPlaying) vcMusicSchedule(); }, nextIn);
+}
+
+function vcMusicSetVol(val) {
+  if (vcMusicGain) vcMusicGain.gain.value = parseFloat(val);
+}
+
+// ══════════════════════════════════════════════════════
+//  CHARACTER SHEET AI TRANSCRIPTION
+// ══════════════════════════════════════════════════════
+var _sheetImageData = null;
+
+function openSheetUploadModal() {
+  _sheetImageData = null;
+  document.getElementById('sheetUploadStatus').textContent = '';
+  document.getElementById('sheetPreviewWrap').style.display = 'none';
+  document.getElementById('sheetTranscribeBtn').disabled = true;
+  document.getElementById('sheetFileInput').value = '';
+  document.getElementById('sheetUploadModal').style.display = 'flex';
+}
+function closeSheetUploadModal() { document.getElementById('sheetUploadModal').style.display = 'none'; }
+
+function handleSheetDrop(e) {
+  e.preventDefault();
+  document.getElementById('sheetUploadZone').style.borderColor = 'var(--border)';
+  var file = e.dataTransfer.files[0];
+  if (file) handleSheetFile(file);
+}
+
+function handleSheetFile(file) {
+  if (!file || !file.type.startsWith('image/')) { showToast('Please upload an image file', 'error'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _sheetImageData = e.target.result; // base64 data URL
+    document.getElementById('sheetPreviewImg').src = _sheetImageData;
+    document.getElementById('sheetPreviewWrap').style.display = 'block';
+    document.getElementById('sheetTranscribeBtn').disabled = false;
+    document.getElementById('sheetUploadStatus').textContent = 'Image ready — click Transcribe!';
+  };
+  reader.readAsDataURL(file);
+}
+
+function transcribeSheet() {
+  if (!_sheetImageData) { showToast('Upload an image first', 'error'); return; }
+  var btn = document.getElementById('sheetTranscribeBtn');
+  btn.disabled = true;
+  btn.textContent = 'Reading sheet...';
+  document.getElementById('sheetUploadStatus').textContent = 'AI is reading your character sheet...';
+
+  // Strip data URL prefix to get base64
+  var base64 = _sheetImageData.split(',')[1];
+  var mediaType = _sheetImageData.split(';')[0].split(':')[1];
+
+  var prompt = 'This is a D&D 5e character sheet image. Please extract all information and return ONLY a valid JSON object with these exact keys (use empty string if not found):\n{\n  "name": "",\n  "class": "",\n  "level": "",\n  "race": "",\n  "background": "",\n  "str": "",\n  "dex": "",\n  "con": "",\n  "int": "",\n  "wis": "",\n  "cha": "",\n  "hp_current": "",\n  "hp_max": "",\n  "ac": "",\n  "speed": "",\n  "prof_bonus": "",\n  "equipment": "",\n  "features": "",\n  "backstory": "",\n  "attacks": []\n}\nReturn ONLY the JSON, no explanation.';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    btn.disabled = false;
+    btn.innerHTML = '&#9651; Transcribe with AI';
+    var text = data.content && data.content[0] ? data.content[0].text : '';
+    if (!text) { document.getElementById('sheetUploadStatus').textContent = 'AI could not read the sheet. Try a clearer image.'; return; }
+    // Parse JSON
+    var clean = text.replace(/```json|```/g,'').trim();
+    var parsed = null;
+    try { parsed = JSON.parse(clean); } catch(e) {
+      document.getElementById('sheetUploadStatus').textContent = 'Could not parse response. Try again.'; return;
+    }
+    // Fill in the sheet
+    applyTranscribedSheet(parsed);
+    closeSheetUploadModal();
+    showToast('Sheet transcribed successfully!', 'success');
+  }).catch(function(e) {
+    btn.disabled = false;
+    btn.innerHTML = '&#9651; Transcribe with AI';
+    document.getElementById('sheetUploadStatus').textContent = 'Error: ' + e.message;
+  });
+}
+
+function applyTranscribedSheet(d) {
+  var map = {
+    csName: d.name, csClass: d.class, csLevel: d.level,
+    csRace: d.race, csBackground: d.background,
+    csSTR: d.str, csDEX: d.dex, csCON: d.con,
+    csINT: d.int, csWIS: d.wis, csCHA: d.cha,
+    csHpCurrent: d.hp_current, csHpMax: d.hp_max,
+    csAC: d.ac, csSpeed: d.speed, csProf: d.prof_bonus,
+    csEquipment: d.equipment, csFeatures: d.features, csBackstory: d.backstory
+  };
+  for (var id in map) {
+    var el = document.getElementById(id);
+    if (el && map[id] !== undefined && map[id] !== '') el.value = map[id];
+  }
+  if (d.attacks && Array.isArray(d.attacks)) {
+    _csAttacks = d.attacks;
+    renderCsAttacks();
+  }
+  updateModifiers();
+  renderCsSkills();
+  showToast('Sheet filled in! Review and save.', 'success');
+}
+
 // ── UTIL
 function pwaInstall() {
   if (window._pwaPrompt) {
@@ -4185,9 +4532,25 @@ function escHTML(s) {
 
 // INIT
 (function() {
-  // Register service worker for PWA
+  // Register service worker for PWA — force update on new version
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(function(){});
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+      reg.addEventListener('updatefound', function() {
+        var newWorker = reg.installing;
+        newWorker.addEventListener('statechange', function() {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version available — apply immediately
+            newWorker.postMessage({type: 'SKIP_WAITING'});
+            showToast('App updated! Reloading...', 'success');
+            setTimeout(function() { window.location.reload(); }, 1500);
+          }
+        });
+      });
+    }).catch(function(){});
+    // Reload when new SW takes control
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      window.location.reload();
+    });
   }
   // Capture PWA install prompt
   window._pwaPrompt = null;
