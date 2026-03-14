@@ -19,6 +19,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <!-- Agora Voice SDK -->
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  var SUPABASE_URL = 'https://etoopensykuusznfmygl.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0b29wZW5zeWt1dXN6bmZteWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0NTQ4MDIsImV4cCI6MjA4OTAzMDgwMn0.WGsRWQZDCVBYz8ChYbOD1imbRdFtuv8jG40O9ckeTAU';
+  var sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
 <script>
   var firebaseConfig = {
     apiKey: "AIzaSyDBFXlXXUpxNPfNkuBUM5o2dZbLhlM5Mw0",
@@ -437,6 +444,29 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .cs-save-btn:hover{background:var(--red-dark);}
 .pfp-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .pfp-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:420px;}
+
+/* ── MAP BUILDER 2.0 ── */
+.map2-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;background:#111;}
+.map2-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:8px 0;}
+.map2-toolbar-section{padding:8px 10px;border-bottom:1px solid rgba(42,42,42,.5);}
+.map2-section-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-family:'Cinzel',serif;}
+.map2-tool-btn{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-size:16px;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin:2px;}
+.map2-tool-btn:hover{background:var(--bg4);color:var(--text);}
+.map2-tool-btn.active{background:var(--red);border-color:var(--red);color:white;}
+.map2-floor-swatches{display:flex;flex-wrap:wrap;gap:4px;}
+.map2-floor-swatch{width:28px;height:28px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
+.map2-floor-swatch:hover,.map2-floor-swatch.active{border-color:var(--red);}
+.map2-color-swatch{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:border-color .15s;}
+.map2-color-swatch:hover,.map2-color-swatch.active{border-color:white;}
+.map2-token-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:5px 8px;font-family:'Crimson Text',serif;font-size:13px;outline:none;}
+.map2-mini-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:5px 8px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;transition:all .15s;text-align:center;display:block;}
+.map2-mini-btn:hover{background:var(--bg4);color:var(--text);}
+.map2-mini-btn.active{background:var(--red);border-color:var(--red);color:white;}
+.map2-canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair;}
+.map2-right-panel{width:140px;background:#0a0a0a;border-left:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;}
+.map2-token-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--muted);transition:background .15s;}
+.map2-token-row:hover{background:var(--bg3);color:var(--text);}
+.map2-token-row.selected{background:var(--red-dim);color:var(--text);}
 </style>
 </head>
 <body>
@@ -712,33 +742,90 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   </div>
 
   <!-- MAP BUILDER -->
-  <div class="page" id="page-map">
-    <div class="map-topbar">
-      <div class="map-tab active" id="mapTabDungeon" onclick="switchMapTab('dungeon')">&#127984; Dungeon Scrawl</div>
-      <div class="map-tab" id="mapTabImage" onclick="switchMapTab('image')">&#128444; Image Map + Tokens</div>
-      <div style="flex:1"></div>
-      <button class="map-tool-btn active" id="toolPlace" onclick="setMapTool('place')">&#9998; Place</button>
-      <button class="map-tool-btn" id="toolErase" onclick="setMapTool('erase')">&#10005; Erase</button>
-      <button class="map-tool-btn" id="toolPan" onclick="setMapTool('pan')">&#9995; Pan</button>
-      <button class="map-tool-btn active" id="toolGrid" onclick="toggleGrid()">&#8862; Grid</button>
-      <button class="map-tool-btn" onclick="showToast('Snap enabled','success')">&#8857; Snap</button>
-      <span style="color:var(--muted);font-size:13px;margin:0 8px">100%</span>
-      <button class="map-tool-btn" onclick="clearMap()">&#8635; Reset</button>
-    </div>
-    <div class="map-layout">
-      <div class="map-sidebar">
-        <div class="ai-panel">
-          <div class="ai-panel-title">&#10024; AI Map Generator</div>
-          <textarea class="map-textarea" placeholder="Describe a map or name a campaign..."></textarea>
-          <button class="map-gen-btn" onclick="showToast('Generating map...','success')">&#10024; Generate Map</button>
+  <div class="page" id="page-map" style="padding:0;max-width:none;">
+    <div class="map2-layout">
+      <!-- LEFT TOOLBAR -->
+      <div class="map2-toolbar">
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">TOOLS</div>
+          <button class="map2-tool-btn active" id="mt-draw" onclick="setMapTool2('draw')" title="Draw Wall">&#9632;</button>
+          <button class="map2-tool-btn" id="mt-room" onclick="setMapTool2('room')" title="Draw Room">&#9633;</button>
+          <button class="map2-tool-btn" id="mt-floor" onclick="setMapTool2('floor')" title="Paint Floor">&#9724;</button>
+          <button class="map2-tool-btn" id="mt-erase" onclick="setMapTool2('erase')" title="Erase">&#10006;</button>
+          <button class="map2-tool-btn" id="mt-token" onclick="setMapTool2('token')" title="Place Token">&#9651;</button>
+          <button class="map2-tool-btn" id="mt-fog" onclick="setMapTool2('fog')" title="Fog of War">&#9729;</button>
+          <button class="map2-tool-btn" id="mt-reveal" onclick="setMapTool2('reveal')" title="Reveal Fog">&#9728;</button>
+          <button class="map2-tool-btn" id="mt-pan" onclick="setMapTool2('pan')" title="Pan">&#9995;</button>
         </div>
-        <div class="map-sidebar-title">MONSTERS</div>
-        <div id="monsterTokens"></div>
-        <div class="map-sidebar-title">PLAYERS</div>
-        <div id="playerTokens"></div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">FLOOR</div>
+          <div class="map2-floor-swatches" id="floorSwatches"></div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">WALL COLOR</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            <div class="map2-color-swatch active" style="background:#c8b89a" onclick="setWallColor('#c8b89a',this)"></div>
+            <div class="map2-color-swatch" style="background:#888" onclick="setWallColor('#888',this)"></div>
+            <div class="map2-color-swatch" style="background:#4a3728" onclick="setWallColor('#4a3728',this)"></div>
+            <div class="map2-color-swatch" style="background:#e53e3e" onclick="setWallColor('#e53e3e',this)"></div>
+            <div class="map2-color-swatch" style="background:#222" onclick="setWallColor('#222',this)"></div>
+          </div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">TOKENS</div>
+          <div id="map2TokenList" style="display:flex;flex-direction:column;gap:2px;max-height:200px;overflow-y:auto;"></div>
+          <input class="map2-token-input" id="map2CustomToken" placeholder="Custom name..." style="margin-top:6px;">
+          <select class="map2-token-input" id="map2CustomEmoji" style="margin-top:4px;">
+            <option value="&#9876;">&#9876; Fighter</option>
+            <option value="&#9670;">&#9670; Rogue</option>
+            <option value="&#9651;">&#9651; Wizard</option>
+            <option value="&#9608;">&#9608; Goblin</option>
+            <option value="&#9632;">&#9632; Orc</option>
+            <option value="&#9670;">&#9670; Dragon</option>
+            <option value="&#9651;">&#9651; Undead</option>
+            <option value="&#9679;">&#9679; NPC</option>
+          </select>
+          <button class="map2-mini-btn" onclick="addCustomToken()" style="margin-top:4px;width:100%">+ Add Token</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">GRID SIZE</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="range" id="map2GridSize" min="24" max="80" value="40" oninput="changeGridSize(this.value)" style="flex:1">
+            <span id="map2GridSizeLabel" style="font-size:12px;color:var(--muted);width:28px">40</span>
+          </div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">MAP</div>
+          <button class="map2-mini-btn" onclick="map2Clear()">&#8635; Clear</button>
+          <button class="map2-mini-btn" onclick="map2Export()" style="margin-top:4px">&#8659; Export PNG</button>
+          <button class="map2-mini-btn" onclick="map2Save()" style="margin-top:4px;background:var(--red);color:white;border-color:var(--red)">&#9660; Save &amp; Sync</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">SESSION</div>
+          <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Map ID</div>
+          <input class="map2-token-input" id="map2SessionId" placeholder="e.g. tavern-1" value="default">
+          <button class="map2-mini-btn" onclick="map2Load()" style="margin-top:4px;width:100%">&#8593; Load Map</button>
+          <div style="font-size:11px;color:var(--dim);margin-top:6px" id="map2SyncStatus">Not synced</div>
+        </div>
       </div>
-      <div class="map-canvas" id="mapCanvas" onclick="placeToken(event)">
-        <div class="map-grid" id="mapGrid"></div>
+      <!-- CANVAS AREA -->
+      <div class="map2-canvas-wrap" id="map2CanvasWrap">
+        <canvas id="map2Canvas"></canvas>
+        <canvas id="map2FogCanvas" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+      </div>
+      <!-- RIGHT PANEL — player view toggle -->
+      <div class="map2-right-panel">
+        <div class="map2-section-label">VIEW</div>
+        <button class="map2-mini-btn active" id="map2DmViewBtn" onclick="setMapView('dm')" style="width:100%;margin-bottom:4px">&#9881; DM View</button>
+        <button class="map2-mini-btn" id="map2PlayerViewBtn" onclick="setMapView('player')" style="width:100%">&#128100; Player View</button>
+        <div style="margin-top:16px">
+          <div class="map2-section-label">PLACED TOKENS</div>
+          <div id="map2TokenListPlaced" style="font-size:12px;max-height:300px;overflow-y:auto;"></div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="map2-section-label">COORDINATES</div>
+          <div id="map2Coords" style="font-size:12px;color:var(--muted);font-family:monospace">x:0 y:0</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1885,12 +1972,12 @@ function navigate(page) {
   var navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
   document.body.className = '';
-  if (page === 'map') document.body.className = 'map-view';
+  if (page === 'map') document.body.className = '';
   if (page === 'messages') document.body.className = 'messages-view';
   if (page === 'campaigns') renderCampaigns();
   if (page === 'home') renderHome();
   if (page === 'characters') renderCharacters();
-  if (page === 'map') renderMapSidebar();
+  if (page === 'map') { setTimeout(map2Init, 50); }
   if (page === 'compendium') { resetDetail(); document.getElementById('compendiumAIInput').value = ''; }
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
@@ -2937,75 +3024,550 @@ function showDetailError(name, emoji, errMsg) {
     '</div></div>';
 }
 
-// MAP BUILDER
-function renderMapSidebar() {
-  var monsters = CDATA.monsters;
-  var mhtml = '';
-  for (var i = 0; i < Math.min(monsters.length, 18); i++) {
-    var m = monsters[i];
-    var mn = m.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-    mhtml += '<div class="token-item" onclick="selectToken(\'' + mn + '\',\'' + m.e + '\',this)">' +
-      '<span class="token-emoji">' + m.e + '</span>' + esc(m.name) + '</div>';
+// ══════════════════════════════════════════════════════
+//  MAP BUILDER 2.0  (Canvas-based, Supabase sync)
+// ══════════════════════════════════════════════════════
+var MAP_CELL = 40;
+var map2Tool = 'draw';
+var map2WallColor = '#c8b89a';
+var map2FloorColor = '#2a2018';
+var map2View = 'dm'; // 'dm' or 'player'
+var map2Painting = false;
+var map2PanStart = null;
+var map2PanOffset = {x:0, y:0};
+var map2LastPan = {x:0, y:0};
+var map2RoomStart = null;
+var map2SelectedToken = null;
+var map2Tokens = [];
+var map2SupaSub = null;
+
+// Grid data: cells[col][row] = { floor: color|null, wall: bool, wallColor, fog: bool }
+var map2Cells = {};
+var map2PlacedTokens = []; // {id, col, row, label, symbol, color}
+
+var MAP2_FLOOR_TYPES = [
+  { name:'Stone',  color:'#3a3530' },
+  { name:'Wood',   color:'#5c3d1e' },
+  { name:'Dirt',   color:'#4a3520' },
+  { name:'Grass',  color:'#1e3a1e' },
+  { name:'Water',  color:'#1a2a4a' },
+  { name:'Sand',   color:'#8a7a4a' },
+  { name:'Lava',   color:'#6a1a0a' },
+  { name:'Ice',    color:'#2a4a5a' },
+  { name:'Marble', color:'#4a4a4a' },
+  { name:'Dark',   color:'#0a0a0a' },
+];
+
+var MAP2_DEFAULT_TOKENS = [
+  {label:'Fighter',  symbol:'&#9876;', color:'#4a90d9'},
+  {label:'Rogue',    symbol:'&#9670;', color:'#9b59b6'},
+  {label:'Wizard',   symbol:'&#9651;', color:'#3498db'},
+  {label:'Cleric',   symbol:'&#10010;',color:'#f1c40f'},
+  {label:'Ranger',   symbol:'&#9993;', color:'#2ecc71'},
+  {label:'Goblin',   symbol:'&#9608;', color:'#e74c3c'},
+  {label:'Orc',      symbol:'&#9632;', color:'#c0392b'},
+  {label:'Dragon',   symbol:'&#9670;', color:'#e53e3e'},
+  {label:'Undead',   symbol:'&#9643;', color:'#7f8c8d'},
+  {label:'Boss',     symbol:'&#9733;', color:'#f39c12'},
+];
+
+function cellKey(c,r){ return c+','+r; }
+
+function map2Init() {
+  var canvas = document.getElementById('map2Canvas');
+  var fog = document.getElementById('map2FogCanvas');
+  var wrap = document.getElementById('map2CanvasWrap');
+  if (!canvas || !wrap) return;
+
+  // Size canvas to fill wrap
+  function resize() {
+    canvas.width = wrap.clientWidth;
+    canvas.height = wrap.clientHeight;
+    fog.width = wrap.clientWidth;
+    fog.height = wrap.clientHeight;
+    map2Draw();
   }
-  mhtml += '<div class="token-item" onclick="showToast(\'Add custom token\',\'success\')"><span class="token-emoji">+</span>Add Custom</div>';
-  document.getElementById('monsterTokens').innerHTML = mhtml;
+  resize();
+  window.addEventListener('resize', resize);
 
-  var phtml = '';
-  for (var j = 0; j < PLAYERS.length; j++) {
-    var p = PLAYERS[j];
-    phtml += '<div class="token-item" onclick="selectToken(\'' + p + '\',\'' + PLAYER_EMOJIS[p] + '\',this)">' +
-      '<span class="token-emoji">' + PLAYER_EMOJIS[p] + '</span>' + p + '</div>';
+  // Mouse events
+  canvas.addEventListener('mousedown', map2MouseDown);
+  canvas.addEventListener('mousemove', map2MouseMove);
+  canvas.addEventListener('mouseup',   map2MouseUp);
+  canvas.addEventListener('mouseleave',map2MouseUp);
+  canvas.addEventListener('wheel',     map2Wheel, {passive:false});
+  canvas.addEventListener('contextmenu', function(e){e.preventDefault();});
+
+  // Init floor swatches
+  var sw = document.getElementById('floorSwatches');
+  sw.innerHTML = '';
+  MAP2_FLOOR_TYPES.forEach(function(f,i) {
+    var d = document.createElement('div');
+    d.className = 'map2-floor-swatch' + (i===0?' active':'');
+    d.style.background = f.color;
+    d.title = f.name;
+    d.onclick = function() {
+      map2FloorColor = f.color;
+      document.querySelectorAll('.map2-floor-swatch').forEach(function(s){s.classList.remove('active');});
+      d.classList.add('active');
+      setMapTool2('floor');
+    };
+    sw.appendChild(d);
+  });
+
+  // Init token list
+  renderMap2TokenList();
+  map2Draw();
+}
+
+function renderMap2TokenList() {
+  var el = document.getElementById('map2TokenList');
+  if (!el) return;
+  var tokens = MAP2_DEFAULT_TOKENS.concat(map2Tokens);
+  el.innerHTML = tokens.map(function(t,i) {
+    var sel = map2SelectedToken && map2SelectedToken.label === t.label;
+    return '<div class="map2-token-row' + (sel?' selected':'') + '" onclick="selectMap2Token('+i+')">' +
+      '<span style="color:'+t.color+'">' + t.symbol + '</span>' +
+      '<span>' + t.label + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function selectMap2Token(i) {
+  var tokens = MAP2_DEFAULT_TOKENS.concat(map2Tokens);
+  map2SelectedToken = tokens[i];
+  setMapTool2('token');
+  renderMap2TokenList();
+}
+
+function addCustomToken() {
+  var name = document.getElementById('map2CustomToken').value.trim();
+  var sym = document.getElementById('map2CustomEmoji').value;
+  if (!name) { showToast('Enter a token name','error'); return; }
+  map2Tokens.push({label:name, symbol:sym, color:'#e2e2e2'});
+  document.getElementById('map2CustomToken').value = '';
+  renderMap2TokenList();
+  showToast('Token added: ' + name, 'success');
+}
+
+function map2ScreenToCell(sx, sy) {
+  var x = (sx - map2PanOffset.x) / MAP_CELL;
+  var y = (sy - map2PanOffset.y) / MAP_CELL;
+  return { col: Math.floor(x), row: Math.floor(y) };
+}
+
+function map2MouseDown(e) {
+  if (e.button === 1 || (e.button === 0 && map2Tool === 'pan')) {
+    map2Painting = false;
+    map2PanStart = {x: e.clientX - map2PanOffset.x, y: e.clientY - map2PanOffset.y};
+    document.getElementById('map2Canvas').style.cursor = 'grabbing';
+    return;
   }
-  document.getElementById('playerTokens').innerHTML = phtml;
-}
-
-function selectToken(name, emoji, el) {
-  var items = document.querySelectorAll('.token-item');
-  for (var i = 0; i < items.length; i++) items[i].classList.remove('selected');
-  el.classList.add('selected');
-  selectedToken = {name: name, emoji: emoji};
-  setMapTool('place');
-}
-
-function setMapTool(tool) {
-  currentMapTool = tool;
-  var tools = ['Place','Erase','Pan'];
-  for (var i = 0; i < tools.length; i++) {
-    var btn = document.getElementById('tool' + tools[i]);
-    if (btn) btn.classList.toggle('active', tools[i].toLowerCase() === tool);
+  if (e.button !== 0) return;
+  map2Painting = true;
+  var rect = e.target.getBoundingClientRect();
+  var pos = map2ScreenToCell(e.clientX - rect.left, e.clientY - rect.top);
+  if (map2Tool === 'room') {
+    map2RoomStart = pos;
+    return;
   }
-  document.getElementById('mapCanvas').style.cursor = tool === 'pan' ? 'grab' : 'crosshair';
+  map2ApplyTool(pos, e);
 }
 
-function toggleGrid() {
-  gridVisible = !gridVisible;
-  document.getElementById('mapGrid').style.opacity = gridVisible ? '1' : '0';
-  document.getElementById('toolGrid').classList.toggle('active', gridVisible);
+function map2MouseMove(e) {
+  var rect = e.target.getBoundingClientRect();
+  var sx = e.clientX - rect.left;
+  var sy = e.clientY - rect.top;
+
+  if (map2PanStart) {
+    map2PanOffset.x = e.clientX - map2PanStart.x;
+    map2PanOffset.y = e.clientY - map2PanStart.y;
+    map2Draw(); return;
+  }
+
+  var pos = map2ScreenToCell(sx, sy);
+  document.getElementById('map2Coords').textContent = 'col:'+pos.col+' row:'+pos.row;
+
+  if (map2Painting && map2Tool !== 'room' && map2Tool !== 'token') {
+    map2ApplyTool(pos, e);
+  }
+
+  // Preview room
+  if (map2Painting && map2Tool === 'room' && map2RoomStart) {
+    map2Draw();
+    var ctx = document.getElementById('map2Canvas').getContext('2d');
+    var x1 = Math.min(map2RoomStart.col, pos.col);
+    var y1 = Math.min(map2RoomStart.row, pos.row);
+    var x2 = Math.max(map2RoomStart.col, pos.col);
+    var y2 = Math.max(map2RoomStart.row, pos.row);
+    ctx.strokeStyle = map2WallColor;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(
+      x1*MAP_CELL + map2PanOffset.x,
+      y1*MAP_CELL + map2PanOffset.y,
+      (x2-x1+1)*MAP_CELL, (y2-y1+1)*MAP_CELL
+    );
+  }
 }
 
-function placeToken(e) {
-  if (currentMapTool !== 'place' || !selectedToken) return;
-  var canvas = document.getElementById('mapCanvas');
-  var rect = canvas.getBoundingClientRect();
-  var el = document.createElement('div');
-  el.className = 'placed-token';
-  el.style.left = (e.clientX - rect.left) + 'px';
-  el.style.top = (e.clientY - rect.top) + 'px';
-  el.innerHTML = selectedToken.emoji;
-  el.title = selectedToken.name;
-  el.onclick = function(ev) { ev.stopPropagation(); if (currentMapTool === 'erase') el.remove(); };
-  canvas.appendChild(el);
+function map2MouseUp(e) {
+  if (map2PanStart) {
+    map2PanStart = null;
+    document.getElementById('map2Canvas').style.cursor = map2Tool === 'pan' ? 'grab' : 'crosshair';
+    return;
+  }
+  if (!map2Painting) return;
+  map2Painting = false;
+
+  if (map2Tool === 'room' && map2RoomStart) {
+    var rect = e.target.getBoundingClientRect();
+    var pos = map2ScreenToCell(e.clientX - rect.left, e.clientY - rect.top);
+    drawRoom(map2RoomStart, pos);
+    map2RoomStart = null;
+  }
+  if (map2Tool === 'token' && map2SelectedToken) {
+    var rect2 = e.target.getBoundingClientRect();
+    var tpos = map2ScreenToCell(e.clientX - rect2.left, e.clientY - rect2.top);
+    // Check if clicking existing token to remove it
+    var existing = map2PlacedTokens.findIndex(function(t){return t.col===tpos.col&&t.row===tpos.row;});
+    if (existing >= 0) {
+      map2PlacedTokens.splice(existing,1);
+    } else {
+      map2PlacedTokens.push({
+        id: Date.now(),
+        col: tpos.col, row: tpos.row,
+        label: map2SelectedToken.label,
+        symbol: map2SelectedToken.symbol,
+        color: map2SelectedToken.color
+      });
+    }
+    renderMap2PlacedTokens();
+    map2Draw();
+  }
 }
 
-function clearMap() {
-  var tokens = document.getElementById('mapCanvas').querySelectorAll('.placed-token');
-  for (var i = 0; i < tokens.length; i++) tokens[i].remove();
+function map2Wheel(e) {
+  e.preventDefault();
+  // Zoom by changing cell size
+  var delta = e.deltaY > 0 ? -2 : 2;
+  MAP_CELL = Math.max(20, Math.min(100, MAP_CELL + delta));
+  document.getElementById('map2GridSize').value = MAP_CELL;
+  document.getElementById('map2GridSizeLabel').textContent = MAP_CELL;
+  map2Draw();
 }
 
-function switchMapTab(tab) {
-  document.getElementById('mapTabDungeon').classList.toggle('active', tab === 'dungeon');
-  document.getElementById('mapTabImage').classList.toggle('active', tab === 'image');
+function map2ApplyTool(pos, e) {
+  var key = cellKey(pos.col, pos.row);
+  if (!map2Cells[key]) map2Cells[key] = {};
+  var cell = map2Cells[key];
+
+  if (map2Tool === 'draw') {
+    cell.wall = true; cell.wallColor = map2WallColor;
+  } else if (map2Tool === 'floor') {
+    cell.floor = map2FloorColor;
+  } else if (map2Tool === 'erase') {
+    delete map2Cells[key];
+    // Also remove any token at this cell
+    map2PlacedTokens = map2PlacedTokens.filter(function(t){return !(t.col===pos.col&&t.row===pos.row);});
+    renderMap2PlacedTokens();
+  } else if (map2Tool === 'fog') {
+    cell.fog = true;
+  } else if (map2Tool === 'reveal') {
+    cell.fog = false;
+  }
+  map2Draw();
 }
+
+function drawRoom(start, end) {
+  var x1 = Math.min(start.col, end.col);
+  var y1 = Math.min(start.row, end.row);
+  var x2 = Math.max(start.col, end.col);
+  var y2 = Math.max(start.row, end.row);
+  // Fill floor
+  for (var c = x1; c <= x2; c++) {
+    for (var r = y1; r <= y2; r++) {
+      var k = cellKey(c,r);
+      if (!map2Cells[k]) map2Cells[k] = {};
+      map2Cells[k].floor = map2FloorColor;
+    }
+  }
+  // Draw walls on border
+  for (var c2 = x1; c2 <= x2; c2++) {
+    [y1, y2].forEach(function(r2) {
+      var k2 = cellKey(c2,r2);
+      if (!map2Cells[k2]) map2Cells[k2] = {};
+      map2Cells[k2].wall = true; map2Cells[k2].wallColor = map2WallColor;
+    });
+  }
+  for (var r3 = y1; r3 <= y2; r3++) {
+    [x1, x2].forEach(function(c3) {
+      var k3 = cellKey(c3,r3);
+      if (!map2Cells[k3]) map2Cells[k3] = {};
+      map2Cells[k3].wall = true; map2Cells[k3].wallColor = map2WallColor;
+    });
+  }
+  map2Draw();
+}
+
+function map2Draw() {
+  var canvas = document.getElementById('map2Canvas');
+  var fog = document.getElementById('map2FogCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var fctx = fog.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+
+  // Background
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  var startCol = Math.floor(-map2PanOffset.x / MAP_CELL) - 1;
+  var startRow = Math.floor(-map2PanOffset.y / MAP_CELL) - 1;
+  var endCol = startCol + Math.ceil(W / MAP_CELL) + 2;
+  var endRow = startRow + Math.ceil(H / MAP_CELL) + 2;
+
+  for (var c = startCol; c <= endCol; c++) {
+    var x = c * MAP_CELL + map2PanOffset.x;
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+  }
+  for (var r = startRow; r <= endRow; r++) {
+    var y = r * MAP_CELL + map2PanOffset.y;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+
+  // Cells
+  for (var key in map2Cells) {
+    var parts = key.split(',');
+    var col = parseInt(parts[0]), row = parseInt(parts[1]);
+    var cell = map2Cells[key];
+    var px = col * MAP_CELL + map2PanOffset.x;
+    var py = row * MAP_CELL + map2PanOffset.y;
+    if (px > W || py > H || px < -MAP_CELL || py < -MAP_CELL) continue;
+
+    if (cell.floor) {
+      ctx.fillStyle = cell.floor;
+      ctx.fillRect(px, py, MAP_CELL, MAP_CELL);
+    }
+    if (cell.wall) {
+      ctx.fillStyle = cell.wallColor || map2WallColor;
+      ctx.fillRect(px, py, MAP_CELL, MAP_CELL);
+      // Wall shading
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fillRect(px, py+MAP_CELL-4, MAP_CELL, 4);
+      ctx.fillRect(px+MAP_CELL-4, py, 4, MAP_CELL);
+    }
+  }
+
+  // Tokens
+  ctx.font = Math.floor(MAP_CELL * 0.5) + 'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (var i = 0; i < map2PlacedTokens.length; i++) {
+    var t = map2PlacedTokens[i];
+    var tx = t.col * MAP_CELL + map2PanOffset.x + MAP_CELL/2;
+    var ty = t.row * MAP_CELL + map2PanOffset.y + MAP_CELL/2;
+    if (tx < -MAP_CELL || tx > W+MAP_CELL || ty < -MAP_CELL || ty > H+MAP_CELL) continue;
+    // Token circle background
+    ctx.fillStyle = t.color + '33';
+    ctx.beginPath();
+    ctx.arc(tx, ty, MAP_CELL*0.42, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = t.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Symbol (use first char of label if symbol is HTML entity)
+    ctx.fillStyle = t.color;
+    ctx.fillText(t.label[0], tx, ty);
+    // Name label
+    if (MAP_CELL >= 36) {
+      ctx.font = '10px sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillText(t.label, tx, ty + MAP_CELL*0.42 + 8);
+      ctx.font = Math.floor(MAP_CELL * 0.5) + 'px serif';
+    }
+  }
+
+  // Fog of war
+  fctx.clearRect(0,0,W,H);
+  if (map2View === 'player') {
+    fctx.fillStyle = 'rgba(0,0,0,0.92)';
+    fctx.fillRect(0,0,W,H);
+    // Reveal non-fog cells
+    fctx.globalCompositeOperation = 'destination-out';
+    for (var fkey in map2Cells) {
+      var fparts = fkey.split(',');
+      var fc = parseInt(fparts[0]), fr = parseInt(fparts[1]);
+      var fcell = map2Cells[fkey];
+      if (!fcell.fog) {
+        var fpx = fc * MAP_CELL + map2PanOffset.x;
+        var fpy = fr * MAP_CELL + map2PanOffset.y;
+        fctx.fillRect(fpx, fpy, MAP_CELL, MAP_CELL);
+      }
+    }
+    fctx.globalCompositeOperation = 'source-over';
+  } else {
+    // DM: show fog as semi-transparent overlay only on fogged cells
+    for (var fk2 in map2Cells) {
+      var fp2 = fk2.split(',');
+      var fc2 = parseInt(fp2[0]), fr2 = parseInt(fp2[1]);
+      if (map2Cells[fk2].fog) {
+        fctx.fillStyle = 'rgba(0,0,0,0.6)';
+        fctx.fillRect(fc2*MAP_CELL+map2PanOffset.x, fr2*MAP_CELL+map2PanOffset.y, MAP_CELL, MAP_CELL);
+        fctx.fillStyle = 'rgba(229,62,62,0.15)';
+        fctx.fillRect(fc2*MAP_CELL+map2PanOffset.x, fr2*MAP_CELL+map2PanOffset.y, MAP_CELL, MAP_CELL);
+      }
+    }
+  }
+}
+
+function setMapTool2(tool) {
+  map2Tool = tool;
+  document.querySelectorAll('.map2-tool-btn').forEach(function(b){b.classList.remove('active');});
+  var btn = document.getElementById('mt-'+tool);
+  if (btn) btn.classList.add('active');
+  var canvas = document.getElementById('map2Canvas');
+  if (canvas) canvas.style.cursor = tool === 'pan' ? 'grab' : tool === 'erase' ? 'not-allowed' : 'crosshair';
+}
+
+function setWallColor(color, el) {
+  map2WallColor = color;
+  document.querySelectorAll('.map2-color-swatch').forEach(function(s){s.classList.remove('active');});
+  el.classList.add('active');
+}
+
+function changeGridSize(val) {
+  MAP_CELL = parseInt(val);
+  document.getElementById('map2GridSizeLabel').textContent = val;
+  map2Draw();
+}
+
+function setMapView(v) {
+  map2View = v;
+  document.getElementById('map2DmViewBtn').classList.toggle('active', v==='dm');
+  document.getElementById('map2PlayerViewBtn').classList.toggle('active', v==='player');
+  map2Draw();
+}
+
+function map2Clear() {
+  if (!confirm('Clear the entire map?')) return;
+  map2Cells = {};
+  map2PlacedTokens = [];
+  renderMap2PlacedTokens();
+  map2Draw();
+  showToast('Map cleared', 'success');
+}
+
+function renderMap2PlacedTokens() {
+  var el = document.getElementById('map2TokenListPlaced');
+  if (!el) return;
+  if (!map2PlacedTokens.length) { el.innerHTML = '<div style="color:var(--dim);font-size:12px">No tokens placed</div>'; return; }
+  el.innerHTML = map2PlacedTokens.map(function(t,i) {
+    return '<div style="display:flex;align-items:center;gap:4px;padding:3px 0;font-size:12px;color:var(--muted);border-bottom:1px solid rgba(42,42,42,.4)">' +
+      '<span style="color:'+t.color+'">&#9679;</span>' +
+      '<span style="flex:1">'+esc(t.label)+'</span>' +
+      '<span style="color:var(--dim)">'+t.col+','+t.row+'</span>' +
+      '<button onclick="removeMap2Token('+i+')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px">&#10006;</button>' +
+    '</div>';
+  }).join('');
+}
+
+function removeMap2Token(i) {
+  map2PlacedTokens.splice(i,1);
+  renderMap2PlacedTokens();
+  map2Draw();
+}
+
+// ── Supabase sync ──
+function map2Save() {
+  var id = document.getElementById('map2SessionId').value.trim() || 'default';
+  var campaignId = _currentCampaignId || 'none';
+  var ownerDN = currentUser ? currentUser.dn : 'unknown';
+  var data = { cells: map2Cells, tokens: map2PlacedTokens };
+  var fog = {};
+  for (var k in map2Cells) { if (map2Cells[k].fog) fog[k] = true; }
+
+  document.getElementById('map2SyncStatus').textContent = 'Saving...';
+  sbClient.from('maps').upsert({
+    id: id,
+    campaign_id: campaignId,
+    owner_dn: ownerDN,
+    data: data,
+    fog: fog,
+    updated_at: new Date().toISOString()
+  }).then(function(res) {
+    if (res.error) {
+      document.getElementById('map2SyncStatus').textContent = 'Error: ' + res.error.message;
+      showToast('Save failed: ' + res.error.message, 'error');
+    } else {
+      document.getElementById('map2SyncStatus').textContent = 'Saved ✓';
+      showToast('Map saved & synced!', 'success');
+    }
+  });
+}
+
+function map2Load() {
+  var id = document.getElementById('map2SessionId').value.trim() || 'default';
+  document.getElementById('map2SyncStatus').textContent = 'Loading...';
+  sbClient.from('maps').select('*').eq('id', id).single().then(function(res) {
+    if (res.error || !res.data) {
+      document.getElementById('map2SyncStatus').textContent = 'Not found';
+      showToast('No map found with that ID', 'error'); return;
+    }
+    var d = res.data;
+    map2Cells = (d.data && d.data.cells) ? d.data.cells : {};
+    map2PlacedTokens = (d.data && d.data.tokens) ? d.data.tokens : [];
+    // Apply fog
+    if (d.fog) {
+      for (var k in d.fog) {
+        if (!map2Cells[k]) map2Cells[k] = {};
+        map2Cells[k].fog = true;
+      }
+    }
+    renderMap2PlacedTokens();
+    map2Draw();
+    document.getElementById('map2SyncStatus').textContent = 'Loaded ✓';
+    showToast('Map loaded!', 'success');
+    // Subscribe to live updates
+    map2Subscribe(id);
+  });
+}
+
+function map2Subscribe(id) {
+  if (map2SupaSub) sbClient.removeChannel(map2SupaSub);
+  map2SupaSub = sbClient.channel('map-' + id)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'maps', filter: 'id=eq.' + id },
+      function(payload) {
+        if (!payload.new) return;
+        var d = payload.new;
+        map2Cells = (d.data && d.data.cells) ? d.data.cells : {};
+        map2PlacedTokens = (d.data && d.data.tokens) ? d.data.tokens : [];
+        if (d.fog) { for (var k in d.fog) { if (!map2Cells[k]) map2Cells[k]={}; map2Cells[k].fog=true; } }
+        renderMap2PlacedTokens();
+        map2Draw();
+        document.getElementById('map2SyncStatus').textContent = 'Live &#9679;';
+      }
+    ).subscribe();
+}
+
+function map2Export() {
+  var canvas = document.getElementById('map2Canvas');
+  var link = document.createElement('a');
+  link.download = 'dnd-map.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('Map exported!', 'success');
+}
+
+// Legacy stubs so old campaign code doesn't break
+function renderMapSidebar() { map2Init(); }
+function setMapTool(t) { setMapTool2(t==='place'?'token':t==='erase'?'erase':'pan'); }
+function toggleGrid() {}
+function placeToken() {}
+function clearMap() { map2Clear(); }
+function switchMapTab() {}
 
 
 // ══════════════════════════════════════════════════════
