@@ -4601,6 +4601,7 @@ function sendRecoveryEmail() {
 
     // Send via EmailJS
     emailjs.send('service_1phkhk1', 'template_gkmm4gx', {
+      email: email,
       to_email: email,
       username: foundUser.username,
       dn: foundUser.dn,
