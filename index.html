@@ -456,6 +456,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
   <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#127897; Voice</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#9881; Admin</button>
+  <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
 </nav>
 
 <!-- AUTH SCREEN -->
@@ -3570,6 +3571,18 @@ function saveCsAvatar() {
 }
 
 // ── UTIL
+function pwaInstall() {
+  if (window._pwaPrompt) {
+    window._pwaPrompt.prompt();
+    window._pwaPrompt.userChoice.then(function(r) {
+      if (r.outcome === 'accepted') showToast('Installing app...', 'success');
+      window._pwaPrompt = null;
+      document.getElementById('pwaInstallBtn').style.display = 'none';
+    });
+  } else {
+    showToast('Open this page in Chrome and refresh to install', 'error');
+  }
+}
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -3584,6 +3597,19 @@ function escHTML(s) {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function(){});
   }
+  // Capture PWA install prompt
+  window._pwaPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    window._pwaPrompt = e;
+    var btn = document.getElementById('pwaInstallBtn');
+    if (btn) btn.style.display = '';
+  });
+  window.addEventListener('appinstalled', function() {
+    var btn = document.getElementById('pwaInstallBtn');
+    if (btn) btn.style.display = 'none';
+    showToast('App installed successfully!', 'success');
+  });
   // Pre-generate DN for registration
   rerollDN();
   // Hide app until logged in
