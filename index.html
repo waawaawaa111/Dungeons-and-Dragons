@@ -19,6 +19,9 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <!-- Agora Voice SDK -->
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('P5dYwdWNEXhhZDz6N');</script>
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
@@ -500,6 +503,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
     <div class="auth-tabs">
       <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Sign In</button>
       <button class="auth-tab" id="authTabRegister" onclick="switchAuthTab('register')">Create Account</button>
+      <button class="auth-tab" id="authTabRecover" onclick="switchAuthTab('recover')">Recovery</button>
     </div>
     <div id="authError" class="auth-error"></div>
     <!-- LOGIN -->
@@ -513,12 +517,20 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
         <input class="auth-input" id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
       </div>
       <button class="auth-btn" onclick="doLogin()">Enter the Realm</button>
+      <div style="text-align:center;margin-top:12px;">
+        <span style="font-size:13px;color:var(--muted)">Forgot your info? </span>
+        <span style="font-size:13px;color:var(--red);cursor:pointer;" onclick="switchAuthTab('recover')">Account Recovery</span>
+      </div>
     </div>
     <!-- REGISTER -->
     <div id="authRegister" style="display:none">
       <div class="auth-form-group">
         <label class="auth-label">Username</label>
         <input class="auth-input" id="regUsername" placeholder="Choose a name, adventurer..." autocomplete="username">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Email <span style="color:var(--muted);font-size:11px">(for recovery)</span></label>
+        <input class="auth-input" id="regEmail" type="email" placeholder="your@email.com" autocomplete="email">
       </div>
       <div class="auth-form-group">
         <label class="auth-label">Password</label>
@@ -537,8 +549,40 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
       </div>
       <button class="auth-btn" onclick="doRegister()" onkeydown="if(event.key==='Enter')doRegister()">Create Account</button>
     </div>
+    <!-- RECOVERY -->
+    <div id="authRecover" style="display:none">
+      <!-- Step 1: Enter email -->
+      <div id="recoverStep1">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Enter your email address and we'll send you your username and a reset code.</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Email Address</label>
+          <input class="auth-input" id="recoverEmail" type="email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendRecoveryEmail()">
+        </div>
+        <button class="auth-btn" onclick="sendRecoveryEmail()">&#9993; Send Recovery Email</button>
+      </div>
+      <!-- Step 2: Enter code + new password -->
+      <div id="recoverStep2" style="display:none">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Check your email for the 6-digit reset code.</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Reset Code</label>
+          <input class="auth-input" id="recoverCode" placeholder="000000" style="text-align:center;font-family:monospace;font-size:22px;letter-spacing:.3em;">
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">New Password</label>
+          <input class="auth-input" id="recoverNewPass" type="password" placeholder="••••••••">
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Confirm New Password</label>
+          <input class="auth-input" id="recoverConfirmPass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doPasswordReset()">
+        </div>
+        <button class="auth-btn" onclick="doPasswordReset()">&#9670; Reset Password</button>
+        <div style="text-align:center;margin-top:10px;">
+          <span style="font-size:13px;color:var(--red);cursor:pointer;" onclick="showRecoverStep(1)">&#8592; Try again</span>
+        </div>
+      </div>
+    </div>
     <div id="authRulesHint" style="margin-top:16px;padding:12px;background:rgba(229,62,62,0.08);border:1px solid rgba(229,62,62,0.2);border-radius:8px;font-size:13px;color:var(--muted);line-height:1.6;display:none">
-      ⚠️ <strong style="color:var(--text)">Firebase rules not set?</strong> Go to <strong>console.firebase.google.com</strong> → your project → <strong>Realtime Database → Rules</strong> and set them to:<br>
+      &#9888; <strong style="color:var(--text)">Firebase rules not set?</strong> Go to <strong>console.firebase.google.com</strong> → your project → <strong>Realtime Database → Rules</strong> and set them to:<br>
       <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--red)">{ "rules": { ".read": true, ".write": true } }</code><br>then click <strong>Publish</strong>.
     </div>
   </div>
@@ -1390,8 +1434,10 @@ function rerollDN() {
 function switchAuthTab(tab) {
   document.getElementById('authTabLogin').classList.toggle('active', tab === 'login');
   document.getElementById('authTabRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('authTabRecover').classList.toggle('active', tab === 'recover');
   document.getElementById('authLogin').style.display    = tab === 'login'    ? '' : 'none';
   document.getElementById('authRegister').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('authRecover').style.display  = tab === 'recover'  ? '' : 'none';
   document.getElementById('authError').textContent = '';
 }
 
@@ -1438,11 +1484,13 @@ function doLogin() {
 
 function doRegister() {
   var username = document.getElementById('regUsername').value.trim();
+  var email    = document.getElementById('regEmail').value.trim().toLowerCase();
   var password  = document.getElementById('regPassword').value;
   var confirm   = document.getElementById('regPasswordConfirm').value;
   var errEl = document.getElementById('authError');
   if (!username) { errEl.textContent = 'Please choose a username.'; return; }
   if (username.length < 3) { errEl.textContent = 'Username must be at least 3 characters.'; return; }
+  if (!email || !email.includes('@')) { errEl.textContent = 'Please enter a valid email for account recovery.'; return; }
   if (!password) { errEl.textContent = 'Please enter a password.'; return; }
   if (password.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
   if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
@@ -1459,6 +1507,7 @@ function doRegister() {
   var timeout = setTimeout(function() {
     timedOut = true;
     errEl.textContent = 'Timed out — check your Firebase Database rules allow read/write.';
+    document.getElementById('authRulesHint').style.display = '';
   }, 8000);
 
   fbUserRef(key).once('value').then(function(snap) {
@@ -1471,7 +1520,7 @@ function doRegister() {
       _allUsersCache = users;
       var dn = _pendingDN || genDN();
       for (var k in users) { if (users[k].dn === dn) { dn = genDN(); } }
-      var newUser = { username: username, dn: dn, passwordHash: hashPass(password), race: 'Human', friends: [] };
+      var newUser = { username: username, dn: dn, passwordHash: hashPass(password), email: email, race: 'Human', friends: [] };
       fbUserRef(key).set(newUser).then(function() {
         _allUsersCache[key] = newUser;
         currentUser = newUser;
@@ -4507,6 +4556,96 @@ function applyTranscribedSheet(d) {
   updateModifiers();
   renderCsSkills();
   showToast('Sheet filled in! Review and save.', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  ACCOUNT RECOVERY
+// ══════════════════════════════════════════════════════
+var _recoveryCode = null;
+var _recoveryUserKey = null;
+var _recoveryCodeExpiry = null;
+
+function showRecoverStep(step) {
+  document.getElementById('recoverStep1').style.display = step === 1 ? '' : 'none';
+  document.getElementById('recoverStep2').style.display = step === 2 ? '' : 'none';
+  document.getElementById('authError').textContent = '';
+}
+
+function sendRecoveryEmail() {
+  var email = document.getElementById('recoverEmail').value.trim().toLowerCase();
+  var errEl = document.getElementById('authError');
+  if (!email || !email.includes('@')) { errEl.textContent = 'Please enter a valid email.'; return; }
+  errEl.textContent = 'Searching for account...';
+
+  // Search all users for matching email
+  fbUsersRef().once('value').then(function(snap) {
+    var users = snap.val() || {};
+    var foundUser = null;
+    var foundKey = null;
+    for (var k in users) {
+      if (users[k].email && users[k].email.toLowerCase() === email) {
+        foundUser = users[k]; foundKey = k; break;
+      }
+    }
+    if (!foundUser) {
+      errEl.textContent = 'No account found with that email.'; return;
+    }
+
+    // Generate 6-digit code
+    var code = Math.floor(100000 + Math.random() * 900000).toString();
+    _recoveryCode = code;
+    _recoveryUserKey = foundKey;
+    _recoveryCodeExpiry = Date.now() + 15 * 60 * 1000; // 15 min
+
+    errEl.textContent = 'Sending email...';
+
+    // Send via EmailJS
+    emailjs.send('service_ip9e6r9', 'template_yiq3ulb', {
+      to_email: email,
+      username: foundUser.username,
+      dn: foundUser.dn,
+      reset_code: code
+    }).then(function() {
+      errEl.textContent = '';
+      showRecoverStep(2);
+      showToast('Recovery email sent!', 'success');
+    }).catch(function(e) {
+      errEl.textContent = 'Failed to send email: ' + (e.text || e.message || 'unknown error');
+    });
+  }).catch(function(e) {
+    errEl.textContent = 'Database error: ' + e.message;
+  });
+}
+
+function doPasswordReset() {
+  var code = document.getElementById('recoverCode').value.trim();
+  var newPass = document.getElementById('recoverNewPass').value;
+  var confirm = document.getElementById('recoverConfirmPass').value;
+  var errEl = document.getElementById('authError');
+
+  if (!code) { errEl.textContent = 'Please enter the reset code.'; return; }
+  if (!_recoveryCode) { errEl.textContent = 'No recovery in progress. Start over.'; return; }
+  if (Date.now() > _recoveryCodeExpiry) { errEl.textContent = 'Code expired. Please request a new one.'; showRecoverStep(1); return; }
+  if (code !== _recoveryCode) { errEl.textContent = 'Incorrect code. Please check your email.'; return; }
+  if (!newPass || newPass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  if (newPass !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
+
+  errEl.textContent = 'Resetting password...';
+
+  fbUserRef(_recoveryUserKey).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) { errEl.textContent = 'User not found.'; return; }
+    u.passwordHash = hashPass(newPass);
+    fbUserRef(_recoveryUserKey).set(u).then(function() {
+      _recoveryCode = null; _recoveryUserKey = null; _recoveryCodeExpiry = null;
+      errEl.textContent = '';
+      showToast('Password reset! You can now sign in.', 'success');
+      switchAuthTab('login');
+      document.getElementById('loginUsername').value = u.username;
+    });
+  }).catch(function(e) {
+    errEl.textContent = 'Error: ' + e.message;
+  });
 }
 
 // ── UTIL
