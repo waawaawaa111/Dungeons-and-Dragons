@@ -17,6 +17,8 @@
 <!-- Firebase SDKs — app-compat MUST load before database-compat -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 <!-- Agora Voice SDK -->
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.20.0.js"></script>
 <!-- EmailJS -->
@@ -448,7 +450,56 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .pfp-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .pfp-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:420px;}
 
-/* ── MAP BUILDER 2.0 ── */
+/* ── MUSIC PLAYER ── */
+.music-layout{display:flex;height:calc(100vh - 52px);background:var(--bg);overflow:hidden;}
+.music-sidebar{width:260px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.music-sidebar-header{padding:16px;border-bottom:1px solid var(--border);}
+.music-sidebar-title{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--text);}
+.music-sidebar-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.music-search-wrap{padding:10px 12px;border-bottom:1px solid var(--border);}
+.music-search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-family:'Crimson Text',serif;font-size:14px;outline:none;}
+.music-search:focus{border-color:var(--red);}
+.music-search::placeholder{color:var(--dim);}
+.music-list{flex:1;overflow-y:auto;}
+.music-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(42,42,42,.3);transition:background .15s;}
+.music-item:hover{background:var(--bg3);}
+.music-item.active{background:rgba(229,62,62,.12);border-left:2px solid var(--red);}
+.music-item.playing{background:rgba(229,62,62,.18);}
+.music-item-num{width:20px;text-align:right;font-size:12px;color:var(--dim);flex-shrink:0;}
+.music-item-info{flex:1;min-width:0;}
+.music-item-title{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-item-artist{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-item-dur{font-size:11px;color:var(--dim);flex-shrink:0;}
+.music-main{flex:1;display:flex;flex-direction:column;}
+.music-now-playing{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;gap:20px;}
+.music-album-art{width:220px;height:220px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;overflow:hidden;}
+.music-album-art.spinning{animation:spin-slow 8s linear infinite;}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.music-track-info{text-align:center;}
+.music-track-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.music-track-artist{font-size:16px;color:var(--muted);}
+.music-sync-badge{font-size:12px;color:var(--red);font-family:monospace;margin-top:4px;}
+.music-progress-wrap{width:100%;max-width:500px;}
+.music-progress-bar{width:100%;height:4px;background:var(--bg3);border-radius:2px;cursor:pointer;position:relative;margin-bottom:6px;}
+.music-progress-fill{height:100%;background:var(--red);border-radius:2px;transition:width .5s linear;pointer-events:none;}
+.music-progress-thumb{width:12px;height:12px;background:var(--red);border-radius:50%;position:absolute;top:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.music-time-row{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);}
+.music-controls{display:flex;align-items:center;gap:16px;}
+.music-ctrl-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:8px;border-radius:50%;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.music-ctrl-btn:hover{color:var(--text);background:var(--bg3);}
+.music-ctrl-btn.primary{width:52px;height:52px;background:var(--red);color:white;font-size:22px;border-radius:50%;}
+.music-ctrl-btn.primary:hover{background:var(--red-dark);}
+.music-ctrl-btn.active{color:var(--red);}
+.music-vol-row{display:flex;align-items:center;gap:8px;width:100%;max-width:200px;}
+.music-vol-icon{font-size:14px;color:var(--muted);}
+.music-vol-slider{flex:1;accent-color:var(--red);}
+.music-bottombar{height:90px;background:#0a0a0a;border-top:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px;flex-shrink:0;}
+.music-bottom-info{display:flex;align-items:center;gap:12px;width:220px;}
+.music-bottom-art{width:48px;height:48px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.music-bottom-title{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-bottom-artist{font-size:12px;color:var(--muted);}
+.music-bottom-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.music-bottom-right{width:220px;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
 .map2-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;background:#111;}
 .map2-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:8px 0;}
 .map2-toolbar-section{padding:8px 10px;border-bottom:1px solid rgba(42,42,42,.5);}
@@ -487,7 +538,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   <button class="nav-item" id="nav-messages" onclick="navigate('messages')">&#128172; Messages</button>
   <button class="nav-item" id="nav-compendium" onclick="navigate('compendium')">&#128218; Compendium</button>
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
-  <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#127897; Voice</button>
+  <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#9835; Voice</button>
+  <button class="nav-item" id="nav-music" onclick="navigate('music')">&#9836; Music</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#9881; Admin</button>
   <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
 </nav>
@@ -1222,6 +1274,62 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
         <div class="cs-section">
           <div class="cs-section-title">Roll History</div>
           <div class="cs-roll-log" id="csRollLog"><div style="color:var(--dim);font-size:14px;">No rolls yet.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUSIC PLAYER -->
+  <div class="page" id="page-music" style="padding:0;max-width:none;">
+    <div class="music-layout">
+      <!-- SIDEBAR: Song List -->
+      <div class="music-sidebar">
+        <div class="music-sidebar-header">
+          <div class="music-sidebar-title">&#9836; Playlist</div>
+          <div class="music-sidebar-sub" id="musicSidebarSub">203 songs</div>
+        </div>
+        <div class="music-search-wrap">
+          <input class="music-search" id="musicSearch" placeholder="Search songs or artists..." oninput="musicFilterList(this.value)">
+        </div>
+        <div class="music-list" id="musicList"></div>
+      </div>
+      <!-- MAIN AREA -->
+      <div class="music-main">
+        <div class="music-now-playing" id="musicNowPlaying">
+          <div class="music-album-art" id="musicAlbumArt">&#9836;</div>
+          <div class="music-track-info">
+            <div class="music-track-title" id="musicTrackTitle">Select a song</div>
+            <div class="music-track-artist" id="musicTrackArtist">— —</div>
+            <div class="music-sync-badge" id="musicSyncBadge"></div>
+          </div>
+          <div class="music-progress-wrap">
+            <div class="music-progress-bar" id="musicProgressBar" onclick="musicSeek(event)">
+              <div class="music-progress-fill" id="musicProgressFill" style="width:0%"></div>
+              <div class="music-progress-thumb" id="musicProgressThumb" style="left:0%"></div>
+            </div>
+            <div class="music-time-row">
+              <span id="musicTimeCurrent">0:00</span>
+              <span id="musicTimeTotal">0:00</span>
+            </div>
+          </div>
+          <div class="music-controls">
+            <button class="music-ctrl-btn" id="musicShuffleBtn" onclick="musicToggleShuffle()" title="Shuffle">&#8635;</button>
+            <button class="music-ctrl-btn" onclick="musicPrev()" title="Previous">&#9664;&#9664;</button>
+            <button class="music-ctrl-btn primary" id="musicPlayBtn" onclick="musicTogglePlay()" title="Play/Pause">&#9654;</button>
+            <button class="music-ctrl-btn" onclick="musicNext()" title="Next">&#9654;&#9654;</button>
+            <button class="music-ctrl-btn" id="musicRepeatBtn" onclick="musicToggleRepeat()" title="Repeat">&#8635;</button>
+          </div>
+          <div class="music-vol-row">
+            <span class="music-vol-icon">&#9839;</span>
+            <input type="range" class="music-vol-slider" id="musicVol" min="0" max="1" step="0.02" value="0.7" oninput="musicSetVol(this.value)">
+          </div>
+          <div style="font-size:12px;color:var(--dim);text-align:center;margin-top:8px;">
+            &#9679; Synced via Firebase — everyone in your session hears the same song
+          </div>
+        </div>
+        <!-- Hidden YouTube iframe -->
+        <div id="musicYTWrap" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+          <div id="musicYTPlayer"></div>
         </div>
       </div>
     </div>
@@ -2094,6 +2202,7 @@ function navigate(page) {
   if (page === 'compendium') { resetDetail(); document.getElementById('compendiumAIInput').value = ''; }
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
+  if (page === 'music') musicInit();
 }
 
 // PROFILE
@@ -4648,6 +4757,484 @@ function doPasswordReset() {
     errEl.textContent = 'Error: ' + e.message;
   });
 }
+
+// ══════════════════════════════════════════════════════
+//  MUSIC PLAYER  (YouTube IFrame API + Firebase sync)
+// ══════════════════════════════════════════════════════
+var PLAYLIST = [
+  {t:'Black Hole Sun',a:'Soundgarden'},
+  {t:'Paradise City',a:'Guns N\' Roses'},
+  {t:'American Idiot',a:'Green Day'},
+  {t:'Seven Nation Army',a:'The White Stripes'},
+  {t:'Fuel',a:'Metallica'},
+  {t:'Even Flow',a:'Pearl Jam'},
+  {t:'1979',a:'The Smashing Pumpkins'},
+  {t:'Creep',a:'Radiohead'},
+  {t:'Master of Puppets',a:'Metallica'},
+  {t:'One',a:'Metallica'},
+  {t:'Fade To Black',a:'Metallica'},
+  {t:'Creeping Death',a:'Metallica'},
+  {t:'The Unforgiven II',a:'Metallica'},
+  {t:'Moth Into Flame',a:'Metallica'},
+  {t:'Atlas Rise!',a:'Metallica'},
+  {t:'The Pretender',a:'Foo Fighters'},
+  {t:'Heart-Shaped Box',a:'Nirvana'},
+  {t:'Rock You Like a Hurricane',a:'Scorpions'},
+  {t:'Kickstart My Heart',a:'Motley Crue'},
+  {t:'Welcome To The Jungle',a:'Guns N\' Roses'},
+  {t:'Toxicity',a:'System Of A Down'},
+  {t:'Carry on Wayward Son',a:'Kansas'},
+  {t:'Chop Suey!',a:'System Of A Down'},
+  {t:'Boulevard of Broken Dreams',a:'Green Day'},
+  {t:'Free Bird',a:'Lynyrd Skynyrd'},
+  {t:'Notion',a:'The Rare Occasions'},
+  {t:'Back In Black',a:'AC/DC'},
+  {t:'Sweet Child O\' Mine',a:'Guns N\' Roses'},
+  {t:'The Man Who Sold The World',a:'Nirvana'},
+  {t:'You Shook Me All Night Long',a:'AC/DC'},
+  {t:'Highway to Hell',a:'AC/DC'},
+  {t:'Californication',a:'Red Hot Chili Peppers'},
+  {t:'Thunderstruck',a:'AC/DC'},
+  {t:'Dream On',a:'Aerosmith'},
+  {t:'November Rain',a:'Guns N\' Roses'},
+  {t:'Dani California',a:'Red Hot Chili Peppers'},
+  {t:'Otherside',a:'Red Hot Chili Peppers'},
+  {t:'Snow (Hey Oh)',a:'Red Hot Chili Peppers'},
+  {t:'Holiday',a:'Green Day'},
+  {t:'Paranoid',a:'Black Sabbath'},
+  {t:'Live And Let Die',a:'Guns N\' Roses'},
+  {t:'Paint It Black',a:'The Rolling Stones'},
+  {t:'Can\'t Stop',a:'Red Hot Chili Peppers'},
+  {t:'T.N.T.',a:'AC/DC'},
+  {t:'Hells Bells',a:'AC/DC'},
+  {t:'Mr. Crowley',a:'Ozzy Osbourne'},
+  {t:'Ace of Spades',a:'Motorhead'},
+  {t:'Crazy Train',a:'Ozzy Osbourne'},
+  {t:'Black Dog',a:'Led Zeppelin'},
+  {t:'Knockin\' On Heaven\'s Door',a:'Guns N\' Roses'},
+  {t:'Stairway to Heaven',a:'Led Zeppelin'},
+  {t:'Breaking the Law',a:'Judas Priest'},
+  {t:'Alive',a:'Pearl Jam'},
+  {t:'Wanted Dead Or Alive',a:'Bon Jovi'},
+  {t:'You Give Love A Bad Name',a:'Bon Jovi'},
+  {t:'Fortunate Son',a:'Creedence Clearwater Revival'},
+  {t:'Basket Case',a:'Green Day'},
+  {t:'Livin\' On A Prayer',a:'Bon Jovi'},
+  {t:'All The Small Things',a:'blink-182'},
+  {t:'All Apologies',a:'Nirvana'},
+  {t:'For Whom The Bell Tolls',a:'Metallica'},
+  {t:'Feel Good Inc.',a:'Gorillaz'},
+  {t:'I Want It That Way',a:'Backstreet Boys'},
+  {t:'Iron Man',a:'Black Sabbath'},
+  {t:'War Pigs',a:'Black Sabbath'},
+  {t:'Learn to Fly',a:'Foo Fighters'},
+  {t:'Immigrant Song',a:'Led Zeppelin'},
+  {t:'Shoot to Thrill',a:'AC/DC'},
+  {t:'Panama',a:'Van Halen'},
+  {t:'Cemetery Gates',a:'Pantera'},
+  {t:'Cowboys from Hell',a:'Pantera'},
+  {t:'Walk',a:'Pantera'},
+  {t:'Floods',a:'Pantera'},
+  {t:'I\'m Broken',a:'Pantera'},
+  {t:'This Love',a:'Pantera'},
+  {t:'Domination',a:'Pantera'},
+  {t:'5 Minutes Alone',a:'Pantera'},
+  {t:'Mouth for War',a:'Pantera'},
+  {t:'Killing In The Name',a:'Rage Against The Machine'},
+  {t:'Walk This Way',a:'Aerosmith'},
+  {t:'Civil War',a:'Guns N\' Roses'},
+  {t:'Ain\'t Talkin\' \'Bout Love',a:'Van Halen'},
+  {t:'Come Out and Play',a:'The Offspring'},
+  {t:'Self Esteem',a:'The Offspring'},
+  {t:'Enter Sandman',a:'Metallica'},
+  {t:'Nothing Else Matters',a:'Metallica'},
+  {t:'Whiskey In The Jar',a:'Metallica'},
+  {t:'Seek & Destroy',a:'Metallica'},
+  {t:'Pretty Fly (For A White Guy)',a:'The Offspring'},
+  {t:'The Kids Aren\'t Alright',a:'The Offspring'},
+  {t:'Ain\'t No Rest for the Wicked',a:'Cage The Elephant'},
+  {t:'Mr. Brightside',a:'The Killers'},
+  {t:'Could Have Been Me',a:'The Struts'},
+  {t:'Runaway',a:'Bon Jovi'},
+  {t:'Bullet With Butterfly Wings',a:'The Smashing Pumpkins'},
+  {t:'The Thing That Should Not Be',a:'Metallica'},
+  {t:'My Hero',a:'Foo Fighters'},
+  {t:'You Could Be Mine',a:'Guns N\' Roses'},
+  {t:'Man in the Box',a:'Alice In Chains'},
+  {t:'Smooth Criminal',a:'Alien Ant Farm'},
+  {t:'When I Come Around',a:'Green Day'},
+  {t:'Here Without You',a:'3 Doors Down'},
+  {t:'Jeremy',a:'Pearl Jam'},
+  {t:'Kryptonite',a:'3 Doors Down'},
+  {t:'Everybody Wants To Rule The World',a:'Tears For Fears'},
+  {t:'Gone Away',a:'The Offspring'},
+  {t:'Last Resort',a:'Papa Roach'},
+  {t:'All My Life',a:'Foo Fighters'},
+  {t:'Symphony Of Destruction',a:'Megadeth'},
+  {t:'Dirty Deeds Done Dirt Cheap',a:'AC/DC'},
+  {t:'Down with the Sickness',a:'Disturbed'},
+  {t:'Breed',a:'Nirvana'},
+  {t:'505',a:'Arctic Monkeys'},
+  {t:'Do I Wanna Know?',a:'Arctic Monkeys'},
+  {t:'Freaks',a:'Surf Curse'},
+  {t:'Everlong',a:'Foo Fighters'},
+  {t:'Aerials',a:'System Of A Down'},
+  {t:'By the Way',a:'Red Hot Chili Peppers'},
+  {t:'Under the Bridge',a:'Red Hot Chili Peppers'},
+  {t:'Fake It',a:'Seether'},
+  {t:'Slither',a:'Velvet Revolver'},
+  {t:'Remedy',a:'Seether'},
+  {t:'Blurry',a:'Puddle Of Mudd'},
+  {t:'Song 2',a:'Blur'},
+  {t:'I Hate Everything About You',a:'Three Days Grace'},
+  {t:'Duality',a:'Slipknot'},
+  {t:'B.Y.O.B.',a:'System Of A Down'},
+  {t:'Bodies',a:'Drowning Pool'},
+  {t:'About A Girl',a:'Nirvana'},
+  {t:'Lonely Day',a:'System Of A Down'},
+  {t:'Somebody Told Me',a:'The Killers'},
+  {t:'Rape Me',a:'Nirvana'},
+  {t:'Higher',a:'Creed'},
+  {t:'One Last Breath',a:'Creed'},
+  {t:'Brain Stew',a:'Green Day'},
+  {t:'Before I Forget',a:'Slipknot'},
+  {t:'Raining Blood',a:'Slayer'},
+  {t:'Wait and Bleed',a:'Slipknot'},
+  {t:'Heaven and Hell',a:'Black Sabbath'},
+  {t:'Du hast',a:'Rammstein'},
+  {t:'One Step Closer',a:'Linkin Park'},
+  {t:'You\'re Gonna Go Far Kid',a:'The Offspring'},
+  {t:'Why Don\'t You Get A Job',a:'The Offspring'},
+  {t:'Painkiller',a:'Judas Priest'},
+  {t:'The Unforgiven',a:'Metallica'},
+  {t:'Sad But True',a:'Metallica'},
+  {t:'Wherever I May Roam',a:'Metallica'},
+  {t:'Hardwired',a:'Metallica'},
+  {t:'Harvester of Sorrow',a:'Metallica'},
+  {t:'Whiplash',a:'Metallica'},
+  {t:'Die Die My Darling',a:'Metallica'},
+  {t:'Lux Aeterna',a:'Metallica'},
+  {t:'Turn The Page',a:'Metallica'},
+  {t:'Psychosocial',a:'Slipknot'},
+  {t:'Blackened',a:'Metallica'},
+  {t:'Battery',a:'Metallica'},
+  {t:'Animal I Have Become',a:'Three Days Grace'},
+  {t:'The Memory Remains',a:'Metallica'},
+  {t:'Shout at the Devil',a:'Motley Crue'},
+  {t:'Until It Sleeps',a:'Metallica'},
+  {t:'Would?',a:'Alice In Chains'},
+  {t:'Freak On a Leash',a:'Korn'},
+  {t:'How You Remind Me',a:'Nickelback'},
+  {t:'21 Guns',a:'Green Day'},
+  {t:'Good Riddance (Time of Your Life)',a:'Green Day'},
+  {t:'Wake Me up When September Ends',a:'Green Day'},
+  {t:'Should I Stay or Should I Go',a:'The Clash'},
+  {t:'Break Stuff',a:'Limp Bizkit'},
+  {t:'Rollin\'',a:'Limp Bizkit'},
+  {t:'No More Tears',a:'Ozzy Osbourne'},
+  {t:'Hellraiser',a:'Ozzy Osbourne'},
+  {t:'Say It Ain\'t So',a:'Weezer'},
+  {t:'Crawling',a:'Linkin Park'},
+  {t:'Numb',a:'Linkin Park'},
+  {t:'Riot',a:'Three Days Grace'},
+  {t:'The Emptiness Machine',a:'Linkin Park'},
+  {t:'Take A Look Around',a:'Limp Bizkit'},
+  {t:'Savin\' Me',a:'Nickelback'},
+  {t:'Faint',a:'Linkin Park'},
+  {t:'Drive',a:'Incubus'},
+  {t:'Wish You Were Here',a:'Incubus'},
+  {t:'Runaway',a:'Linkin Park'},
+  {t:'The Red',a:'Chevelle'},
+  {t:'Lying from You',a:'Linkin Park'},
+  {t:'In the End',a:'Linkin Park'},
+  {t:'Coming Undone',a:'Korn'},
+  {t:'Fly Away',a:'Lenny Kravitz'},
+  {t:'It\'s Been Awhile',a:'Staind'},
+  {t:'My Sacrifice',a:'Creed'},
+  {t:'Smells Like Teen Spirit',a:'Nirvana'},
+  {t:'Nookie',a:'Limp Bizkit'},
+  {t:'Twisted Transistor',a:'Korn'},
+  {t:'The Blister Exists',a:'Slipknot'},
+  {t:'Dead Memories',a:'Slipknot'},
+  {t:'Unholy Confessions',a:'Avenged Sevenfold'},
+  {t:'(sic)',a:'Slipknot'},
+  {t:'Papercut',a:'Linkin Park'},
+  {t:'Pushing Me Away',a:'Linkin Park'},
+  {t:'Custer',a:'Slipknot'},
+  {t:'My Way',a:'Limp Bizkit'},
+  {t:'My Own Summer (Shove It)',a:'Deftones'},
+  {t:'As I Am',a:'Dream Theater'},
+  {t:'Orion',a:'Metallica'}
+];
+
+var musicYTPlayer = null;
+var musicYTReady = false;
+var musicCurrentIndex = -1;
+var musicPlaying = false;
+var musicShuffle = false;
+var musicRepeat = false;
+var musicVolume = 0.7;
+var musicFilteredList = null;
+var musicProgressInterval = null;
+var musicSyncRef = null;
+var musicSyncListener = null;
+var musicIsDM = false; // DM controls, others follow
+var _musicIgnoreSync = false;
+
+// YT API callback
+function onYouTubeIframeAPIReady() {
+  musicYTPlayer = new YT.Player('musicYTPlayer', {
+    height: '1', width: '1',
+    playerVars: { autoplay: 0, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1 },
+    events: {
+      onReady: function() { musicYTReady = true; musicYTPlayer.setVolume(musicVolume * 100); },
+      onStateChange: function(e) {
+        if (e.data === YT.PlayerState.ENDED) { if (musicRepeat) musicPlayIndex(musicCurrentIndex); else musicNext(); }
+        if (e.data === YT.PlayerState.PLAYING) { musicPlaying = true; updateMusicPlayBtn(); startMusicProgress(); }
+        if (e.data === YT.PlayerState.PAUSED) { musicPlaying = false; updateMusicPlayBtn(); }
+      }
+    }
+  });
+}
+
+function musicFbRef() { return db.ref('music/session'); }
+
+function musicInit() {
+  renderMusicList();
+  // Subscribe to Firebase sync
+  if (musicSyncListener) musicFbRef().off('value', musicSyncListener);
+  musicSyncListener = musicFbRef().on('value', function(snap) {
+    var state = snap.val();
+    if (!state || _musicIgnoreSync) return;
+    // Sync track
+    if (state.index !== undefined && state.index !== musicCurrentIndex) {
+      musicCurrentIndex = state.index;
+      loadMusicTrack(musicCurrentIndex, false);
+    }
+    // Sync play/pause
+    if (musicYTReady && musicYTPlayer) {
+      if (state.playing && musicYTPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
+        musicYTPlayer.playVideo();
+      } else if (!state.playing && musicYTPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+        musicYTPlayer.pauseVideo();
+      }
+    }
+    // Sync timestamp (allow 3s drift)
+    if (state.playing && state.timestamp !== undefined && musicYTReady && musicYTPlayer) {
+      var current = musicYTPlayer.getCurrentTime ? musicYTPlayer.getCurrentTime() : 0;
+      var expected = state.timestamp + (Date.now() - state.updatedAt) / 1000;
+      if (Math.abs(current - expected) > 3) { musicYTPlayer.seekTo(expected, true); }
+    }
+    updateMusicUI();
+  });
+}
+
+function musicPushState() {
+  if (!currentUser) return;
+  _musicIgnoreSync = true;
+  var state = {
+    index: musicCurrentIndex,
+    playing: musicPlaying,
+    timestamp: (musicYTReady && musicYTPlayer && musicYTPlayer.getCurrentTime) ? musicYTPlayer.getCurrentTime() : 0,
+    updatedAt: Date.now(),
+    pushedBy: currentUser.username
+  };
+  musicFbRef().set(state);
+  setTimeout(function() { _musicIgnoreSync = false; }, 500);
+}
+
+function getList() { return musicFilteredList || PLAYLIST; }
+
+function renderMusicList(filter) {
+  var el = document.getElementById('musicList');
+  if (!el) return;
+  var list = filter
+    ? PLAYLIST.filter(function(s) { var q = filter.toLowerCase(); return s.t.toLowerCase().includes(q) || s.a.toLowerCase().includes(q); })
+    : PLAYLIST;
+  musicFilteredList = filter ? list : null;
+  var sub = document.getElementById('musicSidebarSub');
+  if (sub) sub.textContent = list.length + ' song' + (list.length !== 1 ? 's' : '');
+  el.innerHTML = list.map(function(s, i) {
+    var realIdx = PLAYLIST.indexOf(s);
+    var isActive = realIdx === musicCurrentIndex;
+    return '<div class="music-item' + (isActive ? ' active' : '') + '" onclick="musicPlayIndex(' + realIdx + ')">' +
+      '<div class="music-item-num">' + (isActive && musicPlaying ? '&#9654;' : (i+1)) + '</div>' +
+      '<div class="music-item-info">' +
+        '<div class="music-item-title">' + esc(s.t) + '</div>' +
+        '<div class="music-item-artist">' + esc(s.a) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function musicFilterList(val) { renderMusicList(val || null); }
+
+function musicPlayIndex(idx) {
+  musicCurrentIndex = idx;
+  loadMusicTrack(idx, true);
+  musicPushState();
+}
+
+function loadMusicTrack(idx, autoplay) {
+  var song = PLAYLIST[idx];
+  if (!song) return;
+  // Update UI immediately
+  document.getElementById('musicTrackTitle').textContent = song.t;
+  document.getElementById('musicTrackArtist').textContent = song.a;
+  document.getElementById('musicAlbumArt').textContent = getMusicEmoji(song.a);
+  document.getElementById('musicSyncBadge').textContent = '';
+  renderMusicList(document.getElementById('musicSearch').value || null);
+  // Search YouTube
+  searchYouTube(song.t + ' ' + song.a, function(videoId) {
+    if (!videoId) { showToast('Could not find: ' + song.t, 'error'); return; }
+    if (!musicYTReady) { setTimeout(function() { loadVideoById(videoId, autoplay); }, 1000); return; }
+    loadVideoById(videoId, autoplay);
+  });
+}
+
+function loadVideoById(videoId, autoplay) {
+  if (!musicYTPlayer) return;
+  if (autoplay) {
+    musicYTPlayer.loadVideoById(videoId);
+    musicPlaying = true;
+  } else {
+    musicYTPlayer.cueVideoById(videoId);
+  }
+  updateMusicPlayBtn();
+}
+
+function searchYouTube(query, cb) {
+  // Use YouTube oEmbed + noembed as a free search proxy
+  var url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(query + ' official audio');
+  // Use noembed to find video without API key via a search trick
+  // We'll use the YouTube suggest API which is free and keyless
+  fetch('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + encodeURIComponent(query), {mode:'no-cors'})
+    .catch(function(){});
+  // Actually use invidious (free YT API proxy) to search
+  var inv = 'https://iv.ggtyler.dev/api/v1/search?q=' + encodeURIComponent(query) + '&type=video&fields=videoId,title';
+  fetch(inv).then(function(r) { return r.json(); }).then(function(data) {
+    if (data && data.length > 0) cb(data[0].videoId);
+    else cb(null);
+  }).catch(function() {
+    // Fallback: try another invidious instance
+    fetch('https://invidious.privacyredirect.com/api/v1/search?q=' + encodeURIComponent(query) + '&type=video&fields=videoId')
+      .then(function(r) { return r.json(); })
+      .then(function(data) { cb(data && data.length > 0 ? data[0].videoId : null); })
+      .catch(function() { cb(null); });
+  });
+}
+
+function musicTogglePlay() {
+  if (!musicYTReady || musicCurrentIndex < 0) {
+    if (musicCurrentIndex < 0) musicPlayIndex(0);
+    return;
+  }
+  if (musicPlaying) { musicYTPlayer.pauseVideo(); musicPlaying = false; }
+  else { musicYTPlayer.playVideo(); musicPlaying = true; }
+  updateMusicPlayBtn();
+  musicPushState();
+}
+
+function musicNext() {
+  var list = getList();
+  var idx = musicCurrentIndex;
+  if (musicShuffle) { idx = Math.floor(Math.random() * PLAYLIST.length); }
+  else { idx = (idx + 1) % PLAYLIST.length; }
+  musicPlayIndex(idx);
+}
+
+function musicPrev() {
+  var idx = musicCurrentIndex;
+  if (musicYTReady && musicYTPlayer && musicYTPlayer.getCurrentTime && musicYTPlayer.getCurrentTime() > 3) {
+    musicYTPlayer.seekTo(0, true); return;
+  }
+  idx = (idx - 1 + PLAYLIST.length) % PLAYLIST.length;
+  musicPlayIndex(idx);
+}
+
+function musicToggleShuffle() {
+  musicShuffle = !musicShuffle;
+  document.getElementById('musicShuffleBtn').classList.toggle('active', musicShuffle);
+  showToast(musicShuffle ? 'Shuffle on' : 'Shuffle off', 'success');
+}
+
+function musicToggleRepeat() {
+  musicRepeat = !musicRepeat;
+  document.getElementById('musicRepeatBtn').classList.toggle('active', musicRepeat);
+  showToast(musicRepeat ? 'Repeat on' : 'Repeat off', 'success');
+}
+
+function musicSetVol(val) {
+  musicVolume = parseFloat(val);
+  if (musicYTReady && musicYTPlayer) musicYTPlayer.setVolume(musicVolume * 100);
+}
+
+function musicSeek(e) {
+  var bar = document.getElementById('musicProgressBar');
+  var pct = e.offsetX / bar.offsetWidth;
+  if (musicYTReady && musicYTPlayer && musicYTPlayer.getDuration) {
+    musicYTPlayer.seekTo(pct * musicYTPlayer.getDuration(), true);
+    musicPushState();
+  }
+}
+
+function startMusicProgress() {
+  if (musicProgressInterval) clearInterval(musicProgressInterval);
+  musicProgressInterval = setInterval(function() {
+    if (!musicYTReady || !musicYTPlayer || !musicYTPlayer.getCurrentTime) return;
+    var cur = musicYTPlayer.getCurrentTime() || 0;
+    var dur = musicYTPlayer.getDuration() || 1;
+    var pct = (cur / dur) * 100;
+    var fill = document.getElementById('musicProgressFill');
+    var thumb = document.getElementById('musicProgressThumb');
+    if (fill) fill.style.width = pct + '%';
+    if (thumb) thumb.style.left = pct + '%';
+    var tc = document.getElementById('musicTimeCurrent');
+    var tt = document.getElementById('musicTimeTotal');
+    if (tc) tc.textContent = fmtMusicTime(cur);
+    if (tt) tt.textContent = fmtMusicTime(dur);
+  }, 500);
+}
+
+function fmtMusicTime(s) {
+  s = Math.floor(s || 0);
+  var m = Math.floor(s / 60);
+  var sec = s % 60;
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function updateMusicPlayBtn() {
+  var btn = document.getElementById('musicPlayBtn');
+  if (btn) btn.innerHTML = musicPlaying ? '&#9646;&#9646;' : '&#9654;';
+}
+
+function updateMusicUI() {
+  if (musicCurrentIndex >= 0 && PLAYLIST[musicCurrentIndex]) {
+    var s = PLAYLIST[musicCurrentIndex];
+    document.getElementById('musicTrackTitle').textContent = s.t;
+    document.getElementById('musicTrackArtist').textContent = s.a;
+  }
+  updateMusicPlayBtn();
+}
+
+function getMusicEmoji(artist) {
+  var a = artist.toLowerCase();
+  if (a.includes('metallica')) return '&#9684;';
+  if (a.includes('nirvana')) return '&#9830;';
+  if (a.includes('ac/dc')) return '&#9889;';
+  if (a.includes('led zeppelin')) return '&#9670;';
+  if (a.includes('black sabbath') || a.includes('ozzy')) return '&#9760;';
+  if (a.includes('guns')) return '&#9876;';
+  if (a.includes('slipknot')) return '&#9843;';
+  if (a.includes('system of a down') || a.includes('soad')) return '&#9830;';
+  if (a.includes('linkin park')) return '&#9670;';
+  if (a.includes('green day')) return '&#9827;';
+  if (a.includes('pantera')) return '&#9660;';
+  if (a.includes('foo fighters')) return '&#9673;';
+  if (a.includes('red hot')) return '&#9829;';
+  return '&#9836;';
+}
+
 
 // ── UTIL
 function pwaInstall() {
