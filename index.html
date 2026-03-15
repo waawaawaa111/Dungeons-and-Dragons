@@ -531,7 +531,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .music-bottom-artist{font-size:12px;color:var(--muted);}
 .music-bottom-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
 .music-bottom-right{width:220px;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
-.map2-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;background:#111;}
+.map2-layout{display:flex;height:100%;overflow:hidden;background:#111;}
 .map2-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:8px 0;}
 .map2-toolbar-section{padding:8px 10px;border-bottom:1px solid rgba(42,42,42,.5);}
 .map2-section-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-family:'Cinzel',serif;}
@@ -611,7 +611,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .wb-tool-btn.active{background:var(--red);border-color:var(--red);color:white;}
 
 /* ── WORLD MAP ── */
-.wmap-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;}
+.wmap-layout{display:flex;height:100%;overflow:hidden;}
 .wmap-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0;flex-shrink:0;}
 .wmap-canvas-wrap{flex:1;position:relative;overflow:hidden;background:#1a2a3a;}
 .wmap-right{width:160px;background:#0a0a0a;border-left:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;}
@@ -1061,7 +1061,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- MAP BUILDER -->
-  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;">
+  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;height:calc(100vh - 52px);">
     <!-- MAP MODE TABS -->
     <div style="display:flex;gap:0;background:#0a0a0a;border-bottom:1px solid var(--border);flex-shrink:0;">
       <button id="mapTabDungeon" onclick="switchMapMode('dungeon')" style="padding:8px 20px;background:var(--red);color:white;border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#128565; DUNGEON MAP</button>
@@ -4455,11 +4455,23 @@ function map2MouseUp(e) {
 
 function map2Wheel(e) {
   e.preventDefault();
-  // Zoom by changing cell size
+  var canvas = document.getElementById('map2Canvas');
+  var r = canvas.getBoundingClientRect();
+  var mouseX = e.clientX - r.left;
+  var mouseY = e.clientY - r.top;
+
+  var oldCell = MAP_CELL;
   var delta = e.deltaY > 0 ? -2 : 2;
-  MAP_CELL = Math.max(20, Math.min(100, MAP_CELL + delta));
+  // Infinite zoom — remove min/max clamp
+  MAP_CELL = Math.max(4, MAP_CELL + delta);
   document.getElementById('map2GridSize').value = MAP_CELL;
   document.getElementById('map2GridSizeLabel').textContent = MAP_CELL;
+
+  // Zoom toward mouse cursor
+  var scale = MAP_CELL / oldCell;
+  map2PanOffset.x = mouseX - (mouseX - map2PanOffset.x) * scale;
+  map2PanOffset.y = mouseY - (mouseY - map2PanOffset.y) * scale;
+
   map2Draw();
 }
 
@@ -4928,8 +4940,21 @@ function wmapInit2() {
   var canvas = document.getElementById('wmapCanvas2');
   var wrap = document.getElementById('wmapCanvasWrap2');
   if (!canvas || !wrap) return;
-  canvas.width = wrap.clientWidth;
-  canvas.height = wrap.clientHeight;
+
+  // Size canvas to fill wrap properly
+  function resizeCanvas() {
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    if (w < 10 || h < 10) return;
+    canvas.width = w;
+    canvas.height = h;
+    wmap2Draw();
+  }
+  resizeCanvas();
+  // Re-size if container changes
+  if (!canvas._resizeObserver) {
+    canvas._resizeObserver = new ResizeObserver(resizeCanvas);
+    canvas._resizeObserver.observe(wrap);
+  }
 
   // Render terrain swatches
   var sw = document.getElementById('wmapTerrainSwatches2');
@@ -5054,8 +5079,25 @@ function wmap2MouseUp(e) {
 
 function wmap2Wheel(e) {
   e.preventDefault();
-  var delta = e.deltaY > 0 ? 0.9 : 1.1;
-  wmap2Scale = Math.max(0.3, Math.min(4, wmap2Scale * delta));
+  var canvas = document.getElementById('wmapCanvas2');
+  var r = canvas.getBoundingClientRect();
+  var mouseX = e.clientX - r.left;
+  var mouseY = e.clientY - r.top;
+
+  var delta = e.deltaY > 0 ? 0.85 : 1.18;
+  var oldScale = wmap2Scale;
+  // Infinite zoom — no min/max
+  wmap2Scale = wmap2Scale * delta;
+
+  // Zoom toward mouse cursor
+  wmap2PanOffset.x = mouseX - (mouseX - wmap2PanOffset.x) * (wmap2Scale / oldScale);
+  wmap2PanOffset.y = mouseY - (mouseY - wmap2PanOffset.y) * (wmap2Scale / oldScale);
+
+  // Update brush size label to show effective pixel size
+  var cs = WMAP2_CELL * wmap2Scale;
+  var brushEl = document.getElementById('wmapBrushLabel2');
+  if (brushEl) brushEl.textContent = wmap2Brush + ' (' + Math.round(cs * wmap2Brush) + 'px)';
+
   wmap2Draw();
 }
 
