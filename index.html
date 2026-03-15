@@ -72,6 +72,8 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,s
 .main{padding:32px;max-width:1200px;margin:0 auto;}
 .page{display:none;}
 .page.active{display:block;}
+.page-map-layout.active{display:flex !important;flex-direction:column;height:calc(100vh - 52px);overflow:hidden;}
+.page-flex-layout.active{display:flex !important;flex-direction:column;}
 #page-map.active{display:flex;}
 .page.active.page-fullscreen{display:flex;flex-direction:column;padding:0!important;max-width:none!important;}
 body.map-view .main,body.messages-view .main{padding:0!important;max-width:none!important;margin:0!important;width:100%!important;}
@@ -1064,7 +1066,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- MAP BUILDER -->
-  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;width:100%;height:calc(100vh - 52px);overflow:hidden;">
+  <div class="page page-map-layout" id="page-map" style="padding:0;max-width:none;">
     <!-- MAP MODE TABS -->
     <div style="display:flex;gap:0;background:#0a0a0a;border-bottom:1px solid var(--border);flex-shrink:0;">
       <button id="mapTabDungeon" onclick="switchMapMode('dungeon')" style="padding:8px 20px;background:var(--red);color:white;border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#128565; DUNGEON MAP</button>
@@ -1708,7 +1710,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- WHITEBOARD -->
-  <div class="page" id="page-whiteboard" style="padding:0;max-width:none;">
+  <div class="page page-flex-layout" id="page-whiteboard" style="padding:0;max-width:none;height:calc(100vh - 52px);overflow:hidden;">
     <div class="wb-toolbar">
       <button class="wb-tool-btn active" id="wb-pen" onclick="wbSetTool('pen')">&#9998; Pen</button>
       <button class="wb-tool-btn" id="wb-line" onclick="wbSetTool('line')">&#8212; Line</button>
@@ -3045,12 +3047,6 @@ function navigate(page) {
   var pages = document.querySelectorAll('.page');
   for (var i = 0; i < pages.length; i++) {
     pages[i].classList.remove('active');
-    // Reset whiteboard flex when navigating away
-    if (pages[i].id === 'page-whiteboard' && pages[i].id !== 'page-' + page) {
-      pages[i].style.display = '';
-      pages[i].style.flexDirection = '';
-      pages[i].style.height = '';
-    }
   }
   var navItems = document.querySelectorAll('.nav-item');
   for (var j = 0; j < navItems.length; j++) navItems[j].classList.remove('active');
@@ -7650,9 +7646,6 @@ function wbInit() {
   var canvas = document.getElementById('wbCanvas');
   var wrap = document.getElementById('page-whiteboard');
   if (!canvas || !wrap) return;
-  wrap.style.display = 'flex';
-  wrap.style.flexDirection = 'column';
-  wrap.style.height = 'calc(100vh - 52px)';
   var toolbar = wrap.querySelector('.wb-toolbar');
   canvas.width = wrap.clientWidth || 800;
   canvas.height = (wrap.clientHeight || 600) - (toolbar ? toolbar.offsetHeight : 40);
