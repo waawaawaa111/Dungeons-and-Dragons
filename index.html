@@ -72,7 +72,10 @@ body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,s
 .main{padding:32px;max-width:1200px;margin:0 auto;}
 .page{display:none;}
 .page.active{display:block;}
-body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
+#page-map.active{display:flex;}
+.page.active.page-fullscreen{display:flex;flex-direction:column;padding:0!important;max-width:none!important;}
+body.map-view .main,body.messages-view .main{padding:0!important;max-width:none!important;margin:0!important;width:100%!important;}
+body.map-view #page-map{height:calc(100vh - 52px)!important;width:100vw!important;}
 .btn-primary{background:var(--red);color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:15px;font-family:'Crimson Text',serif;display:inline-flex;align-items:center;gap:8px;transition:background .15s;}
 .btn-primary:hover{background:var(--red-dark);}
 .btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:15px;font-family:'Crimson Text',serif;display:inline-flex;align-items:center;gap:8px;transition:all .15s;}
@@ -531,8 +534,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .music-bottom-artist{font-size:12px;color:var(--muted);}
 .music-bottom-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
 .music-bottom-right{width:220px;display:flex;align-items:center;justify-content:flex-end;gap:10px;}
-.map2-layout{display:flex;height:100%;overflow:hidden;background:#111;}
-.map2-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:8px 0;}
+.map2-layout{display:flex;flex:1;width:100%;overflow:hidden;background:#111;min-height:0;}
+.map2-toolbar{width:130px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;padding:6px 0;}
 .map2-toolbar-section{padding:8px 10px;border-bottom:1px solid rgba(42,42,42,.5);}
 .map2-section-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-family:'Cinzel',serif;}
 .map2-tool-btn{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-size:16px;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;margin:2px;}
@@ -547,8 +550,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .map2-mini-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:5px 8px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;transition:all .15s;text-align:center;display:block;}
 .map2-mini-btn:hover{background:var(--bg4);color:var(--text);}
 .map2-mini-btn.active{background:var(--red);border-color:var(--red);color:white;}
-.map2-canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair;}
-.map2-right-panel{width:140px;background:#0a0a0a;border-left:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;}
+.map2-canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair;min-width:0;min-height:0;height:100%;}
+.map2-right-panel{width:120px;background:#0a0a0a;border-left:1px solid var(--border);padding:8px;overflow-y:auto;flex-shrink:0;}
 .map2-token-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--muted);transition:background .15s;}
 .map2-token-row:hover{background:var(--bg3);color:var(--text);}
 .map2-token-row.selected{background:var(--red-dim);color:var(--text);}
@@ -611,10 +614,10 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .wb-tool-btn.active{background:var(--red);border-color:var(--red);color:white;}
 
 /* ── WORLD MAP ── */
-.wmap-layout{display:flex;height:100%;overflow:hidden;}
-.wmap-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0;flex-shrink:0;}
-.wmap-canvas-wrap{flex:1;position:relative;overflow:hidden;background:#1a2a3a;}
-.wmap-right{width:160px;background:#0a0a0a;border-left:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;}
+.wmap-layout{display:flex;flex:1;width:100%;overflow:hidden;min-height:0;}
+.wmap-toolbar{width:140px;min-width:140px;background:#0a0a0a;border-right:1px solid var(--border);overflow-y:auto;padding:6px 0;flex-shrink:0;}
+.wmap-canvas-wrap{flex:1;position:relative;overflow:hidden;background:#1a2a3a;min-width:0;min-height:0;height:100%;}
+.wmap-right{width:140px;background:#0a0a0a;border-left:1px solid var(--border);padding:8px;overflow-y:auto;flex-shrink:0;}
 .wmap-terrain-swatch{width:32px;height:32px;border-radius:6px;cursor:pointer;border:2px solid transparent;margin:2px;display:inline-block;transition:border-color .15s;}
 .wmap-terrain-swatch.active{border-color:white;}
 
@@ -1061,14 +1064,14 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- MAP BUILDER -->
-  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;height:calc(100vh - 52px);">
+  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;width:100%;height:calc(100vh - 52px);overflow:hidden;">
     <!-- MAP MODE TABS -->
     <div style="display:flex;gap:0;background:#0a0a0a;border-bottom:1px solid var(--border);flex-shrink:0;">
       <button id="mapTabDungeon" onclick="switchMapMode('dungeon')" style="padding:8px 20px;background:var(--red);color:white;border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#128565; DUNGEON MAP</button>
       <button id="mapTabWorld" onclick="switchMapMode('world')" style="padding:8px 20px;background:#0a0a0a;color:var(--muted);border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#127758; WORLD MAP</button>
     </div>
     <!-- DUNGEON MAP -->
-    <div id="mapModeDungeon" style="flex:1;display:flex;overflow:hidden;">
+    <div id="mapModeDungeon" style="flex:1;display:flex;overflow:hidden;min-height:0;">
     <div class="map2-layout" style="flex:1;">
       <!-- LEFT TOOLBAR -->
       <div class="map2-toolbar">
@@ -1175,7 +1178,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
     </div><!-- end mapModeDungeon -->
 
     <!-- WORLD MAP MODE -->
-    <div id="mapModeWorld" style="flex:1;display:none;overflow:hidden;">
+    <div id="mapModeWorld" style="flex:1;display:none;overflow:hidden;min-height:0;">
       <div class="wmap-layout" style="height:100%;">
         <div class="wmap-toolbar" style="height:100%;overflow-y:auto;">
           <div class="map2-toolbar-section">
@@ -3056,7 +3059,7 @@ function navigate(page) {
   var navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
   document.body.className = '';
-  if (page === 'map') document.body.className = '';
+  if (page === 'map') document.body.className = 'map-view';
   if (page === 'messages') document.body.className = 'messages-view';
   if (page === 'campaigns') renderCampaigns();
   if (page === 'home') renderHome();
@@ -4272,15 +4275,21 @@ function map2Init() {
   var wrap = document.getElementById('map2CanvasWrap');
   if (!canvas || !wrap) return;
 
-  // Size canvas to fill wrap
+  // Size canvas to fill wrap — use ResizeObserver for reliability
   function resize() {
-    canvas.width = wrap.clientWidth;
-    canvas.height = wrap.clientHeight;
-    fog.width = wrap.clientWidth;
-    fog.height = wrap.clientHeight;
+    var w = wrap.clientWidth || wrap.offsetWidth;
+    var h = wrap.clientHeight || wrap.offsetHeight;
+    if (w < 10 || h < 10) return;
+    canvas.width = w; canvas.height = h;
+    fog.width = w; fog.height = h;
     map2Draw();
   }
-  resize();
+  // Small delay to let flex layout settle
+  setTimeout(resize, 50);
+  if (!canvas._mapResizeObserver) {
+    canvas._mapResizeObserver = new ResizeObserver(function(){ setTimeout(resize, 10); });
+    canvas._mapResizeObserver.observe(wrap);
+  }
   window.addEventListener('resize', resize);
 
   // Mouse events
@@ -4862,8 +4871,32 @@ function switchMapMode(mode) {
   document.getElementById('mapTabDungeon').style.color = mode === 'dungeon' ? 'white' : 'var(--muted)';
   document.getElementById('mapTabWorld').style.background = mode === 'world' ? 'var(--red)' : '#0a0a0a';
   document.getElementById('mapTabWorld').style.color = mode === 'world' ? 'white' : 'var(--muted)';
-  if (mode === 'dungeon') { map2Init(); }
-  if (mode === 'world') { setTimeout(wmapInit2, 50); }
+  if (mode === 'dungeon') {
+    // Force resize after flex layout renders
+    setTimeout(function() {
+      var canvas = document.getElementById('map2Canvas');
+      var fog = document.getElementById('map2FogCanvas');
+      var wrap = document.getElementById('map2CanvasWrap');
+      if (wrap && canvas) {
+        canvas.width = wrap.clientWidth;
+        canvas.height = wrap.clientHeight;
+        if (fog) { fog.width = wrap.clientWidth; fog.height = wrap.clientHeight; }
+        map2Draw();
+      }
+      map2Init();
+    }, 60);
+  }
+  if (mode === 'world') {
+    setTimeout(function() {
+      var canvas = document.getElementById('wmapCanvas2');
+      var wrap = document.getElementById('wmapCanvasWrap2');
+      if (wrap && canvas) {
+        canvas.width = wrap.clientWidth;
+        canvas.height = wrap.clientHeight;
+      }
+      wmapInit2();
+    }, 60);
+  }
 }
 
 // ══════════════════════════════════════════════════════
