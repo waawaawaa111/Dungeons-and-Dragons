@@ -680,30 +680,18 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <button class="nav-item" id="nav-home" onclick="navigate('home')">&#127968; Home</button>
   <button class="nav-item" id="nav-campaigns" onclick="navigate('campaigns')">&#9876; Campaigns</button>
   <button class="nav-item" id="nav-characters" onclick="navigate('characters')">&#128100; Characters</button>
-  <button class="nav-item" id="nav-map" onclick="navigate('map')">&#128506; Map Builder</button>
-  <button class="nav-item" id="nav-messages" onclick="navigate('messages')">&#128172; Messages</button>
+  <button class="nav-item" id="nav-map" onclick="navigate('map')">&#128506; Map</button>
+  <button class="nav-item" id="nav-worldmap" onclick="navigate('worldmap')">&#127758; World Map</button>
   <button class="nav-item" id="nav-compendium" onclick="navigate('compendium')">&#128218; Compendium</button>
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
-  <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#9835; Voice</button>
-  <button class="nav-item" id="nav-music" onclick="navigate('music')">&#9836; Music</button>
-  <button class="nav-item" id="nav-dice" onclick="navigate('dice')">&#127922; Dice Log</button>
-  <button class="nav-item" id="nav-whiteboard" onclick="navigate('whiteboard')">&#9998; Whiteboard</button>
-  <button class="nav-item" id="nav-worldmap" onclick="navigate('worldmap')">&#127758; World Map</button>
   <button class="nav-item" id="nav-quests" onclick="navigate('quests')">&#128221; Quests</button>
-  <button class="nav-item" id="nav-pet" onclick="navigate('pet')">&#9733; Pet</button>
   <button class="nav-item" id="nav-tools" onclick="navigate('tools')">&#9881; DM Tools</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#128737; Admin</button>
-  <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
-  <button class="nav-item" id="notifBtn" onclick="toggleNotifPanel()" style="position:relative;">
-    &#128276;<span class="notif-dot" id="notifDot" style="display:none;"></span>
-    <div class="notif-panel" id="notifPanel" style="display:none;position:absolute;top:100%;right:0;z-index:300;min-width:300px;" onclick="event.stopPropagation()">
-      <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;">Notifications</div>
-        <span style="font-size:12px;color:var(--red);cursor:pointer;" onclick="clearNotifs()">Clear all</span>
-      </div>
-      <div id="notifList"><div style="padding:20px;text-align:center;color:var(--dim);font-size:13px;">No notifications</div></div>
-    </div>
-  </button>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+    <button class="nav-item" id="nav-messages" onclick="navigate('messages')" title="Messages" style="font-size:18px;padding:6px 10px;">&#128172;</button>
+    <button class="nav-item" id="nav-voice" onclick="navigate('voice')" title="Voice Chat" style="font-size:18px;padding:6px 10px;">&#128222;</button>
+    <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;background:var(--red);color:white;border-radius:6px;padding:6px 12px;font-size:13px;">&#8659; Install</button>
+  </div>
 </nav>
 
 <!-- AUTH SCREEN -->
@@ -807,11 +795,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 <div class="profile-panel" id="profilePanel">
   <div class="profile-header-row">
     <span class="profile-title">Profile</span>
-    <div style="display:flex;gap:8px">
-      <button class="icon-btn" onclick="navigate('messages')" title="Messages">&#128172;</button>
-      <button class="icon-btn">&#128276;</button>
-      <button class="icon-btn" onclick="closeProfile()">&#10005;</button>
-    </div>
+    <button class="icon-btn" onclick="closeProfile()">&#10005;</button>
   </div>
   <div class="profile-avatar-wrap">
     <div class="profile-avatar" id="profileAvatar" onclick="openPfpModal()" style="cursor:pointer;" title="Change picture">&#128100;</div>
@@ -824,6 +808,54 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
     <div class="profile-stat"><div class="profile-stat-val" id="pStatCampaigns">0</div><div class="profile-stat-label">Campaigns</div></div>
     <div class="profile-stat"><div class="profile-stat-val" id="pStatFriends">0</div><div class="profile-stat-label">Friends</div></div>
   </div>
+
+  <!-- QUICK ACTIONS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;">
+    <button onclick="closeProfile();navigate('messages')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;color:var(--text);font-family:'Crimson Text',serif;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">&#128172; Messages</button>
+    <button onclick="closeProfile();navigate('voice')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;color:var(--text);font-family:'Crimson Text',serif;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">&#128222; Voice</button>
+    <button onclick="closeProfile();navigate('pet')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;color:var(--text);font-family:'Crimson Text',serif;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">&#9733; My Pet</button>
+    <button onclick="closeProfile();navigate('dice')" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer;color:var(--text);font-family:'Crimson Text',serif;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">&#127922; Dice Log</button>
+  </div>
+
+  <!-- PET MINI -->
+  <div id="profilePetMini" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:12px;cursor:pointer;" onclick="closeProfile();navigate('pet')">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="font-size:32px;" id="profilePetEmoji">&#9733;</div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--text);" id="profilePetName">My Pet</div>
+        <div style="font-size:11px;color:var(--muted);" id="profilePetMood">Happy</div>
+      </div>
+      <div style="margin-left:auto;font-size:11px;color:var(--dim);">Tap to visit</div>
+    </div>
+  </div>
+
+  <!-- MUSIC MINI PLAYER -->
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">&#9836; Music</div>
+      <button onclick="closeProfile();navigate('music')" style="background:none;border:none;color:var(--red);font-size:11px;cursor:pointer;font-family:'Crimson Text',serif;">Open Player &#8250;</button>
+    </div>
+    <div style="font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px;" id="profileMusicTitle">No song playing</div>
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <button onclick="musicPrev()" style="background:var(--bg4);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:14px;">&#9664;&#9664;</button>
+      <button onclick="musicTogglePlay()" id="profileMusicPlayBtn" style="background:var(--red);border:none;color:white;border-radius:6px;padding:5px 14px;cursor:pointer;font-size:14px;">&#9654;</button>
+      <button onclick="musicNext()" style="background:var(--bg4);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;font-size:14px;">&#9654;&#9654;</button>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">
+        &#128276; Notifications <span id="notifDot" style="display:inline-block;width:7px;height:7px;background:var(--red);border-radius:50%;vertical-align:middle;margin-left:4px;display:none;"></span>
+      </div>
+      <span style="font-size:11px;color:var(--red);cursor:pointer;" onclick="clearNotifs()">Clear all</span>
+    </div>
+    <div id="notifList" style="max-height:180px;overflow-y:auto;">
+      <div style="padding:8px 0;text-align:center;color:var(--dim);font-size:13px;">No notifications</div>
+    </div>
+  </div>
+
   <!-- ADD FRIEND -->
   <div class="profile-field">
     <div class="profile-field-label">Add Friend by Dungeon Number</div>
@@ -844,11 +876,6 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
       <option>Gnome</option><option>Half-Elf</option><option>Half-Orc</option><option>Tiefling</option>
       <option>Dragonborn</option><option>Aasimar</option>
     </select>
-  </div>
-  <div id="profilePetMini" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:12px;text-align:center;cursor:pointer;" onclick="navigate('pet')">
-    <div style="font-size:28px;" id="profilePetEmoji">&#9733;</div>
-    <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--text);" id="profilePetName">My Pet</div>
-    <div style="font-size:11px;color:var(--muted);" id="profilePetMood">Happy</div>
   </div>
   <button class="signout-btn" onclick="doSignOut()">&#8618; Sign Out</button>
 </div>
@@ -981,10 +1008,11 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:12px;margin-bottom:20px" id="cdActions">
-      <button class="btn-primary" onclick="navigate('map')">&#128506; Open Map Builder</button>
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;" id="cdActions">
+      <button class="btn-primary" onclick="navigate('map')">&#128506; Map Builder</button>
       <button class="btn-secondary" id="cdMsgBtn" onclick="openCampaignChat()">&#128172; Party Chat</button>
-      <button class="btn-secondary" id="cdVoiceBtn" onclick="openCampaignVoice()">&#127897; Voice Chat</button>
+      <button class="btn-secondary" id="cdVoiceBtn" onclick="openCampaignVoice()">&#128222; Voice Chat</button>
+      <button class="btn-secondary" onclick="navigate('whiteboard')">&#9998; Whiteboard</button>
       <button class="btn-secondary" id="cdInviteBtn" onclick="copyInviteLink()" style="display:none">&#128279; Invite Link</button>
       <button class="btn-secondary" id="cdJoinBtn" style="display:none" onclick="joinCampaign()">+ Join Campaign</button>
     </div>
@@ -1640,7 +1668,8 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
       <div style="flex:1;"></div>
       <button class="wb-tool-btn" onclick="wbClear()">&#8635; Clear</button>
       <button class="wb-tool-btn" onclick="wbExport()">&#8659; Export</button>
-      <button class="wb-tool-btn" onclick="wbSync()">&#9660; Sync</button>
+      <button class="wb-tool-btn" onclick="wbSync()">&#9660; Save</button>
+      <button class="wb-tool-btn" onclick="wbLoad()">&#8593; Load</button>
     </div>
     <div class="whiteboard-wrap">
       <canvas id="wbCanvas"></canvas>
@@ -6217,13 +6246,19 @@ function fmtMusicTime(s) {
 function updateMusicPlayBtn() {
   var btn = document.getElementById('musicPlayBtn');
   if (btn) btn.innerHTML = musicPlaying ? '&#9646;&#9646;' : '&#9654;';
+  var profileBtn = document.getElementById('profileMusicPlayBtn');
+  if (profileBtn) profileBtn.innerHTML = musicPlaying ? '&#9646;&#9646;' : '&#9654;';
 }
 
 function updateMusicUI() {
   if (musicCurrentIndex >= 0 && PLAYLIST[musicCurrentIndex]) {
     var s = PLAYLIST[musicCurrentIndex];
-    document.getElementById('musicTrackTitle').textContent = s.t;
-    document.getElementById('musicTrackArtist').textContent = s.a;
+    var titleEl = document.getElementById('musicTrackTitle');
+    if (titleEl) titleEl.textContent = s.t;
+    var artistEl = document.getElementById('musicTrackArtist');
+    if (artistEl) artistEl.textContent = s.a;
+    var profileTitle = document.getElementById('profileMusicTitle');
+    if (profileTitle) profileTitle.textContent = s.t + ' — ' + s.a;
   }
   updateMusicPlayBtn();
 }
@@ -6696,15 +6731,19 @@ function renderNotifDot() {
 }
 
 function toggleNotifPanel() {
-  _notifPanelOpen = !_notifPanelOpen;
-  var panel = document.getElementById('notifPanel');
-  if (panel) panel.style.display = _notifPanelOpen ? '' : 'none';
-  if (_notifPanelOpen) {
-    renderNotifList();
-    _notifications.forEach(function(n) { n.read = true; });
-    saveNotifs();
-    renderNotifDot();
+  // Open profile panel and scroll to notifications
+  var panel = document.getElementById('profilePanel');
+  var ov = document.getElementById('overlay');
+  if (!panel.classList.contains('open')) {
+    panel.classList.add('open');
+    if (ov) ov.classList.add('show');
   }
+  setTimeout(function() {
+    var notifEl = document.getElementById('notifList');
+    if (notifEl) notifEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 200);
+  _notifications.forEach(function(n) { n.read = true; });
+  saveNotifs(); renderNotifDot(); renderNotifList();
 }
 
 function renderNotifList() {
@@ -7106,11 +7145,24 @@ function wbExport() {
 }
 
 function wbSync() {
-  if (!_currentCampaignId) { showToast('Open a campaign first to sync', 'error'); return; }
   var c = document.getElementById('wbCanvas');
   var data = c.toDataURL('image/jpeg', 0.5);
-  db.ref('whiteboard/' + _currentCampaignId).set({ data: data, updatedAt: Date.now() });
-  showToast('Whiteboard synced!', 'success');
+  try {
+    localStorage.setItem('dnd_whiteboard_' + (_currentCampaignId || 'default'), data);
+    showToast('Whiteboard saved locally!', 'success');
+  } catch(e) {
+    showToast('Could not save — canvas too large', 'error');
+  }
+}
+
+function wbLoad() {
+  var data = localStorage.getItem('dnd_whiteboard_' + (_currentCampaignId || 'default'));
+  if (!data) { showToast('No saved whiteboard', 'error'); return; }
+  var c = document.getElementById('wbCanvas');
+  var img = new Image();
+  img.onload = function() { c.getContext('2d').drawImage(img, 0, 0); };
+  img.src = data;
+  showToast('Whiteboard loaded!', 'success');
 }
 
 // ══════════════════════════════════════════════════════
