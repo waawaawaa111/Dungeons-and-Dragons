@@ -7337,7 +7337,7 @@ function toggleNotifPanel() {
   var ov = document.getElementById('overlay');
   if (!panel.classList.contains('open')) {
     panel.classList.add('open');
-    if (ov) ov.classList.add('show');
+    if (ov) ov.classList.add('open');
   }
   setTimeout(function() {
     var notifEl = document.getElementById('notifList');
