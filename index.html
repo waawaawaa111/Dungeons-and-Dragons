@@ -7528,14 +7528,17 @@ function renderPetPage() {
 }
 
 function showChoosePet() {
-  document.getElementById('petChoose').style.display = '';
-  document.getElementById('petActive').style.display = 'none';
+  var chooseEl = document.getElementById('petChoose');
+  var activeEl = document.getElementById('petActive');
+  if (chooseEl) chooseEl.style.display = '';
+  if (activeEl) activeEl.style.display = 'none';
   var grid = document.getElementById('petChooseGrid');
-  grid.innerHTML = PET_MONSTERS.map(function(p,i) {
-    return '<div class="pet-choose-card" onclick="choosePet('+i+')">' +
-      '<span class="pet-choose-emoji">'+p.emoji+'</span>' +
-      '<div class="pet-choose-name">'+p.name+'</div>' +
-      '<div class="pet-choose-species">'+p.species+'</div>' +
+  if (!grid) return;
+  grid.innerHTML = PET_MONSTERS.map(function(p, i) {
+    return '<div class="pet-choose-card" onclick="choosePet(' + i + ')">' +
+      '<div class="pet-choose-emoji">' + p.emoji + '</div>' +
+      '<div class="pet-choose-name">' + esc(p.name) + '</div>' +
+      '<div class="pet-choose-species">' + esc(p.species) + '</div>' +
     '</div>';
   }).join('');
 }
@@ -7562,8 +7565,10 @@ function choosePet(idx) {
 }
 
 function showActivePet() {
-  document.getElementById('petChoose').style.display = 'none';
-  document.getElementById('petActive').style.display = '';
+  var chooseEl = document.getElementById('petChoose');
+  var activeEl = document.getElementById('petActive');
+  if (chooseEl) chooseEl.style.display = 'none';
+  if (activeEl) activeEl.style.display = '';
   updatePetUI();
   startPetDecay();
 }
