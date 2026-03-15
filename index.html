@@ -681,17 +681,12 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <button class="nav-item" id="nav-campaigns" onclick="navigate('campaigns')">&#9876; Campaigns</button>
   <button class="nav-item" id="nav-characters" onclick="navigate('characters')">&#128100; Characters</button>
   <button class="nav-item" id="nav-map" onclick="navigate('map')">&#128506; Map</button>
-  <button class="nav-item" id="nav-worldmap" onclick="navigate('worldmap')">&#127758; World Map</button>
   <button class="nav-item" id="nav-compendium" onclick="navigate('compendium')">&#128218; Compendium</button>
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
   <button class="nav-item" id="nav-quests" onclick="navigate('quests')">&#128221; Quests</button>
   <button class="nav-item" id="nav-tools" onclick="navigate('tools')">&#9881; DM Tools</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#128737; Admin</button>
-  <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
-    <button class="nav-item" id="nav-messages" onclick="navigate('messages')" title="Messages" style="font-size:18px;padding:6px 10px;">&#128172;</button>
-    <button class="nav-item" id="nav-voice" onclick="navigate('voice')" title="Voice Chat" style="font-size:18px;padding:6px 10px;">&#128222;</button>
-    <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;background:var(--red);color:white;border-radius:6px;padding:6px 12px;font-size:13px;">&#8659; Install</button>
-  </div>
+  <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;font-size:13px;">&#8659; Install</button>
 </nav>
 
 <!-- AUTH SCREEN -->
@@ -1066,8 +1061,15 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- MAP BUILDER -->
-  <div class="page" id="page-map" style="padding:0;max-width:none;">
-    <div class="map2-layout">
+  <div class="page" id="page-map" style="padding:0;max-width:none;display:flex;flex-direction:column;">
+    <!-- MAP MODE TABS -->
+    <div style="display:flex;gap:0;background:#0a0a0a;border-bottom:1px solid var(--border);flex-shrink:0;">
+      <button id="mapTabDungeon" onclick="switchMapMode('dungeon')" style="padding:8px 20px;background:var(--red);color:white;border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#128565; DUNGEON MAP</button>
+      <button id="mapTabWorld" onclick="switchMapMode('world')" style="padding:8px 20px;background:#0a0a0a;color:var(--muted);border:none;border-right:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;">&#127758; WORLD MAP</button>
+    </div>
+    <!-- DUNGEON MAP -->
+    <div id="mapModeDungeon" style="flex:1;display:flex;overflow:hidden;">
+    <div class="map2-layout" style="flex:1;">
       <!-- LEFT TOOLBAR -->
       <div class="map2-toolbar">
         <div class="map2-toolbar-section">
@@ -1170,6 +1172,63 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
         </div>
       </div>
     </div>
+    </div><!-- end mapModeDungeon -->
+
+    <!-- WORLD MAP MODE -->
+    <div id="mapModeWorld" style="flex:1;display:none;overflow:hidden;">
+      <div class="wmap-layout" style="height:100%;">
+        <div class="wmap-toolbar" style="height:100%;overflow-y:auto;">
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">TERRAIN</div>
+            <div id="wmapTerrainSwatches2" style="display:flex;flex-wrap:wrap;padding:2px;"></div>
+          </div>
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">PLACE</div>
+            <div id="wmapMarkerList2" style="display:flex;flex-direction:column;gap:2px;"></div>
+          </div>
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">TOOLS</div>
+            <button class="map2-tool-btn active" id="wmt2-paint" onclick="wmapSetTool2('paint')" title="Paint">&#9724;</button>
+            <button class="map2-tool-btn" id="wmt2-marker" onclick="wmapSetTool2('marker')" title="Place Marker">&#9670;</button>
+            <button class="map2-tool-btn" id="wmt2-label" onclick="wmapSetTool2('label')" title="Add Label">T</button>
+            <button class="map2-tool-btn" id="wmt2-erase" onclick="wmapSetTool2('erase')" title="Erase">&#10006;</button>
+            <button class="map2-tool-btn" id="wmt2-pan" onclick="wmapSetTool2('pan')" title="Pan">&#9995;</button>
+          </div>
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">BRUSH</div>
+            <div style="display:flex;align-items:center;gap:4px;padding:0 4px;">
+              <button onclick="wmapChangeBrush2(-1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:14px;">&#8722;</button>
+              <span id="wmapBrushLabel2" style="font-size:12px;color:var(--text);flex:1;text-align:center;">3</span>
+              <button onclick="wmapChangeBrush2(1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:14px;">+</button>
+            </div>
+          </div>
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">MAP</div>
+            <button class="map2-mini-btn" onclick="wmapClear2()" style="width:100%;margin-bottom:3px;">&#8635; Clear</button>
+            <button class="map2-mini-btn" onclick="wmapExport2()" style="width:100%;margin-bottom:3px;">&#8659; Export</button>
+            <button class="map2-mini-btn" onclick="wmapSave2()" style="width:100%;background:var(--red);color:white;border-color:var(--red);">&#9660; Save</button>
+          </div>
+          <div class="map2-toolbar-section">
+            <div class="map2-section-label">LOAD</div>
+            <input class="map2-token-input" id="wmapId2" value="world-1" style="margin-bottom:4px;">
+            <button class="map2-mini-btn" onclick="wmapLoad2()" style="width:100%;">&#8593; Load</button>
+          </div>
+        </div>
+        <div class="wmap-canvas-wrap" id="wmapCanvasWrap2" style="flex:1;position:relative;overflow:hidden;">
+          <canvas id="wmapCanvas2"></canvas>
+          <!-- Inkarnate-style label overlay -->
+          <div id="wmapLabelOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;"></div>
+        </div>
+        <div class="wmap-right" style="width:180px;overflow-y:auto;">
+          <div class="map2-section-label">LEGEND</div>
+          <div id="wmapLegend2" style="font-size:11px;"></div>
+          <div style="margin-top:12px;">
+            <div class="map2-section-label">LOCATIONS</div>
+            <div id="wmapMarkerListPlaced2" style="font-size:11px;max-height:250px;overflow-y:auto;"></div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end mapModeWorld -->
   </div>
 
   <!-- CHARACTERS -->
@@ -3002,7 +3061,7 @@ function navigate(page) {
   if (page === 'campaigns') renderCampaigns();
   if (page === 'home') renderHome();
   if (page === 'characters') renderCharacters();
-  if (page === 'map') { setTimeout(map2Init, 50); }
+  if (page === 'map') { setTimeout(function(){ switchMapMode(_currentMapMode || 'dungeon'); }, 50); }
   if (page === 'compendium') { resetDetail(); document.getElementById('compendiumAIInput').value = ''; }
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
@@ -3010,7 +3069,7 @@ function navigate(page) {
   if (page === 'dice') { loadDiceHistory(); renderDiceHistory(); }
   if (page === 'soundboard') { sbInit(); }
   if (page === 'whiteboard') { setTimeout(wbInit, 50); }
-  if (page === 'worldmap') { setTimeout(wmapInit, 50); }
+  if (page === 'worldmap') { navigate('map'); setTimeout(function(){ switchMapMode('world'); }, 80); }
   if (page === 'quests') { loadQuests(); renderQuests(); }
   if (page === 'pet') { renderPetPage(); }
   if (page === 'tools') { renderConditionsRef(); renderRulesRef(); renderEncBuilder(); }
@@ -4314,18 +4373,30 @@ function map2MouseDown(e) {
     return;
   }
   if (e.button !== 0) return;
-  map2Painting = true;
   var rect = e.target.getBoundingClientRect();
   var pos = map2ScreenToCell(e.clientX - rect.left, e.clientY - rect.top);
-  if (map2Tool === 'room') {
-    map2RoomStart = pos;
+
+  if (map2Tool === 'token') {
+    if (!map2SelectedToken) { showToast('Select a token first!', 'error'); return; }
+    var existing = map2PlacedTokens.findIndex(function(t){return t.col===pos.col&&t.row===pos.row;});
+    if (existing >= 0) {
+      map2PlacedTokens.splice(existing,1);
+    } else {
+      map2PlacedTokens.push({
+        id: Date.now(), col: pos.col, row: pos.row,
+        label: map2SelectedToken.label,
+        symbol: map2SelectedToken.symbol,
+        color: map2SelectedToken.color
+      });
+    }
+    renderMap2PlacedTokens();
+    map2Draw();
     return;
   }
-  if (map2Tool === 'bucket') {
-    map2BucketFill(pos.col, pos.row);
-    map2Painting = false;
-    return;
-  }
+
+  map2Painting = true;
+  if (map2Tool === 'room') { map2RoomStart = pos; return; }
+  if (map2Tool === 'bucket') { map2BucketFill(pos.col, pos.row); map2Painting = false; return; }
   map2ApplyTool(pos, e);
 }
 
@@ -4379,25 +4450,6 @@ function map2MouseUp(e) {
     var pos = map2ScreenToCell(e.clientX - rect.left, e.clientY - rect.top);
     drawRoom(map2RoomStart, pos);
     map2RoomStart = null;
-  }
-  if (map2Tool === 'token' && map2SelectedToken) {
-    var rect2 = e.target.getBoundingClientRect();
-    var tpos = map2ScreenToCell(e.clientX - rect2.left, e.clientY - rect2.top);
-    // Check if clicking existing token to remove it
-    var existing = map2PlacedTokens.findIndex(function(t){return t.col===tpos.col&&t.row===tpos.row;});
-    if (existing >= 0) {
-      map2PlacedTokens.splice(existing,1);
-    } else {
-      map2PlacedTokens.push({
-        id: Date.now(),
-        col: tpos.col, row: tpos.row,
-        label: map2SelectedToken.label,
-        symbol: map2SelectedToken.symbol,
-        color: map2SelectedToken.color
-      });
-    }
-    renderMap2PlacedTokens();
-    map2Draw();
   }
 }
 
@@ -4785,6 +4837,484 @@ function map2Export() {
   link.href = canvas.toDataURL('image/png');
   link.click();
   showToast('Map exported!', 'success');
+}
+
+// ── Map Mode Switching ──
+var _currentMapMode = 'dungeon';
+
+function switchMapMode(mode) {
+  _currentMapMode = mode;
+  document.getElementById('mapModeDungeon').style.display = mode === 'dungeon' ? 'flex' : 'none';
+  document.getElementById('mapModeWorld').style.display = mode === 'world' ? 'flex' : 'none';
+  document.getElementById('mapTabDungeon').style.background = mode === 'dungeon' ? 'var(--red)' : '#0a0a0a';
+  document.getElementById('mapTabDungeon').style.color = mode === 'dungeon' ? 'white' : 'var(--muted)';
+  document.getElementById('mapTabWorld').style.background = mode === 'world' ? 'var(--red)' : '#0a0a0a';
+  document.getElementById('mapTabWorld').style.color = mode === 'world' ? 'white' : 'var(--muted)';
+  if (mode === 'dungeon') { map2Init(); }
+  if (mode === 'world') { setTimeout(wmapInit2, 50); }
+}
+
+// ══════════════════════════════════════════════════════
+//  WORLD MAP v2 — Inkarnate-style (embedded in Map page)
+// ══════════════════════════════════════════════════════
+var WMAP2_CELL = 28;
+var wmap2Tool = 'paint';
+var wmap2Brush = 3;
+var wmap2Terrain = '#1a3a5c';
+var wmap2MarkerType = 'city';
+var wmap2MarkerIcon = '&#127961;';
+var wmap2Cells = {};
+var wmap2Markers = [];
+var wmap2Labels = [];
+var wmap2Painting = false;
+var wmap2PanOffset = {x:0, y:0};
+var wmap2PanStart = null;
+var wmap2Scale = 1;
+var _wmap2Inited = false;
+
+var WMAP2_TERRAINS = [
+  // Water
+  {name:'Deep Ocean',   color:'#0d1f3c', pattern:'ocean-deep'},
+  {name:'Ocean',        color:'#1a3a5c', pattern:'ocean'},
+  {name:'Shallow Sea',  color:'#2a5a8c', pattern:'shallow'},
+  {name:'Lake/River',   color:'#2e6b9c', pattern:'lake'},
+  // Land
+  {name:'Beach/Sand',   color:'#c4a35a', pattern:'sand'},
+  {name:'Grassland',    color:'#4a7a3a', pattern:'grass'},
+  {name:'Plains',       color:'#6a9a4a', pattern:'plains'},
+  {name:'Farmland',     color:'#7aaa4a', pattern:'farm'},
+  // Forest
+  {name:'Forest',       color:'#2d5a27', pattern:'forest'},
+  {name:'Dense Forest', color:'#1a3a17', pattern:'dense'},
+  {name:'Jungle',       color:'#1a5a1a', pattern:'jungle'},
+  {name:'Dead Forest',  color:'#4a3a2a', pattern:'dead'},
+  // Elevated
+  {name:'Hills',        color:'#7a7a5a', pattern:'hills'},
+  {name:'Mountains',    color:'#8a8a7a', pattern:'mtn'},
+  {name:'High Peaks',   color:'#b0b0a0', pattern:'peaks'},
+  {name:'Snow/Ice',     color:'#d8e8f0', pattern:'snow'},
+  // Special
+  {name:'Swamp',        color:'#3a4a2a', pattern:'swamp'},
+  {name:'Desert',       color:'#c8a050', pattern:'desert'},
+  {name:'Volcanic',     color:'#5a1a0a', pattern:'lava'},
+  {name:'Tundra',       color:'#8a9aaa', pattern:'tundra'},
+  {name:'Road/Path',    color:'#9a8a6a', pattern:'road'},
+];
+
+var WMAP2_MARKERS = [
+  {name:'Capital City', icon:'&#9956;',  type:'capital',  size:20},
+  {name:'City',         icon:'&#127961;',type:'city',     size:16},
+  {name:'Town',         icon:'&#127960;',type:'town',     size:14},
+  {name:'Village',      icon:'&#127978;',type:'village',  size:12},
+  {name:'Castle',       icon:'&#127981;',type:'castle',   size:16},
+  {name:'Fortress',     icon:'&#129699;',type:'fortress', size:16},
+  {name:'Dungeon',      icon:'&#128565;',type:'dungeon',  size:14},
+  {name:'Temple',       icon:'&#9970;',  type:'temple',   size:14},
+  {name:'Ruins',        icon:'&#9962;',  type:'ruins',    size:14},
+  {name:'Shrine',       icon:'&#9855;',  type:'shrine',   size:12},
+  {name:'Cave/Mine',    icon:'&#9968;',  type:'cave',     size:14},
+  {name:'Tower',        icon:'&#127991;',type:'tower',    size:14},
+  {name:'Port/Harbor',  icon:'&#9875;',  type:'port',     size:16},
+  {name:'Camp',         icon:'&#9978;',  type:'camp',     size:12},
+  {name:'Battlefield',  icon:'&#9876;',  type:'battle',   size:14},
+  {name:'Dragon Lair',  icon:'&#128009;',type:'dragon',   size:16},
+  {name:'Magic Site',   icon:'&#10024;', type:'magic',    size:14},
+  {name:'Graveyard',    icon:'&#9760;',  type:'grave',    size:12},
+  {name:'Volcano',      icon:'&#127755;',type:'volcano',  size:14},
+  {name:'Mountain Pass',icon:'&#9968;',  type:'pass',     size:12},
+];
+
+function wmapInit2() {
+  var canvas = document.getElementById('wmapCanvas2');
+  var wrap = document.getElementById('wmapCanvasWrap2');
+  if (!canvas || !wrap) return;
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+
+  // Render terrain swatches
+  var sw = document.getElementById('wmapTerrainSwatches2');
+  if (sw) {
+    sw.innerHTML = WMAP2_TERRAINS.map(function(t,i) {
+      return '<div title="'+t.name+'" onclick="wmap2SetTerrain(\''+t.color+'\',this)" style="width:20px;height:20px;background:'+t.color+';border-radius:3px;cursor:pointer;border:2px solid transparent;margin:1px;display:inline-block;transition:border-color .1s;" ' +
+        (i===1?'class="wmap2-active-terrain"':'') + '></div>';
+    }).join('');
+  }
+
+  // Render marker list
+  var ml = document.getElementById('wmapMarkerList2');
+  if (ml) {
+    ml.innerHTML = WMAP2_MARKERS.map(function(m) {
+      return '<div onclick="wmap2SetMarker(\''+m.type+'\',\''+m.icon+'\',this)" style="display:flex;align-items:center;gap:6px;padding:3px 6px;cursor:pointer;border-radius:4px;font-size:12px;color:var(--muted);border:1px solid transparent;transition:all .15s;" onmouseover="this.style.background=\'var(--bg3)\'" onmouseout="this.style.background=\'\'">'+
+        '<span style="font-size:14px;">'+m.icon+'</span>'+
+        '<span>'+m.name+'</span>'+
+      '</div>';
+    }).join('');
+  }
+
+  // Render legend
+  var leg = document.getElementById('wmapLegend2');
+  if (leg) {
+    leg.innerHTML = WMAP2_TERRAINS.map(function(t) {
+      return '<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">'+
+        '<div style="width:10px;height:10px;background:'+t.color+';border-radius:1px;flex-shrink:0;"></div>'+
+        '<span style="color:var(--dim);">'+t.name+'</span>'+
+      '</div>';
+    }).join('');
+  }
+
+  if (!_wmap2Inited) {
+    _wmap2Inited = true;
+    // Fill with deep ocean by default
+    var cols = Math.ceil(canvas.width / WMAP2_CELL) + 30;
+    var rows = Math.ceil(canvas.height / WMAP2_CELL) + 30;
+    for (var c=-10;c<cols;c++) for (var r=-10;r<rows;r++) wmap2Cells[c+','+r] = '#0d1f3c';
+    canvas.addEventListener('mousedown', wmap2MouseDown);
+    canvas.addEventListener('mousemove', wmap2MouseMove);
+    canvas.addEventListener('mouseup', wmap2MouseUp);
+    canvas.addEventListener('mouseleave', wmap2MouseUp);
+    canvas.addEventListener('wheel', wmap2Wheel, {passive:false});
+    canvas.addEventListener('contextmenu', function(e){e.preventDefault();});
+  }
+  wmap2Draw();
+}
+
+function wmap2SetTerrain(color, el) {
+  wmap2Terrain = color;
+  document.querySelectorAll('#wmapTerrainSwatches2 div').forEach(function(d){d.style.borderColor='transparent';});
+  el.style.borderColor = 'white';
+  wmap2SetTool2('paint');
+}
+
+function wmap2SetMarker(type, icon, el) {
+  wmap2MarkerType = type;
+  wmap2MarkerIcon = icon;
+  document.querySelectorAll('#wmapMarkerList2 div').forEach(function(d){d.style.background='';d.style.borderColor='transparent';});
+  el.style.background = 'var(--bg3)';
+  el.style.borderColor = 'var(--red)';
+  wmap2SetTool2('marker');
+}
+
+function wmapSetTool2(t) {
+  wmap2Tool = t;
+  document.querySelectorAll('[id^="wmt2-"]').forEach(function(b){b.classList.remove('active');});
+  var btn = document.getElementById('wmt2-'+t);
+  if (btn) btn.classList.add('active');
+}
+
+function wmapChangeBrush2(d) {
+  wmap2Brush = Math.max(1, Math.min(12, wmap2Brush + d));
+  var el = document.getElementById('wmapBrushLabel2');
+  if (el) el.textContent = wmap2Brush;
+}
+
+function wmap2ScreenToCell(sx, sy) {
+  return {
+    col: Math.floor((sx - wmap2PanOffset.x) / (WMAP2_CELL * wmap2Scale)),
+    row: Math.floor((sy - wmap2PanOffset.y) / (WMAP2_CELL * wmap2Scale))
+  };
+}
+
+function wmap2MouseDown(e) {
+  var r = e.target.getBoundingClientRect();
+  var sx = e.clientX - r.left, sy = e.clientY - r.top;
+  if (e.button === 1 || wmap2Tool === 'pan' || e.button === 2) {
+    wmap2PanStart = {x: sx - wmap2PanOffset.x, y: sy - wmap2PanOffset.y};
+    return;
+  }
+  if (wmap2Tool === 'marker') {
+    var pos = wmap2ScreenToCell(sx, sy);
+    showWmap2LabelInput(pos, sx, sy);
+    return;
+  }
+  if (wmap2Tool === 'label') {
+    var pos2 = wmap2ScreenToCell(sx, sy);
+    showWmap2LabelInput(pos2, sx, sy, true);
+    return;
+  }
+  wmap2Painting = true;
+  wmap2Apply(wmap2ScreenToCell(sx, sy));
+}
+
+function wmap2MouseMove(e) {
+  var r = e.target.getBoundingClientRect();
+  var sx = e.clientX - r.left, sy = e.clientY - r.top;
+  if (wmap2PanStart) {
+    wmap2PanOffset.x = sx - wmap2PanStart.x;
+    wmap2PanOffset.y = sy - wmap2PanStart.y;
+    wmap2Draw(); return;
+  }
+  if (!wmap2Painting) return;
+  wmap2Apply(wmap2ScreenToCell(sx, sy));
+}
+
+function wmap2MouseUp(e) {
+  wmap2Painting = false;
+  wmap2PanStart = null;
+}
+
+function wmap2Wheel(e) {
+  e.preventDefault();
+  var delta = e.deltaY > 0 ? 0.9 : 1.1;
+  wmap2Scale = Math.max(0.3, Math.min(4, wmap2Scale * delta));
+  wmap2Draw();
+}
+
+function wmap2Apply(pos) {
+  var half = Math.floor(wmap2Brush / 2);
+  // Use circular brush for more natural painting
+  for (var dc=-half; dc<=half; dc++) {
+    for (var dr=-half; dr<=half; dr++) {
+      if (dc*dc + dr*dr <= half*half + half) {
+        var k = (pos.col+dc)+','+(pos.row+dr);
+        if (wmap2Tool === 'paint') wmap2Cells[k] = wmap2Terrain;
+        else if (wmap2Tool === 'erase') wmap2Cells[k] = '#0d1f3c';
+      }
+    }
+  }
+  wmap2Draw();
+}
+
+function showWmap2LabelInput(pos, sx, sy, labelOnly) {
+  var canvas = document.getElementById('wmapCanvas2');
+  var r = canvas.getBoundingClientRect();
+  var name = '';
+  // Create an inline input over the canvas
+  var inp = document.createElement('input');
+  inp.style.cssText = 'position:fixed;left:'+(r.left+sx-60)+'px;top:'+(r.top+sy-14)+'px;width:120px;background:rgba(0,0,0,.85);color:white;border:1px solid var(--red);border-radius:4px;padding:4px 8px;font-family:Crimson Text,serif;font-size:13px;z-index:200;outline:none;';
+  inp.placeholder = labelOnly ? 'Label text...' : 'Location name...';
+  document.body.appendChild(inp);
+  inp.focus();
+  inp.onkeydown = function(e) {
+    if (e.key === 'Enter') {
+      name = inp.value.trim();
+      inp.remove();
+      if (!name) return;
+      if (labelOnly) {
+        wmap2Labels.push({col:pos.col, row:pos.row, text:name});
+      } else {
+        wmap2Markers.push({col:pos.col, row:pos.row, type:wmap2MarkerType, icon:wmap2MarkerIcon, label:name});
+        renderWmap2MarkerList();
+      }
+      wmap2Draw();
+    }
+    if (e.key === 'Escape') inp.remove();
+  };
+  inp.onblur = function() { setTimeout(function(){ if(document.body.contains(inp)) inp.remove(); }, 200); };
+}
+
+function wmap2Draw() {
+  var canvas = document.getElementById('wmapCanvas2');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var cs = WMAP2_CELL * wmap2Scale;
+
+  ctx.fillStyle = '#0d1f3c';
+  ctx.fillRect(0, 0, W, H);
+
+  var startCol = Math.floor(-wmap2PanOffset.x / cs) - 1;
+  var startRow = Math.floor(-wmap2PanOffset.y / cs) - 1;
+  var endCol = startCol + Math.ceil(W / cs) + 2;
+  var endRow = startRow + Math.ceil(H / cs) + 2;
+
+  // Draw terrain cells
+  for (var c=startCol; c<=endCol; c++) {
+    for (var r=startRow; r<=endRow; r++) {
+      var color = wmap2Cells[c+','+r] || '#0d1f3c';
+      ctx.fillStyle = color;
+      var px = c*cs + wmap2PanOffset.x;
+      var py = r*cs + wmap2PanOffset.y;
+      ctx.fillRect(px, py, cs+0.5, cs+0.5);
+    }
+  }
+
+  // Draw subtle grid at high zoom
+  if (wmap2Scale > 1.5) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 0.5;
+    for (var c2=startCol; c2<=endCol; c2++) {
+      var px2 = c2*cs + wmap2PanOffset.x;
+      ctx.beginPath(); ctx.moveTo(px2,0); ctx.lineTo(px2,H); ctx.stroke();
+    }
+    for (var r2=startRow; r2<=endRow; r2++) {
+      var py2 = r2*cs + wmap2PanOffset.y;
+      ctx.beginPath(); ctx.moveTo(0,py2); ctx.lineTo(W,py2); ctx.stroke();
+    }
+  }
+
+  // Draw terrain decorations (trees, waves etc)
+  wmap2DrawDecorations(ctx, startCol, endCol, startRow, endRow, cs);
+
+  // Draw roads (connected cells)
+  wmap2DrawRoads(ctx, startCol, endCol, startRow, endRow, cs);
+
+  // Draw markers
+  wmap2Markers.forEach(function(m) {
+    var px = m.col*cs + wmap2PanOffset.x + cs/2;
+    var py = m.row*cs + wmap2PanOffset.y + cs/2;
+    if (px < -cs || px > W+cs || py < -cs || py > H+cs) return;
+
+    var markerDef = WMAP2_MARKERS.find(function(d){return d.type===m.type;}) || {size:14};
+    var sz = Math.max(10, markerDef.size * wmap2Scale);
+
+    // Shadow
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 6;
+
+    // Icon
+    ctx.font = sz + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(m.icon, px, py);
+    ctx.shadowBlur = 0;
+
+    // Label
+    if (cs >= 16) {
+      ctx.font = 'bold ' + Math.max(9, Math.min(14, cs*0.45)) + 'px "Cinzel", serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.shadowColor = 'rgba(0,0,0,0.9)';
+      ctx.shadowBlur = 4;
+      ctx.textBaseline = 'top';
+      ctx.fillText(m.label, px, py + sz/2 + 2);
+      ctx.shadowBlur = 0;
+    }
+  });
+
+  // Draw text labels
+  wmap2Labels.forEach(function(l) {
+    var px = l.col*cs + wmap2PanOffset.x + cs/2;
+    var py = l.row*cs + wmap2PanOffset.y + cs/2;
+    if (px < -100 || px > W+100) return;
+    ctx.font = 'italic ' + Math.max(10, 14*wmap2Scale) + 'px "Cinzel", serif';
+    ctx.fillStyle = 'rgba(255,240,200,0.9)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+    ctx.shadowBlur = 5;
+    ctx.fillText(l.text, px, py);
+    ctx.shadowBlur = 0;
+  });
+}
+
+function wmap2DrawDecorations(ctx, sc, ec, sr, er, cs) {
+  if (cs < 8) return; // Too small to draw decorations
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (var c=sc; c<=ec; c++) {
+    for (var r=sr; r<=er; r++) {
+      var color = wmap2Cells[c+','+r] || '#0d1f3c';
+      var px = c*cs + wmap2PanOffset.x + cs/2;
+      var py = r*cs + wmap2PanOffset.y + cs/2;
+      // Use deterministic pseudo-random per cell
+      var seed = ((c * 2654435761) ^ (r * 2246822519)) >>> 0;
+      var rand = (seed % 1000) / 1000;
+      if (rand > 0.4) continue; // Only decorate ~40% of cells
+
+      ctx.globalAlpha = 0.45;
+      ctx.font = Math.max(8, cs * 0.55) + 'px serif';
+      if (color === '#2d5a27' || color === '#1a3a17') {
+        // Forest - trees
+        ctx.fillText(rand > 0.2 ? '🌲' : '🌳', px, py);
+      } else if (color === '#1a5a1a') {
+        // Jungle
+        ctx.fillText('🌴', px, py);
+      } else if (color === '#1a3a5c' || color === '#0d1f3c') {
+        // Ocean - waves
+        if (rand < 0.1) ctx.fillText('🌊', px, py);
+      } else if (color === '#8a8a7a' || color === '#b0b0a0') {
+        // Mountains
+        ctx.fillText(rand > 0.5 ? '⛰' : '🏔', px, py);
+      } else if (color === '#c8a050' || color === '#c4a35a') {
+        // Desert
+        if (rand < 0.08) ctx.fillText('🌵', px, py);
+      } else if (color === '#3a4a2a') {
+        // Swamp
+        if (rand < 0.15) ctx.fillText('🌿', px, py);
+      } else if (color === '#d8e8f0') {
+        // Snow
+        if (rand < 0.15) ctx.fillText('❄', px, py);
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+function wmap2DrawRoads(ctx, sc, ec, sr, er, cs) {
+  var roadColor = '#9a8a6a';
+  ctx.strokeStyle = 'rgba(180,160,100,0.7)';
+  ctx.lineWidth = Math.max(1.5, cs * 0.15);
+  ctx.lineCap = 'round';
+  for (var c=sc; c<=ec; c++) {
+    for (var r=sr; r<=er; r++) {
+      if (wmap2Cells[c+','+r] !== roadColor) continue;
+      var px = c*cs + wmap2PanOffset.x + cs/2;
+      var py = r*cs + wmap2PanOffset.y + cs/2;
+      // Connect to adjacent road cells
+      var neighbors = [[c+1,r],[c,r+1]];
+      neighbors.forEach(function(n) {
+        if (wmap2Cells[n[0]+','+n[1]] === roadColor) {
+          var nx = n[0]*cs + wmap2PanOffset.x + cs/2;
+          var ny = n[1]*cs + wmap2PanOffset.y + cs/2;
+          ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(nx,ny); ctx.stroke();
+        }
+      });
+    }
+  }
+}
+
+function renderWmap2MarkerList() {
+  var el = document.getElementById('wmapMarkerListPlaced2');
+  if (!el) return;
+  if (!wmap2Markers.length) { el.innerHTML = '<div style="color:var(--dim);font-size:11px;padding:4px;">No locations placed</div>'; return; }
+  el.innerHTML = wmap2Markers.map(function(m,i) {
+    return '<div style="display:flex;align-items:center;gap:4px;padding:2px 0;border-bottom:1px solid rgba(42,42,42,.3);font-size:11px;">'+
+      m.icon+' <span style="flex:1;color:var(--muted);">'+esc(m.label)+'</span>'+
+      '<span style="color:var(--dim);cursor:pointer;" onclick="wmap2RemoveMarker('+i+')">&#10005;</span>'+
+    '</div>';
+  }).join('');
+}
+
+function wmap2RemoveMarker(i) { wmap2Markers.splice(i,1); wmap2Draw(); renderWmap2MarkerList(); }
+
+function wmapClear2() {
+  if (!confirm('Clear world map?')) return;
+  wmap2Cells = {}; wmap2Markers = []; wmap2Labels = [];
+  var canvas = document.getElementById('wmapCanvas2');
+  if (canvas) {
+    var cols = Math.ceil(canvas.width/WMAP2_CELL)+30, rows = Math.ceil(canvas.height/WMAP2_CELL)+30;
+    for (var c=-10;c<cols;c++) for (var r=-10;r<rows;r++) wmap2Cells[c+','+r]='#0d1f3c';
+  }
+  wmap2Draw(); renderWmap2MarkerList();
+}
+
+function wmapExport2() {
+  var link = document.createElement('a');
+  link.download = 'world-map.png';
+  link.href = document.getElementById('wmapCanvas2').toDataURL();
+  link.click();
+}
+
+function wmapSave2() {
+  var id = document.getElementById('wmapId2').value.trim() || 'world-1';
+  try {
+    var data = { cells: wmap2Cells, markers: wmap2Markers, labels: wmap2Labels };
+    localStorage.setItem('dnd_worldmap_' + id, JSON.stringify(data));
+    showToast('World map saved!', 'success');
+  } catch(e) { showToast('Save failed — map too large', 'error'); }
+}
+
+function wmapLoad2() {
+  var id = document.getElementById('wmapId2').value.trim() || 'world-1';
+  try {
+    var raw = localStorage.getItem('dnd_worldmap_' + id);
+    if (!raw) { showToast('No saved map found', 'error'); return; }
+    var data = JSON.parse(raw);
+    wmap2Cells = data.cells || {};
+    wmap2Markers = data.markers || [];
+    wmap2Labels = data.labels || [];
+    wmap2Draw(); renderWmap2MarkerList();
+    showToast('World map loaded!', 'success');
+  } catch(e) { showToast('Load failed', 'error'); }
 }
 
 // ── Map Templates ──
