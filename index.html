@@ -469,7 +469,7 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .spell-slot-pip.available{background:var(--red);border-color:var(--red);}
 /* ── NOTIFICATIONS ── */
 .notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #0a0a0a;}
-.notif-panel{position:fixed;top:52px;right:0;width:320px;background:var(--bg2);border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 0 10px;z-index:150;max-height:400px;overflow-y:auto;box-shadow:-4px 4px 20px rgba(0,0,0,.4);}
+.notif-panel{background:var(--bg2);border:1px solid var(--border);border-radius:0 0 10px 10px;z-index:300;max-height:400px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.5);}
 .notif-item{padding:12px 16px;border-bottom:1px solid rgba(42,42,42,.4);cursor:pointer;transition:background .15s;}
 .notif-item:hover{background:var(--bg3);}
 .notif-item.unread{border-left:3px solid var(--red);}
@@ -687,7 +687,6 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#9835; Voice</button>
   <button class="nav-item" id="nav-music" onclick="navigate('music')">&#9836; Music</button>
   <button class="nav-item" id="nav-dice" onclick="navigate('dice')">&#127922; Dice Log</button>
-  <button class="nav-item" id="nav-soundboard" onclick="navigate('soundboard')">&#128266; Sounds</button>
   <button class="nav-item" id="nav-whiteboard" onclick="navigate('whiteboard')">&#9998; Whiteboard</button>
   <button class="nav-item" id="nav-worldmap" onclick="navigate('worldmap')">&#127758; World Map</button>
   <button class="nav-item" id="nav-quests" onclick="navigate('quests')">&#128221; Quests</button>
@@ -697,6 +696,13 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
   <button class="nav-item" id="notifBtn" onclick="toggleNotifPanel()" style="position:relative;">
     &#128276;<span class="notif-dot" id="notifDot" style="display:none;"></span>
+    <div class="notif-panel" id="notifPanel" style="display:none;position:absolute;top:100%;right:0;z-index:300;min-width:300px;" onclick="event.stopPropagation()">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;">Notifications</div>
+        <span style="font-size:12px;color:var(--red);cursor:pointer;" onclick="clearNotifs()">Clear all</span>
+      </div>
+      <div id="notifList"><div style="padding:20px;text-align:center;color:var(--dim);font-size:13px;">No notifications</div></div>
+    </div>
   </button>
 </nav>
 
@@ -1012,6 +1018,22 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
         </div>
       </div>
       <div id="cdInitList"><div style="color:var(--dim);font-size:14px;text-align:center;padding:20px;">No combatants yet. Click + Add to start combat.</div></div>
+    </div>
+    <!-- Campaign Dice Log -->
+    <div class="section-card" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="section-title" style="margin:0;">&#127922; Session Dice Rolls</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="die-btn" onclick="cdRollDie(4)">d4</button>
+          <button class="die-btn" onclick="cdRollDie(6)">d6</button>
+          <button class="die-btn" onclick="cdRollDie(8)">d8</button>
+          <button class="die-btn" onclick="cdRollDie(10)">d10</button>
+          <button class="die-btn" onclick="cdRollDie(12)">d12</button>
+          <button class="die-btn" onclick="cdRollDie(20)">d20</button>
+          <button class="die-btn" onclick="cdRollDie(100)">d100</button>
+        </div>
+      </div>
+      <div id="cdDiceLog" style="max-height:180px;overflow-y:auto;"></div>
     </div>
   </div>
 
@@ -1596,7 +1618,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
   <!-- WHITEBOARD -->
-  <div class="page" id="page-whiteboard" style="padding:0;max-width:none;flex-direction:column;height:calc(100vh - 52px);">
+  <div class="page" id="page-whiteboard" style="padding:0;max-width:none;">
     <div class="wb-toolbar">
       <button class="wb-tool-btn active" id="wb-pen" onclick="wbSetTool('pen')">&#9998; Pen</button>
       <button class="wb-tool-btn" id="wb-line" onclick="wbSetTool('line')">&#8212; Line</button>
@@ -2122,13 +2144,6 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 </div>
 
 <!-- NOTIFICATION PANEL -->
-<div class="notif-panel" id="notifPanel" style="display:none;">
-  <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
-    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;">Notifications</div>
-    <span style="font-size:12px;color:var(--red);cursor:pointer;" onclick="clearNotifs()">Clear all</span>
-  </div>
-  <div id="notifList"><div style="padding:20px;text-align:center;color:var(--dim);font-size:13px;">No notifications</div></div>
-</div>
 
 <!-- ADD COMBATANT MODAL -->
 <div class="pfp-modal" id="initAddModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
@@ -2937,7 +2952,15 @@ var CDATA = {
 // NAVIGATION
 function navigate(page) {
   var pages = document.querySelectorAll('.page');
-  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+  for (var i = 0; i < pages.length; i++) {
+    pages[i].classList.remove('active');
+    // Reset whiteboard flex when navigating away
+    if (pages[i].id === 'page-whiteboard' && pages[i].id !== 'page-' + page) {
+      pages[i].style.display = '';
+      pages[i].style.flexDirection = '';
+      pages[i].style.height = '';
+    }
+  }
   var navItems = document.querySelectorAll('.nav-item');
   for (var j = 0; j < navItems.length; j++) navItems[j].classList.remove('active');
   var pageEl = document.getElementById('page-' + page);
@@ -2957,10 +2980,7 @@ function navigate(page) {
   if (page === 'music') musicInit();
   if (page === 'dice') { loadDiceHistory(); renderDiceHistory(); }
   if (page === 'soundboard') { sbInit(); }
-  if (page === 'whiteboard') {
-    document.getElementById('page-whiteboard').style.display = 'flex';
-    setTimeout(wbInit, 50);
-  }
+  if (page === 'whiteboard') { setTimeout(wbInit, 50); }
   if (page === 'worldmap') { setTimeout(wmapInit, 50); }
   if (page === 'quests') { loadQuests(); renderQuests(); }
   if (page === 'pet') { renderPetPage(); }
@@ -3160,6 +3180,7 @@ function openCampaign(id, fromBrowse) {
   setTimeout(function() {
     loadInitiativeFromFb();
     loadSessionNotes();
+    startCdDiceListener();
   }, 100);
 }
 
@@ -6985,20 +7006,27 @@ function wbInit() {
   var canvas = document.getElementById('wbCanvas');
   var wrap = document.getElementById('page-whiteboard');
   if (!canvas || !wrap) return;
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.height = 'calc(100vh - 52px)';
   var toolbar = wrap.querySelector('.wb-toolbar');
-  canvas.width = wrap.clientWidth;
-  canvas.height = wrap.clientHeight - (toolbar ? toolbar.offsetHeight : 40);
+  canvas.width = wrap.clientWidth || 800;
+  canvas.height = (wrap.clientHeight || 600) - (toolbar ? toolbar.offsetHeight : 40);
   var ctx = canvas.getContext('2d');
   ctx.fillStyle = '#111';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  canvas.addEventListener('mousedown', wbMouseDown);
-  canvas.addEventListener('mousemove', wbMouseMove);
-  canvas.addEventListener('mouseup', wbMouseUp);
-  canvas.addEventListener('mouseleave', wbMouseUp);
-  document.getElementById('wbSize').addEventListener('input', function(e){
-    wbSize = parseInt(e.target.value);
-    document.getElementById('wbSizeLabel').textContent = wbSize;
-  });
+  // Only add listeners once
+  if (!canvas._wbInit) {
+    canvas._wbInit = true;
+    canvas.addEventListener('mousedown', wbMouseDown);
+    canvas.addEventListener('mousemove', wbMouseMove);
+    canvas.addEventListener('mouseup', wbMouseUp);
+    canvas.addEventListener('mouseleave', wbMouseUp);
+    document.getElementById('wbSize').addEventListener('input', function(e){
+      wbSize = parseInt(e.target.value);
+      document.getElementById('wbSizeLabel').textContent = wbSize;
+    });
+  }
 }
 
 function wbSetTool(t) {
@@ -8057,6 +8085,47 @@ function logSessionEvent(type, message) {
   db.ref('feed/' + _currentCampaignId).push(entry);
 }
 
+
+// ── Campaign Dice Log ──
+var _cdDiceLog = [];
+var _cdDiceListener = null;
+
+function cdRollDie(sides) {
+  if (!_currentCampaignId || !currentUser) { showToast('Open a campaign first', 'error'); return; }
+  var result = Math.floor(Math.random() * sides) + 1;
+  var isCrit = sides === 20 && result === 20;
+  var isFail = sides === 20 && result === 1;
+  var entry = { user: currentUser.username, dn: currentUser.dn, sides: sides, result: result, time: Date.now() };
+  db.ref('campaigndice/' + _currentCampaignId).push(entry);
+  playSound('dice');
+  if (isCrit) unlockAchievement('nat20', '&#9733;', 'Natural 20!', 'Rolled a natural 20');
+  if (isFail) unlockAchievement('nat1', '&#9785;', 'Epic Fail', 'Rolled a natural 1');
+}
+
+function startCdDiceListener() {
+  if (!_currentCampaignId) return;
+  if (_cdDiceListener) db.ref('campaigndice/' + _currentCampaignId).off('value', _cdDiceListener);
+  _cdDiceListener = db.ref('campaigndice/' + _currentCampaignId).limitToLast(30).on('value', function(snap) {
+    var raw = snap.val() || {};
+    var entries = Object.values(raw).sort(function(a,b){ return b.time - a.time; });
+    var el = document.getElementById('cdDiceLog');
+    if (!el) return;
+    if (!entries.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">No rolls yet. Roll some dice!</div>'; return; }
+    el.innerHTML = entries.map(function(r) {
+      var isCrit = r.sides === 20 && r.result === 20;
+      var isFail = r.sides === 20 && r.result === 1;
+      return '<div class="dice-hist-entry">' +
+        '<div class="dice-hist-val' + (isCrit?' crit':isFail?' fail':'') + '">' + r.result + '</div>' +
+        '<div style="flex:1;">' +
+          '<span style="color:var(--text);">d' + r.sides + '</span>' +
+          (isCrit ? ' <span style="color:#ffd700;font-size:11px;">&#9733; CRIT!</span>' : '') +
+          (isFail ? ' <span style="color:#555;font-size:11px;">&#9785; FAIL</span>' : '') +
+          '<div style="font-size:11px;color:var(--dim);">' + esc(r.user) + ' &nbsp;&#183;&nbsp; ' + fmtTime(r.time) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  });
+}
 
 // ── UTIL
 function pwaInstall() {
