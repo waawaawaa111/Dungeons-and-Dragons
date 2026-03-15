@@ -450,7 +450,38 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .pfp-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
 .pfp-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;width:100%;max-width:420px;}
 
-/* ── MUSIC PLAYER ── */
+/* ── INITIATIVE TRACKER ── */
+.init-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);margin-bottom:6px;transition:all .2s;}
+.init-row.active-turn{border-color:var(--red);background:rgba(229,62,62,.08);box-shadow:0 0 0 1px var(--red);}
+.init-badge{width:40px;height:40px;border-radius:8px;background:var(--red);color:white;font-family:'Cinzel',serif;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.init-name{flex:1;font-family:'Cinzel',serif;font-size:14px;}
+.init-hp{display:flex;align-items:center;gap:6px;font-size:13px;}
+.init-hp-bar{width:80px;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;}
+.init-hp-fill{height:100%;border-radius:3px;transition:width .3s;}
+.init-conditions{display:flex;gap:4px;flex-wrap:wrap;}
+.init-condition{padding:2px 8px;border-radius:12px;font-size:11px;background:var(--bg4);border:1px solid var(--border);}
+/* ── SPELL SLOTS ── */
+.spell-slot-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.spell-slot-label{font-size:12px;color:var(--muted);width:60px;flex-shrink:0;}
+.spell-slot-pips{display:flex;gap:4px;}
+.spell-slot-pip{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:all .15s;}
+.spell-slot-pip.used{background:transparent;}
+.spell-slot-pip.available{background:var(--red);border-color:var(--red);}
+/* ── NOTIFICATIONS ── */
+.notif-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #0a0a0a;}
+.notif-panel{position:fixed;top:52px;right:0;width:320px;background:var(--bg2);border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 0 10px;z-index:150;max-height:400px;overflow-y:auto;box-shadow:-4px 4px 20px rgba(0,0,0,.4);}
+.notif-item{padding:12px 16px;border-bottom:1px solid rgba(42,42,42,.4);cursor:pointer;transition:background .15s;}
+.notif-item:hover{background:var(--bg3);}
+.notif-item.unread{border-left:3px solid var(--red);}
+.notif-title{font-size:13px;color:var(--text);margin-bottom:2px;}
+.notif-sub{font-size:12px;color:var(--muted);}
+.notif-time{font-size:11px;color:var(--dim);}
+/* ── DICE HISTORY ── */
+.dice-hist-entry{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid rgba(42,42,42,.3);font-size:13px;}
+.dice-hist-val{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--red);width:32px;text-align:center;}
+.dice-hist-val.crit{color:#ffd700;}
+.dice-hist-val.fail{color:#555;}
+
 .music-layout{display:flex;height:calc(100vh - 52px);background:var(--bg);overflow:hidden;}
 .music-sidebar{width:260px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
 .music-sidebar-header{padding:16px;border-bottom:1px solid var(--border);}
@@ -521,6 +552,121 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 .map2-token-row{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;cursor:pointer;font-size:12px;color:var(--muted);transition:background .15s;}
 .map2-token-row:hover{background:var(--bg3);color:var(--text);}
 .map2-token-row.selected{background:var(--red-dim);color:var(--text);}
+
+/* ══════════════════════════════════════════════════════
+   NEW FEATURES CSS
+   ══════════════════════════════════════════════════════ */
+
+/* ── VIRTUAL PET ── */
+.pet-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;}
+.pet-display{width:120px;height:120px;margin:0 auto 12px;position:relative;cursor:pointer;user-select:none;}
+.pet-sprite{font-size:72px;line-height:120px;display:block;transition:transform .3s;filter:drop-shadow(0 4px 8px rgba(229,62,62,.3));}
+.pet-sprite:hover{transform:scale(1.1);}
+.pet-sprite.happy{animation:pet-bounce .5s ease infinite alternate;}
+.pet-sprite.sleeping{filter:grayscale(.6);opacity:.7;}
+@keyframes pet-bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+@keyframes pet-shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.pet-name{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--red);margin-bottom:4px;}
+.pet-species{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.pet-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.pet-stat{background:var(--bg3);border-radius:8px;padding:8px 4px;}
+.pet-stat-val{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--red);}
+.pet-stat-bar{height:4px;background:var(--bg4);border-radius:2px;margin:4px auto;width:80%;}
+.pet-stat-fill{height:100%;border-radius:2px;transition:width .5s;}
+.pet-stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;}
+.pet-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.pet-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-family:'Crimson Text',serif;font-size:14px;transition:all .15s;}
+.pet-btn:hover{background:var(--red);border-color:var(--red);color:white;}
+.pet-speech{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:12px;font-size:14px;color:var(--text);min-height:44px;position:relative;text-align:left;line-height:1.5;}
+.pet-speech::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:var(--border);border-top:none;}
+.pet-level-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--red-dim);border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:12px;color:var(--red);margin-bottom:8px;}
+.pet-xp-bar{height:4px;background:var(--bg3);border-radius:2px;margin-bottom:12px;overflow:hidden;}
+.pet-xp-fill{height:100%;background:var(--red);border-radius:2px;transition:width .5s;}
+.pet-page{max-width:900px;margin:0 auto;padding:32px;}
+.pet-choose-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px;}
+.pet-choose-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;}
+.pet-choose-card:hover{border-color:var(--red);background:var(--bg3);}
+.pet-choose-emoji{font-size:48px;display:block;margin-bottom:8px;}
+.pet-choose-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);}
+.pet-choose-species{font-size:12px;color:var(--muted);margin-top:2px;}
+.pet-chat-wrap{display:flex;gap:8px;margin-top:10px;}
+.pet-chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-family:'Crimson Text',serif;font-size:14px;outline:none;}
+.pet-chat-input:focus{border-color:var(--red);}
+
+/* ── SOUNDBOARD ── */
+.soundboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.sound-btn{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Crimson Text',serif;}
+.sound-btn:hover{border-color:var(--red);background:var(--bg3);}
+.sound-btn.playing{border-color:var(--red);background:var(--red-dim);animation:pulse-border .8s ease infinite;}
+@keyframes pulse-border{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.4)}50%{box-shadow:0 0 0 6px rgba(229,62,62,0)}}
+.sound-icon{font-size:28px;display:block;margin-bottom:6px;}
+.sound-label{font-size:13px;color:var(--text);}
+
+/* ── WHITEBOARD ── */
+.whiteboard-wrap{flex:1;position:relative;background:#111;overflow:hidden;}
+.wb-toolbar{padding:8px 12px;background:#0a0a0a;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.wb-color-swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s;flex-shrink:0;}
+.wb-color-swatch.active{border-color:white;}
+.wb-tool-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);cursor:pointer;font-size:13px;transition:all .15s;}
+.wb-tool-btn.active{background:var(--red);border-color:var(--red);color:white;}
+
+/* ── WORLD MAP ── */
+.wmap-layout{display:flex;height:calc(100vh - 52px);overflow:hidden;}
+.wmap-toolbar{width:160px;background:#0a0a0a;border-right:1px solid var(--border);overflow-y:auto;padding:8px 0;flex-shrink:0;}
+.wmap-canvas-wrap{flex:1;position:relative;overflow:hidden;background:#1a2a3a;}
+.wmap-right{width:160px;background:#0a0a0a;border-left:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;}
+.wmap-terrain-swatch{width:32px;height:32px;border-radius:6px;cursor:pointer;border:2px solid transparent;margin:2px;display:inline-block;transition:border-color .15s;}
+.wmap-terrain-swatch.active{border-color:white;}
+
+/* ── QUEST BOARD ── */
+.quest-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s;position:relative;}
+.quest-card:hover{border-color:#444;background:var(--bg3);}
+.quest-card.active{border-left:3px solid var(--red);}
+.quest-card.complete{opacity:.6;border-left:3px solid #2d6a4f;}
+.quest-badge{padding:2px 8px;border-radius:12px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+.quest-badge.main{background:rgba(229,62,62,.15);color:var(--red);border:1px solid rgba(229,62,62,.3);}
+.quest-badge.side{background:rgba(74,124,89,.2);color:#5cb88a;border:1px solid rgba(74,124,89,.4);}
+.quest-badge.bounty{background:rgba(212,160,23,.15);color:#d4a017;border:1px solid rgba(212,160,23,.3);}
+
+/* ── INVENTORY ── */
+.inv-slot{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;transition:background .15s;}
+.inv-slot:hover{background:var(--bg4);}
+.inv-icon{width:32px;height:32px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.inv-name{font-size:14px;color:var(--text);flex:1;}
+.inv-qty{font-size:12px;color:var(--muted);background:var(--bg4);border-radius:4px;padding:2px 6px;}
+.inv-weight{font-size:11px;color:var(--dim);}
+
+/* ── ENCOUNTER BUILDER ── */
+.enc-monster-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.enc-difficulty{padding:6px 16px;border-radius:8px;font-family:'Cinzel',serif;font-size:14px;font-weight:700;text-align:center;margin-top:12px;}
+.enc-easy{background:rgba(45,106,79,.2);color:#5cb88a;border:1px solid rgba(45,106,79,.4);}
+.enc-medium{background:rgba(212,160,23,.15);color:#d4a017;border:1px solid rgba(212,160,23,.3);}
+.enc-hard{background:rgba(229,62,62,.15);color:#fc8181;border:1px solid rgba(229,62,62,.3);}
+.enc-deadly{background:rgba(139,0,0,.3);color:#fc8181;border:1px solid #8b0000;animation:pulse-border .8s ease infinite;}
+
+/* ── DYNAMIC THEME ── */
+body.theme-dawn{--bg:#0d0808;--bg2:#140c0c;--bg3:#1a1010;}
+body.theme-dusk{--bg:#080810;--bg2:#0c0c1a;--bg3:#101020;}
+body.theme-night{--bg:#050508;--bg2:#09090f;--bg3:#0d0d18;}
+body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
+
+/* ── TYPING INDICATOR ── */
+.typing-indicator{display:none;align-items:center;gap:4px;padding:6px 12px;font-size:12px;color:var(--muted);}
+.typing-indicator.visible{display:flex;}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typing-pulse 1.2s ease infinite;}
+.typing-dot:nth-child(2){animation-delay:.2s;}
+.typing-dot:nth-child(3){animation-delay:.4s;}
+@keyframes typing-pulse{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1);opacity:1}}
+
+/* ── ACHIEVEMENT ── */
+.achievement-pop{position:fixed;bottom:80px;right:24px;background:var(--bg2);border:1px solid var(--red);border-radius:12px;padding:14px 20px;z-index:300;display:flex;align-items:center;gap:12px;transform:translateY(100px);opacity:0;transition:all .4s;box-shadow:0 4px 20px rgba(229,62,62,.2);}
+.achievement-pop.show{transform:translateY(0);opacity:1;}
+.achievement-icon{font-size:28px;}
+.achievement-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--red);}
+.achievement-desc{font-size:12px;color:var(--muted);}
+.achievement-badge{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.achievement-badge.earned{border-color:rgba(229,62,62,.4);background:var(--red-dim);}
+
 </style>
 </head>
 <body>
@@ -540,8 +686,18 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
   <button class="nav-item" id="nav-voice" onclick="navigate('voice')">&#9835; Voice</button>
   <button class="nav-item" id="nav-music" onclick="navigate('music')">&#9836; Music</button>
-  <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#9881; Admin</button>
+  <button class="nav-item" id="nav-dice" onclick="navigate('dice')">&#127922; Dice Log</button>
+  <button class="nav-item" id="nav-soundboard" onclick="navigate('soundboard')">&#128266; Sounds</button>
+  <button class="nav-item" id="nav-whiteboard" onclick="navigate('whiteboard')">&#9998; Whiteboard</button>
+  <button class="nav-item" id="nav-worldmap" onclick="navigate('worldmap')">&#127758; World Map</button>
+  <button class="nav-item" id="nav-quests" onclick="navigate('quests')">&#128221; Quests</button>
+  <button class="nav-item" id="nav-pet" onclick="navigate('pet')">&#9733; Pet</button>
+  <button class="nav-item" id="nav-tools" onclick="navigate('tools')">&#9881; DM Tools</button>
+  <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#128737; Admin</button>
   <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;">&#8659; Install App</button>
+  <button class="nav-item" id="notifBtn" onclick="toggleNotifPanel()" style="position:relative;">
+    &#128276;<span class="notif-dot" id="notifDot" style="display:none;"></span>
+  </button>
 </nav>
 
 <!-- AUTH SCREEN -->
@@ -683,6 +839,11 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
       <option>Dragonborn</option><option>Aasimar</option>
     </select>
   </div>
+  <div id="profilePetMini" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:12px;text-align:center;cursor:pointer;" onclick="navigate('pet')">
+    <div style="font-size:28px;" id="profilePetEmoji">&#9733;</div>
+    <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--text);" id="profilePetName">My Pet</div>
+    <div style="font-size:11px;color:var(--muted);" id="profilePetMood">Happy</div>
+  </div>
   <button class="signout-btn" onclick="doSignOut()">&#8618; Sign Out</button>
 </div>
 
@@ -818,9 +979,10 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
       <button class="btn-primary" onclick="navigate('map')">&#128506; Open Map Builder</button>
       <button class="btn-secondary" id="cdMsgBtn" onclick="openCampaignChat()">&#128172; Party Chat</button>
       <button class="btn-secondary" id="cdVoiceBtn" onclick="openCampaignVoice()">&#127897; Voice Chat</button>
+      <button class="btn-secondary" id="cdInviteBtn" onclick="copyInviteLink()" style="display:none">&#128279; Invite Link</button>
       <button class="btn-secondary" id="cdJoinBtn" style="display:none" onclick="joinCampaign()">+ Join Campaign</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
       <div class="section-card">
         <div class="section-title">&#128101; Players</div>
         <div id="cdPlayersList"></div>
@@ -833,7 +995,23 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
           <div id="cdAddPlayerError" style="color:#fc8181;font-size:13px;margin-top:6px;min-height:18px"></div>
         </div>
       </div>
-      <div class="section-card"><div class="section-title">&#128221; Session Notes</div><div class="empty-state"><div class="empty-icon">&#128203;</div><div>No session notes yet.</div></div></div>
+      <!-- SESSION NOTES -->
+      <div class="section-card">
+        <div class="section-title">&#128221; Session Notes</div>
+        <textarea id="cdSessionNotes" class="form-textarea" placeholder="Write session notes here — visible to all players..." style="min-height:120px;" oninput="saveSessionNotes()"></textarea>
+      </div>
+    </div>
+    <!-- INITIATIVE TRACKER -->
+    <div class="section-card" style="margin-bottom:16px" id="cdInitCard">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="section-title" style="margin:0">&#9876; Initiative Tracker</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-secondary" style="padding:6px 12px;font-size:13px;" onclick="initAddCombatant()">+ Add</button>
+          <button class="btn-secondary" style="padding:6px 12px;font-size:13px;" onclick="initNextTurn()">&#9654; Next Turn</button>
+          <button class="btn-secondary" style="padding:6px 12px;font-size:13px;" onclick="initClear()">&#8635; Clear</button>
+        </div>
+      </div>
+      <div id="cdInitList"><div style="color:var(--dim);font-size:14px;text-align:center;padding:20px;">No combatants yet. Click + Add to start combat.</div></div>
     </div>
   </div>
 
@@ -878,7 +1056,8 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
         </div>
         <div class="map2-toolbar-section">
           <div class="map2-section-label">TOKENS</div>
-          <div id="map2TokenList" style="display:flex;flex-direction:column;gap:2px;max-height:200px;overflow-y:auto;"></div>
+          <input class="map2-token-input" placeholder="Search tokens..." oninput="renderMap2TokenList(this.value)" style="margin-bottom:4px;">
+          <div id="map2TokenList" style="display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;"></div>
           <input class="map2-token-input" id="map2CustomToken" placeholder="Custom name..." style="margin-top:6px;">
           <select class="map2-token-input" id="map2CustomEmoji" style="margin-top:4px;">
             <option value="&#9876;">&#9876; Fighter</option>
@@ -904,6 +1083,14 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
           <button class="map2-mini-btn" onclick="map2Clear()">&#8635; Clear</button>
           <button class="map2-mini-btn" onclick="map2Export()" style="margin-top:4px">&#8659; Export PNG</button>
           <button class="map2-mini-btn" onclick="map2Save()" style="margin-top:4px;background:var(--red);color:white;border-color:var(--red)">&#9660; Save &amp; Sync</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">TEMPLATES</div>
+          <button class="map2-mini-btn" onclick="loadMapTemplate('tavern')" style="margin-bottom:3px;width:100%">&#127867; Tavern</button>
+          <button class="map2-mini-btn" onclick="loadMapTemplate('dungeon')" style="margin-bottom:3px;width:100%">&#128565; Dungeon</button>
+          <button class="map2-mini-btn" onclick="loadMapTemplate('cave')" style="margin-bottom:3px;width:100%">&#9968; Cave</button>
+          <button class="map2-mini-btn" onclick="loadMapTemplate('castle')" style="margin-bottom:3px;width:100%">&#127981; Castle Hall</button>
+          <button class="map2-mini-btn" onclick="loadMapTemplate('ship')" style="width:100%">&#9875; Ship Deck</button>
         </div>
         <div class="map2-toolbar-section">
           <div class="map2-section-label">SESSION</div>
@@ -1018,10 +1205,14 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
             </div>
           </div>
           <div class="msg-messages" id="msgMessages"></div>
+          <div class="typing-indicator" id="msgTypingIndicator">
+            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+            <span style="font-size:12px;color:var(--muted);"></span>
+          </div>
           <div class="msg-input-area">
             <textarea class="msg-input" id="msgInput" placeholder="Type a message..." rows="1"
               onkeydown="handleMsgKey(event)"
-              oninput="autoResize(this)"></textarea>
+              oninput="autoResize(this);msgInputTyping()"></textarea>
             <button class="msg-send-btn" onclick="sendMessage()" id="msgSendBtn">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -1270,6 +1461,12 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
           <div class="cs-section-title">Backstory</div>
           <textarea class="cs-textarea" id="csBackstory" placeholder="Your character's history..."></textarea>
         </div>
+        <!-- Spell Slots -->
+        <div class="cs-section">
+          <div class="cs-section-title">Spell Slots</div>
+          <div id="csSpellSlots"></div>
+          <button class="btn-secondary" style="margin-top:8px;padding:6px 12px;font-size:13px;" onclick="csResetSpellSlots()">&#8635; Long Rest (Reset All)</button>
+        </div>
         <!-- Roll Log -->
         <div class="cs-section">
           <div class="cs-section-title">Roll History</div>
@@ -1336,6 +1533,373 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
   </div>
 
   <!-- ADMIN -->
+  <!-- DICE HISTORY -->
+  <div class="page" id="page-dice">
+    <div class="page-header">
+      <div class="page-title">&#127922; Dice History</div>
+      <button class="btn-secondary" onclick="clearDiceHistory()">&#8635; Clear History</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px;">
+      <div class="section-card">
+        <div class="section-title">&#127922; Quick Roll</div>
+        <div class="dice-grid" style="margin-bottom:16px;">
+          <button class="die-btn" onclick="rollDieLog(4)">d4</button>
+          <button class="die-btn" onclick="rollDieLog(6)">d6</button>
+          <button class="die-btn" onclick="rollDieLog(8)">d8</button>
+          <button class="die-btn" onclick="rollDieLog(10)">d10</button>
+          <button class="die-btn" onclick="rollDieLog(12)">d12</button>
+          <button class="die-btn" onclick="rollDieLog(20)">d20</button>
+          <button class="die-btn" onclick="rollDieLog(100)">d100</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+          <span style="font-size:13px;color:var(--muted);">Custom:</span>
+          <input class="form-input" id="diceCustomCount" type="number" min="1" max="20" value="1" style="width:50px;text-align:center;padding:4px;">
+          <span style="color:var(--muted);">d</span>
+          <input class="form-input" id="diceCustomSides" type="number" min="2" max="1000" value="6" style="width:60px;text-align:center;padding:4px;">
+          <span style="color:var(--muted);">+</span>
+          <input class="form-input" id="diceCustomMod" type="number" value="0" style="width:50px;text-align:center;padding:4px;">
+          <button class="btn-primary" style="padding:6px 12px;" onclick="rollDiceCustom()">Roll</button>
+        </div>
+        <div id="diceLogBigResult" style="text-align:center;padding:16px;display:none;">
+          <div style="font-family:'Cinzel',serif;font-size:56px;font-weight:700;color:var(--red);" id="diceLogBigNum">—</div>
+          <div style="font-size:13px;color:var(--muted);" id="diceLogBigLabel">—</div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title">&#128203; Roll Log</div>
+        <div id="diceHistoryList" style="max-height:400px;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOUNDBOARD -->
+  <div class="page" id="page-soundboard">
+    <div class="page-header"><div class="page-title">&#128266; Soundboard</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label class="form-label" style="margin:0;">Volume</label>
+        <input type="range" id="sbVolume" min="0" max="1" step="0.05" value="0.5" style="width:100px;accent-color:var(--red);">
+        <button class="btn-secondary" style="padding:6px 12px;font-size:13px;" onclick="sbStopAll()">&#9632; Stop All</button>
+      </div>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Combat & Action</div>
+      <div class="soundboard-grid" id="sbGridCombat"></div>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Atmosphere</div>
+      <div class="soundboard-grid" id="sbGridAtmo"></div>
+    </div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;">Magic & Spells</div>
+      <div class="soundboard-grid" id="sbGridMagic"></div>
+    </div>
+  </div>
+
+  <!-- WHITEBOARD -->
+  <div class="page" id="page-whiteboard" style="padding:0;max-width:none;flex-direction:column;height:calc(100vh - 52px);">
+    <div class="wb-toolbar">
+      <button class="wb-tool-btn active" id="wb-pen" onclick="wbSetTool('pen')">&#9998; Pen</button>
+      <button class="wb-tool-btn" id="wb-line" onclick="wbSetTool('line')">&#8212; Line</button>
+      <button class="wb-tool-btn" id="wb-rect" onclick="wbSetTool('rect')">&#9633; Rect</button>
+      <button class="wb-tool-btn" id="wb-circle" onclick="wbSetTool('circle')">&#9675; Circle</button>
+      <button class="wb-tool-btn" id="wb-text" onclick="wbSetTool('text')">T Text</button>
+      <button class="wb-tool-btn" id="wb-erase" onclick="wbSetTool('erase')">&#10006; Erase</button>
+      <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+      <div class="wb-color-swatch active" style="background:#e2e2e2;" onclick="wbSetColor('#e2e2e2',this)"></div>
+      <div class="wb-color-swatch" style="background:#e53e3e;" onclick="wbSetColor('#e53e3e',this)"></div>
+      <div class="wb-color-swatch" style="background:#4a90d9;" onclick="wbSetColor('#4a90d9',this)"></div>
+      <div class="wb-color-swatch" style="background:#2ecc71;" onclick="wbSetColor('#2ecc71',this)"></div>
+      <div class="wb-color-swatch" style="background:#f1c40f;" onclick="wbSetColor('#f1c40f',this)"></div>
+      <div class="wb-color-swatch" style="background:#9b59b6;" onclick="wbSetColor('#9b59b6',this)"></div>
+      <div style="width:1px;height:24px;background:var(--border);margin:0 4px;"></div>
+      <label style="font-size:12px;color:var(--muted);">Size</label>
+      <input type="range" id="wbSize" min="1" max="40" value="3" style="width:80px;accent-color:var(--red);">
+      <span id="wbSizeLabel" style="font-size:12px;color:var(--muted);width:20px;">3</span>
+      <div style="flex:1;"></div>
+      <button class="wb-tool-btn" onclick="wbClear()">&#8635; Clear</button>
+      <button class="wb-tool-btn" onclick="wbExport()">&#8659; Export</button>
+      <button class="wb-tool-btn" onclick="wbSync()">&#9660; Sync</button>
+    </div>
+    <div class="whiteboard-wrap">
+      <canvas id="wbCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- WORLD MAP -->
+  <div class="page" id="page-worldmap" style="padding:0;max-width:none;">
+    <div class="wmap-layout">
+      <div class="wmap-toolbar">
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">TERRAIN</div>
+          <div id="wmapTerrainSwatches"></div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">MARKERS</div>
+          <div id="wmapMarkerList"></div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">TOOLS</div>
+          <button class="map2-tool-btn active" id="wmt-paint" onclick="wmapSetTool('paint')" title="Paint Terrain">&#9724;</button>
+          <button class="map2-tool-btn" id="wmt-marker" onclick="wmapSetTool('marker')" title="Place Marker">&#9670;</button>
+          <button class="map2-tool-btn" id="wmt-label" onclick="wmapSetTool('label')" title="Add Label">T</button>
+          <button class="map2-tool-btn" id="wmt-road" onclick="wmapSetTool('road')" title="Draw Road">&#9135;</button>
+          <button class="map2-tool-btn" id="wmt-erase" onclick="wmapSetTool('erase')" title="Erase">&#10006;</button>
+          <button class="map2-tool-btn" id="wmt-pan" onclick="wmapSetTool('pan')" title="Pan">&#9995;</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">BRUSH</div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <button onclick="wmapChangeBrush(-1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:22px;height:22px;cursor:pointer;">&#8722;</button>
+            <span id="wmapBrushLabel" style="font-size:12px;color:var(--text);flex:1;text-align:center;">3</span>
+            <button onclick="wmapChangeBrush(1)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:4px;width:22px;height:22px;cursor:pointer;">+</button>
+          </div>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">MAP</div>
+          <button class="map2-mini-btn" onclick="wmapClear()">&#8635; Clear</button>
+          <button class="map2-mini-btn" onclick="wmapExport()" style="margin-top:4px;">&#8659; Export</button>
+          <button class="map2-mini-btn" onclick="wmapSave()" style="margin-top:4px;background:var(--red);color:white;border-color:var(--red);">&#9660; Save</button>
+        </div>
+        <div class="map2-toolbar-section">
+          <div class="map2-section-label">MAP ID</div>
+          <input class="map2-token-input" id="wmapSessionId" value="worldmap-1">
+          <button class="map2-mini-btn" onclick="wmapLoad()" style="margin-top:4px;width:100%;">&#8593; Load</button>
+        </div>
+      </div>
+      <div class="wmap-canvas-wrap" id="wmapCanvasWrap">
+        <canvas id="wmapCanvas"></canvas>
+      </div>
+      <div class="wmap-right">
+        <div class="map2-section-label">LEGEND</div>
+        <div id="wmapLegend" style="font-size:12px;"></div>
+        <div style="margin-top:16px;">
+          <div class="map2-section-label">PLACED MARKERS</div>
+          <div id="wmapMarkerListPlaced" style="font-size:12px;max-height:300px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUEST BOARD -->
+  <div class="page" id="page-quests">
+    <div class="page-header">
+      <div class="page-title">&#128221; Quest Board</div>
+      <button class="btn-primary" onclick="openAddQuestModal()">+ New Quest</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start;">
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;">&#9670; Active</div>
+        <div id="questsActive"></div>
+      </div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;">&#9632; Available</div>
+        <div id="questsAvailable"></div>
+      </div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;">&#10003; Completed</div>
+        <div id="questsCompleted"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIRTUAL PET -->
+  <div class="page" id="page-pet">
+    <div class="pet-page">
+      <!-- Choose pet state -->
+      <div id="petChoose">
+        <div class="page-title" style="margin-bottom:8px;">&#9733; Choose Your Companion</div>
+        <div style="color:var(--muted);font-size:15px;margin-bottom:20px;">Pick a monster companion to bond with on your adventures.</div>
+        <div class="pet-choose-grid" id="petChooseGrid"></div>
+      </div>
+      <!-- Active pet state -->
+      <div id="petActive" style="display:none;">
+        <div style="display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;">
+          <!-- Pet card -->
+          <div class="pet-card">
+            <div class="pet-level-badge">&#9733; Level <span id="petLevelDisplay">1</span></div>
+            <div class="pet-xp-bar"><div class="pet-xp-fill" id="petXpBar" style="width:0%"></div></div>
+            <div class="pet-display">
+              <span class="pet-sprite" id="petSprite">&#128009;</span>
+            </div>
+            <div class="pet-name" id="petNameDisplay">My Pet</div>
+            <div class="pet-species" id="petSpeciesDisplay">Dragon Wyrmling</div>
+            <div class="pet-stats">
+              <div class="pet-stat">
+                <div class="pet-stat-val" id="petHungerVal">80</div>
+                <div class="pet-stat-bar"><div class="pet-stat-fill" id="petHungerBar" style="width:80%;background:#e53e3e;"></div></div>
+                <div class="pet-stat-label">Hunger</div>
+              </div>
+              <div class="pet-stat">
+                <div class="pet-stat-val" id="petHappyVal">80</div>
+                <div class="pet-stat-bar"><div class="pet-stat-fill" id="petHappyBar" style="width:80%;background:#f1c40f;"></div></div>
+                <div class="pet-stat-label">Happy</div>
+              </div>
+              <div class="pet-stat">
+                <div class="pet-stat-val" id="petEnergyVal">80</div>
+                <div class="pet-stat-bar"><div class="pet-stat-fill" id="petEnergyBar" style="width:80%;background:#4a90d9;"></div></div>
+                <div class="pet-stat-label">Energy</div>
+              </div>
+            </div>
+            <div class="pet-speech" id="petSpeech">...</div>
+            <div class="pet-actions" style="margin-top:12px;">
+              <button class="pet-btn" onclick="petFeed()">&#127859; Feed</button>
+              <button class="pet-btn" onclick="petPlay()">&#9733; Play</button>
+              <button class="pet-btn" onclick="petSleep()">&#128564; Sleep</button>
+              <button class="pet-btn" onclick="petPet()">&#10084; Pet</button>
+            </div>
+            <div class="pet-chat-wrap" style="margin-top:10px;">
+              <input class="pet-chat-input" id="petChatInput" placeholder="Talk to your pet..." onkeydown="if(event.key==='Enter')petChat()">
+              <button class="pet-btn" onclick="petChat()" style="flex-shrink:0;">&#9658;</button>
+            </div>
+            <button onclick="petAbandon()" style="margin-top:12px;background:none;border:none;color:var(--dim);font-size:12px;cursor:pointer;font-family:'Crimson Text',serif;">Release companion</button>
+          </div>
+          <!-- Pet details -->
+          <div>
+            <div class="section-card" style="margin-bottom:16px;">
+              <div class="section-title">&#128196; Companion Journal</div>
+              <div id="petJournal" style="max-height:200px;overflow-y:auto;font-size:14px;color:var(--muted);"></div>
+            </div>
+            <div class="section-card">
+              <div class="section-title">&#9670; Stats & Abilities</div>
+              <div id="petAbilities" style="font-size:14px;color:var(--muted);line-height:1.8;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DM TOOLS -->
+  <div class="page" id="page-tools">
+    <div class="page-header"><div class="page-title">&#9881; DM Tools</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <!-- Loot Generator -->
+      <div class="section-card">
+        <div class="section-title">&#128176; Loot Generator</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Encounter Difficulty</label>
+          <select class="auth-input" id="lootDifficulty">
+            <option value="easy">Easy</option><option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option><option value="deadly">Deadly (Boss)</option>
+          </select>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Party Level</label>
+          <input class="auth-input" id="lootLevel" type="number" min="1" max="20" value="5">
+        </div>
+        <button class="auth-btn" onclick="generateLoot()">&#9670; Generate Loot</button>
+        <div id="lootResult" style="margin-top:12px;font-size:14px;line-height:1.8;"></div>
+      </div>
+      <!-- Random Encounter -->
+      <div class="section-card">
+        <div class="section-title">&#9876; Random Encounter</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Terrain</label>
+          <select class="auth-input" id="encTerrain">
+            <option>Forest</option><option>Dungeon</option><option>City</option>
+            <option>Plains</option><option>Mountain</option><option>Swamp</option>
+            <option>Desert</option><option>Underdark</option><option>Ocean</option>
+          </select>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Party Level</label>
+          <input class="auth-input" id="encLevel" type="number" min="1" max="20" value="5">
+        </div>
+        <button class="auth-btn" onclick="generateEncounter()">&#9876; Generate</button>
+        <div id="encResult" style="margin-top:12px;font-size:14px;line-height:1.8;"></div>
+      </div>
+      <!-- Name Generator -->
+      <div class="section-card">
+        <div class="section-title">&#128100; Name Generator</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Race / Culture</label>
+          <select class="auth-input" id="nameRace">
+            <option>Human</option><option>Elf</option><option>Dwarf</option><option>Halfling</option>
+            <option>Gnome</option><option>Tiefling</option><option>Dragonborn</option><option>Orc</option>
+            <option>Goblin</option><option>Undead</option><option>Demon</option><option>Celestial</option>
+          </select>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Gender</label>
+          <select class="auth-input" id="nameGender">
+            <option>Any</option><option>Male</option><option>Female</option><option>Neutral</option>
+          </select>
+        </div>
+        <button class="auth-btn" onclick="generateName()">&#9670; Generate Names</button>
+        <div id="nameResult" style="margin-top:12px;font-size:14px;line-height:1.8;"></div>
+      </div>
+      <!-- Tavern Generator -->
+      <div class="section-card">
+        <div class="section-title">&#127867; Tavern Generator</div>
+        <button class="auth-btn" onclick="generateTavern()">&#127867; Generate Tavern</button>
+        <div id="tavernResult" style="margin-top:12px;font-size:14px;line-height:1.8;"></div>
+      </div>
+      <!-- Trap Generator -->
+      <div class="section-card">
+        <div class="section-title">&#9888; Trap Generator</div>
+        <div class="auth-form-group">
+          <label class="auth-label">Party Level</label>
+          <input class="auth-input" id="trapLevel" type="number" min="1" max="20" value="5">
+        </div>
+        <button class="auth-btn" onclick="generateTrap()">&#9888; Generate Trap</button>
+        <div id="trapResult" style="margin-top:12px;font-size:14px;line-height:1.8;"></div>
+      </div>
+      <!-- Encounter Builder -->
+      <div class="section-card">
+        <div class="section-title">&#9876; Encounter Builder</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input class="form-input" id="encBuilderMonster" placeholder="Monster name..." style="flex:1;">
+          <input class="form-input" id="encBuilderCount" type="number" value="1" min="1" style="width:60px;text-align:center;">
+          <button class="btn-primary" style="padding:6px 12px;" onclick="encBuilderAdd()">+</button>
+        </div>
+        <div class="auth-form-group">
+          <label class="auth-label">Party (size × level)</label>
+          <div style="display:flex;gap:8px;">
+            <input class="auth-input" id="encPartySize" type="number" value="4" min="1" max="10" style="width:80px;text-align:center;">
+            <span style="color:var(--muted);align-self:center;">×</span>
+            <input class="auth-input" id="encPartyLevel" type="number" value="5" min="1" max="20" style="width:80px;text-align:center;">
+          </div>
+        </div>
+        <div id="encBuilderList" style="margin-bottom:8px;"></div>
+        <div id="encBuilderDifficulty"></div>
+      </div>
+      <!-- Conditions Reference -->
+      <div class="section-card">
+        <div class="section-title">&#128196; Conditions Reference</div>
+        <div id="conditionsRef" style="font-size:13px;max-height:300px;overflow-y:auto;"></div>
+      </div>
+      <!-- Rules Reference -->
+      <div class="section-card">
+        <div class="section-title">&#128218; Rules Quick Reference</div>
+        <div id="rulesRef" style="font-size:13px;max-height:300px;overflow-y:auto;"></div>
+      </div>
+      <!-- Currency Converter -->
+      <div class="section-card">
+        <div class="section-title">&#128176; Currency Converter</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div>
+            <div class="cs-label">Platinum (pp)</div>
+            <input class="cs-input" id="currPP" type="number" value="0" min="0" oninput="convertCurrency('pp')">
+          </div>
+          <div>
+            <div class="cs-label">Gold (gp)</div>
+            <input class="cs-input" id="currGP" type="number" value="0" min="0" oninput="convertCurrency('gp')">
+          </div>
+          <div>
+            <div class="cs-label">Silver (sp)</div>
+            <input class="cs-input" id="currSP" type="number" value="0" min="0" oninput="convertCurrency('sp')">
+          </div>
+          <div>
+            <div class="cs-label">Copper (cp)</div>
+            <input class="cs-input" id="currCP" type="number" value="0" min="0" oninput="convertCurrency('cp')">
+          </div>
+        </div>
+        <div id="currResult" style="font-size:13px;color:var(--muted);"></div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="page" id="page-admin">
     <!-- LOCKED STATE -->
     <div id="adminLocked" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;">
@@ -1514,6 +2078,95 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ADD QUEST MODAL -->
+<div class="pfp-modal" id="addQuestModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="pfp-card" style="max-width:480px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">New Quest</div>
+      <button onclick="document.getElementById('addQuestModal').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;">&#10005;</button>
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Quest Title</label>
+      <input class="auth-input" id="questTitle" placeholder="The Lost Artifact...">
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Description</label>
+      <textarea class="auth-input" id="questDesc" placeholder="Quest details..." style="min-height:80px;resize:vertical;"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="auth-form-group">
+        <label class="auth-label">Type</label>
+        <select class="auth-input" id="questType">
+          <option value="main">Main Quest</option>
+          <option value="side">Side Quest</option>
+          <option value="bounty">Bounty</option>
+        </select>
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Reward</label>
+        <input class="auth-input" id="questReward" placeholder="500gp, magic item...">
+      </div>
+    </div>
+    <button class="auth-btn" onclick="addQuest()">&#128221; Post Quest</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT POPUP -->
+<div class="achievement-pop" id="achievementPop">
+  <div class="achievement-icon" id="achievementIcon">&#9733;</div>
+  <div>
+    <div class="achievement-title" id="achievementTitle">Achievement Unlocked!</div>
+    <div class="achievement-desc" id="achievementDesc"></div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel" style="display:none;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;">Notifications</div>
+    <span style="font-size:12px;color:var(--red);cursor:pointer;" onclick="clearNotifs()">Clear all</span>
+  </div>
+  <div id="notifList"><div style="padding:20px;text-align:center;color:var(--dim);font-size:13px;">No notifications</div></div>
+</div>
+
+<!-- ADD COMBATANT MODAL -->
+<div class="pfp-modal" id="initAddModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="pfp-card" style="max-width:400px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">Add Combatant</div>
+      <button onclick="document.getElementById('initAddModal').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;">&#10005;</button>
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Name</label>
+      <input class="auth-input" id="initName" placeholder="Goblin, Thorin, Dragon...">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+      <div class="auth-form-group">
+        <label class="auth-label">Initiative</label>
+        <input class="auth-input" id="initRoll" type="number" placeholder="Roll d20..." style="text-align:center;">
+        <button onclick="document.getElementById('initRoll').value=Math.floor(Math.random()*20)+1" style="width:100%;margin-top:4px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:4px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;">&#127922; Auto Roll</button>
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">HP</label>
+        <input class="auth-input" id="initHP" type="number" placeholder="20" style="text-align:center;">
+      </div>
+      <div class="auth-form-group">
+        <label class="auth-label">Max HP</label>
+        <input class="auth-input" id="initMaxHP" type="number" placeholder="20" style="text-align:center;">
+      </div>
+    </div>
+    <div class="auth-form-group">
+      <label class="auth-label">Type</label>
+      <select class="auth-input" id="initType">
+        <option value="player">Player</option>
+        <option value="enemy">Enemy</option>
+        <option value="npc">NPC / Ally</option>
+      </select>
+    </div>
+    <button class="auth-btn" onclick="initDoAdd()">Add to Initiative</button>
+  </div>
+</div>
 
 <!-- SHEET UPLOAD MODAL -->
 <div class="pfp-modal" id="sheetUploadModal" style="display:none" onclick="if(event.target===this)closeSheetUploadModal()">
@@ -1742,8 +2395,22 @@ function bootApp() {
   document.getElementById('mainContent').style.display = 'block';
   document.querySelector('.navbar').style.display = 'flex';
   refreshProfilePanel();
-  // Start listening for convo updates
   startConvosListener();
+  loadNotifs();
+  loadDiceHistory();
+  loadAchievements();
+  loadPet();
+  loadQuests();
+  startMessageNotifListener();
+  processPendingJoin();
+  updateDynamicTheme();
+  setInterval(updateDynamicTheme, 60000 * 30); // check every 30 min
+  // Check pet health and warn if low
+  if (_pet && (_pet.hunger < 20 || _pet.happy < 20)) {
+    setTimeout(function() {
+      addNotif('&#9733; ' + _pet.name, 'Your companion needs attention!');
+    }, 2000);
+  }
   navigate('home');
 }
 
@@ -1993,6 +2660,9 @@ function openConvo(id) {
     msgs.sort(function(a,b) { return a.time - b.time; });
     renderMessagesFromArray(msgs);
   });
+
+  // Typing indicator
+  startTypingListener(id);
 }
 
 // ── Render messages from array ──
@@ -2057,6 +2727,10 @@ function sendMessage() {
   }
   input.value = '';
   input.style.height = '';
+  // Clear typing indicator
+  if (currentUser) db.ref('typing/' + activeConvoId + '/' + currentUser.dn).remove();
+  // Achievement
+  unlockAchievement('first_message', '&#128172;', 'First Words', 'Sent your first message');
 }
 
 function handleMsgKey(e) {
@@ -2281,7 +2955,21 @@ function navigate(page) {
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
   if (page === 'music') musicInit();
+  if (page === 'dice') { loadDiceHistory(); renderDiceHistory(); }
+  if (page === 'soundboard') { sbInit(); }
+  if (page === 'whiteboard') {
+    document.getElementById('page-whiteboard').style.display = 'flex';
+    setTimeout(wbInit, 50);
+  }
+  if (page === 'worldmap') { setTimeout(wmapInit, 50); }
+  if (page === 'quests') { loadQuests(); renderQuests(); }
+  if (page === 'pet') { renderPetPage(); }
+  if (page === 'tools') { renderConditionsRef(); renderRulesRef(); renderEncBuilder(); }
   if (page === 'admin') { if (!adminUnlocked) { document.getElementById('adminLocked').style.display='flex'; document.getElementById('adminPanel').style.display='none'; } }
+  // Close notif panel on navigate
+  _notifPanelOpen = false;
+  var np = document.getElementById('notifPanel');
+  if (np) np.style.display = 'none';
 }
 
 // PROFILE
@@ -2311,17 +2999,25 @@ function showToast(msg, type) {
 
 // DICE
 function rollDie(sides, btn) {
-  var btns = document.querySelectorAll('.die-btn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-  btn.classList.add('active');
+  if (btn) {
+    var btns = document.querySelectorAll('.die-btn');
+    for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+    btn.classList.add('active');
+  }
   var result = Math.floor(Math.random() * sides) + 1;
   var el = document.getElementById('diceResult');
-  el.style.display = 'block';
+  if (el) el.style.display = 'block';
   var numEl = document.getElementById('diceResultNum');
-  numEl.textContent = result;
-  document.getElementById('diceResultLabel').textContent = 'd' + sides;
-  numEl.style.transform = 'scale(1.4)';
-  setTimeout(function() { numEl.style.transform = 'scale(1)'; }, 200);
+  if (numEl) {
+    numEl.textContent = result;
+    document.getElementById('diceResultLabel').textContent = 'd' + sides;
+    numEl.style.transform = 'scale(1.4)';
+    setTimeout(function() { numEl.style.transform = 'scale(1)'; }, 200);
+  }
+  if (result === 20 && sides === 20) unlockAchievement('nat20', '&#9733;', 'Natural 20!', 'Rolled a natural 20');
+  if (result === 1 && sides === 20) unlockAchievement('nat1', '&#9785;', 'Epic Fail', 'Rolled a natural 1');
+  unlockAchievement('first_roll', '&#127922;', 'Roll the Dice', 'Made your first dice roll');
+  return result;
 }
 
 // HOME
@@ -2448,6 +3144,10 @@ function openCampaign(id, fromBrowse) {
   var joinBtn = document.getElementById('cdJoinBtn');
   joinBtn.style.display = (!isOwner && !isPlayer && isPublic) ? '' : 'none';
 
+  // Invite link button (shown to owner)
+  var inviteBtn = document.getElementById('cdInviteBtn');
+  if (inviteBtn) inviteBtn.style.display = isOwner ? '' : 'none';
+
   // Add player section (only for owner)
   document.getElementById('cdAddPlayerSection').style.display = isOwner ? '' : 'none';
 
@@ -2455,6 +3155,12 @@ function openCampaign(id, fromBrowse) {
   renderCampaignPlayers(c, isOwner);
 
   navigate('campaign-detail');
+
+  // Load initiative and session notes from Firebase
+  setTimeout(function() {
+    loadInitiativeFromFb();
+    loadSessionNotes();
+  }, 100);
 }
 
 function renderCampaignPlayers(c, isOwner) {
@@ -2694,6 +3400,8 @@ function createCampaign() {
     var playerDNs = _ccPlayers.map(function(p) { return p.dn; });
     createGroupChat('⚔️ ' + name, playerDNs, c.id);
     showToast('Campaign created! A party chat was set up in Messages.', 'success');
+    unlockAchievement('first_campaign', '&#9876;', 'Campaign Master', 'Created your first campaign');
+    logSessionEvent('campaign_created', 'Campaign "' + name + '" was created');
   } else {
     showToast('Campaign created!', 'success');
   }
@@ -3361,16 +4069,90 @@ var MAP2_FLOOR_TYPES = [
 ];
 
 var MAP2_DEFAULT_TOKENS = [
-  {label:'Fighter',  symbol:'&#9876;', color:'#4a90d9'},
-  {label:'Rogue',    symbol:'&#9670;', color:'#9b59b6'},
-  {label:'Wizard',   symbol:'&#9651;', color:'#3498db'},
-  {label:'Cleric',   symbol:'&#10010;',color:'#f1c40f'},
-  {label:'Ranger',   symbol:'&#9993;', color:'#2ecc71'},
-  {label:'Goblin',   symbol:'&#9608;', color:'#e74c3c'},
-  {label:'Orc',      symbol:'&#9632;', color:'#c0392b'},
-  {label:'Dragon',   symbol:'&#9670;', color:'#e53e3e'},
-  {label:'Undead',   symbol:'&#9643;', color:'#7f8c8d'},
-  {label:'Boss',     symbol:'&#9733;', color:'#f39c12'},
+  // Player Classes
+  {label:'Fighter',      symbol:'&#9876;', color:'#4a90d9', category:'Players'},
+  {label:'Rogue',        symbol:'&#9670;', color:'#9b59b6', category:'Players'},
+  {label:'Wizard',       symbol:'&#9651;', color:'#3498db', category:'Players'},
+  {label:'Cleric',       symbol:'&#10010;',color:'#f1c40f', category:'Players'},
+  {label:'Ranger',       symbol:'&#9993;', color:'#2ecc71', category:'Players'},
+  {label:'Paladin',      symbol:'&#9737;', color:'#ffd700', category:'Players'},
+  {label:'Barbarian',    symbol:'&#9760;', color:'#e74c3c', category:'Players'},
+  {label:'Bard',         symbol:'&#9835;', color:'#ff69b4', category:'Players'},
+  {label:'Druid',        symbol:'&#9752;', color:'#27ae60', category:'Players'},
+  {label:'Monk',         symbol:'&#9775;', color:'#16a085', category:'Players'},
+  {label:'Sorcerer',     symbol:'&#9670;', color:'#8e44ad', category:'Players'},
+  {label:'Warlock',      symbol:'&#9830;', color:'#6c3483', category:'Players'},
+  // Common Monsters
+  {label:'Goblin',       symbol:'&#9650;', color:'#e74c3c', category:'Monsters'},
+  {label:'Orc',          symbol:'&#9632;', color:'#c0392b', category:'Monsters'},
+  {label:'Kobold',       symbol:'&#9671;', color:'#d4a017', category:'Monsters'},
+  {label:'Hobgoblin',    symbol:'&#9650;', color:'#8b0000', category:'Monsters'},
+  {label:'Bugbear',      symbol:'&#9660;', color:'#5d4037', category:'Monsters'},
+  {label:'Gnoll',        symbol:'&#9684;', color:'#795548', category:'Monsters'},
+  {label:'Lizardfolk',   symbol:'&#9670;', color:'#2e7d32', category:'Monsters'},
+  {label:'Yuan-ti',      symbol:'&#9741;', color:'#558b2f', category:'Monsters'},
+  // Undead
+  {label:'Skeleton',     symbol:'&#9760;', color:'#bdbdbd', category:'Undead'},
+  {label:'Zombie',       symbol:'&#9760;', color:'#558b2f', category:'Undead'},
+  {label:'Ghoul',        symbol:'&#9760;', color:'#6d4c41', category:'Undead'},
+  {label:'Wight',        symbol:'&#9760;', color:'#424242', category:'Undead'},
+  {label:'Vampire',      symbol:'&#9760;', color:'#b71c1c', category:'Undead'},
+  {label:'Lich',         symbol:'&#9760;', color:'#4a148c', category:'Undead'},
+  {label:'Specter',      symbol:'&#9760;', color:'#78909c', category:'Undead'},
+  {label:'Banshee',      symbol:'&#9760;', color:'#b0bec5', category:'Undead'},
+  // Beasts
+  {label:'Wolf',         symbol:'&#9670;', color:'#757575', category:'Beasts'},
+  {label:'Bear',         symbol:'&#9670;', color:'#795548', category:'Beasts'},
+  {label:'Giant Spider', symbol:'&#9670;', color:'#212121', category:'Beasts'},
+  {label:'Giant Rat',    symbol:'&#9670;', color:'#9e9e9e', category:'Beasts'},
+  {label:'Owlbear',      symbol:'&#9670;', color:'#6d4c41', category:'Beasts'},
+  {label:'Wyvern',       symbol:'&#9670;', color:'#1b5e20', category:'Beasts'},
+  // Dragons
+  {label:'Dragon (Red)', symbol:'&#9670;', color:'#e53e3e', category:'Dragons'},
+  {label:'Dragon (Blue)',symbol:'&#9670;', color:'#1565c0', category:'Dragons'},
+  {label:'Dragon (Green)',symbol:'&#9670;',color:'#2e7d32', category:'Dragons'},
+  {label:'Dragon (Black)',symbol:'&#9670;',color:'#212121', category:'Dragons'},
+  {label:'Dragon (White)',symbol:'&#9670;',color:'#e0e0e0', category:'Dragons'},
+  {label:'Dragon (Gold)', symbol:'&#9670;',color:'#ffd700', category:'Dragons'},
+  {label:'Wyrmling',     symbol:'&#9670;', color:'#ff7043', category:'Dragons'},
+  // Aberrations
+  {label:'Beholder',     symbol:'&#9673;', color:'#6a1b9a', category:'Aberrations'},
+  {label:'Mind Flayer',  symbol:'&#9673;', color:'#4527a0', category:'Aberrations'},
+  {label:'Aboleth',      symbol:'&#9673;', color:'#00695c', category:'Aberrations'},
+  {label:'Grell',        symbol:'&#9673;', color:'#33691e', category:'Aberrations'},
+  {label:'Nothic',       symbol:'&#9673;', color:'#e65100', category:'Aberrations'},
+  // Fiends
+  {label:'Imp',          symbol:'&#9660;', color:'#b71c1c', category:'Fiends'},
+  {label:'Quasit',       symbol:'&#9660;', color:'#880e4f', category:'Fiends'},
+  {label:'Incubus',      symbol:'&#9660;', color:'#4a148c', category:'Fiends'},
+  {label:'Pit Fiend',    symbol:'&#9660;', color:'#bf360c', category:'Fiends'},
+  {label:'Balor',        symbol:'&#9660;', color:'#e65100', category:'Fiends'},
+  {label:'Marilith',     symbol:'&#9660;', color:'#880e4f', category:'Fiends'},
+  // Giants
+  {label:'Hill Giant',   symbol:'&#9650;', color:'#795548', category:'Giants'},
+  {label:'Stone Giant',  symbol:'&#9650;', color:'#607d8b', category:'Giants'},
+  {label:'Frost Giant',  symbol:'&#9650;', color:'#0288d1', category:'Giants'},
+  {label:'Fire Giant',   symbol:'&#9650;', color:'#e64a19', category:'Giants'},
+  {label:'Cloud Giant',  symbol:'&#9650;', color:'#b0bec5', category:'Giants'},
+  {label:'Storm Giant',  symbol:'&#9650;', color:'#283593', category:'Giants'},
+  // NPCs
+  {label:'Town Guard',   symbol:'&#9651;', color:'#1565c0', category:'NPCs'},
+  {label:'Merchant',     symbol:'&#9651;', color:'#f57f17', category:'NPCs'},
+  {label:'Innkeeper',    symbol:'&#9651;', color:'#6d4c41', category:'NPCs'},
+  {label:'Villain',      symbol:'&#9651;', color:'#b71c1c', category:'NPCs'},
+  {label:'Quest Giver',  symbol:'&#9651;', color:'#ffd700', category:'NPCs'},
+  {label:'Ally',         symbol:'&#9651;', color:'#2e7d32', category:'NPCs'},
+  // Objects & Markers
+  {label:'Chest',        symbol:'&#9674;', color:'#d4a017', category:'Objects'},
+  {label:'Door',         symbol:'&#9646;', color:'#8b4513', category:'Objects'},
+  {label:'Trap',         symbol:'&#9888;', color:'#e53e3e', category:'Objects'},
+  {label:'Torch',        symbol:'&#9728;', color:'#ff8f00', category:'Objects'},
+  {label:'Altar',        symbol:'&#9670;', color:'#4a148c', category:'Objects'},
+  {label:'Pillar',       symbol:'&#9616;', color:'#9e9e9e', category:'Objects'},
+  {label:'Statue',       symbol:'&#9644;', color:'#78909c', category:'Objects'},
+  {label:'X Mark',       symbol:'&#10005;',color:'#e53e3e', category:'Objects'},
+  {label:'Star',         symbol:'&#9733;', color:'#ffd700', category:'Objects'},
+  {label:'Arrow',        symbol:'&#9658;', color:'#ffffff', category:'Objects'},
 ];
 
 function cellKey(c,r){ return c+','+r; }
@@ -3422,17 +4204,33 @@ function map2Init() {
   map2Draw();
 }
 
-function renderMap2TokenList() {
+function renderMap2TokenList(filter) {
   var el = document.getElementById('map2TokenList');
   if (!el) return;
   var tokens = MAP2_DEFAULT_TOKENS.concat(map2Tokens);
-  el.innerHTML = tokens.map(function(t,i) {
-    var sel = map2SelectedToken && map2SelectedToken.label === t.label;
-    return '<div class="map2-token-row' + (sel?' selected':'') + '" onclick="selectMap2Token('+i+')">' +
-      '<span style="color:'+t.color+'">' + t.symbol + '</span>' +
-      '<span>' + t.label + '</span>' +
-    '</div>';
-  }).join('');
+  if (filter) {
+    filter = filter.toLowerCase();
+    tokens = tokens.filter(function(t){ return t.label.toLowerCase().includes(filter); });
+  }
+  // Group by category
+  var categories = {};
+  tokens.forEach(function(t, i) {
+    var cat = t.category || 'Custom';
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push({t:t, i: MAP2_DEFAULT_TOKENS.concat(map2Tokens).indexOf(t)});
+  });
+  var html = '';
+  for (var cat in categories) {
+    html += '<div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;padding:4px 6px 2px;margin-top:4px;">'+cat+'</div>';
+    html += categories[cat].map(function(item) {
+      var sel = map2SelectedToken && map2SelectedToken.label === item.t.label;
+      return '<div class="map2-token-row' + (sel?' selected':'') + '" onclick="selectMap2Token('+item.i+')">' +
+        '<span style="color:'+item.t.color+';font-size:14px;">'+item.t.symbol+'</span>' +
+        '<span style="font-size:12px;">'+item.t.label+'</span>' +
+      '</div>';
+    }).join('');
+  }
+  el.innerHTML = html;
 }
 
 function selectMap2Token(i) {
@@ -3939,6 +4737,130 @@ function map2Export() {
   showToast('Map exported!', 'success');
 }
 
+// ── Map Templates ──
+var MAP_TEMPLATES = {
+  tavern: function() {
+    map2Cells = {};
+    var W = '#5c3d1e', S = '#3a3530', wall = '#c8b89a';
+    // Outer walls
+    for (var x=0;x<20;x++) { for (var y=0;y<15;y++) {
+      var k = x+','+y;
+      if (x===0||x===19||y===0||y===14) { map2Cells[k]={wall:true,wallColor:wall}; }
+      else { map2Cells[k]={floor:W}; }
+    }}
+    // Bar counter
+    for (var bx=2;bx<=8;bx++) { map2Cells[bx+',2']={wall:true,wallColor:'#4a3728'}; }
+    // Tables (floor with surrounding empty)
+    [[4,6],[4,10],[10,6],[10,10],[15,6],[15,10]].forEach(function(t){
+      map2Cells[t[0]+','+t[1]]={floor:'#4a3020'};
+    });
+    // Fireplace
+    map2Cells['18,7']={wall:true,wallColor:'#8b0000'};
+    map2Cells['18,8']={floor:'#6a1a0a'};
+    // Door
+    delete map2Cells['10,14'];
+    map2Cells['10,14']={floor:W};
+  },
+  dungeon: function() {
+    map2Cells = {};
+    var S = '#3a3530', wall = '#888';
+    // Main corridor
+    for (var x=0;x<30;x++) { for (var y=4;y<=8;y++) {
+      var k=x+','+y;
+      if (y===4||y===8) map2Cells[k]={wall:true,wallColor:wall};
+      else map2Cells[k]={floor:S};
+    }}
+    // Left room
+    for (var rx=0;rx<8;rx++) { for (var ry=0;ry<8;ry++) {
+      var k=rx+','+(ry+8);
+      if (rx===0||rx===7||ry===0||ry===7) map2Cells[k]={wall:true,wallColor:wall};
+      else map2Cells[k]={floor:S};
+    }}
+    // Right room
+    for (var rx2=22;rx2<30;rx2++) { for (var ry2=0;ry2<10;ry2++) {
+      var k=rx2+','+ry2;
+      if (rx2===22||rx2===29||ry2===0||ry2===9) map2Cells[k]={wall:true,wallColor:wall};
+      else map2Cells[k]={floor:S};
+    }}
+    // Secret room
+    for (var sx=10;sx<18;sx++) { for (var sy=9;sy<16;sy++) {
+      var k=sx+','+sy;
+      if (sx===10||sx===17||sy===9||sy===15) map2Cells[k]={wall:true,wallColor:'#555'};
+      else map2Cells[k]={floor:'#2a2520'};
+    }}
+  },
+  cave: function() {
+    map2Cells = {};
+    var C = '#2a2218', wall = '#4a3728';
+    var caveShape = [[3,3],[4,3],[5,3],[6,3],[7,4],[8,4],[9,4],[10,4],[11,3],[12,3],[13,4],[14,5],[15,5],[15,6],[14,7],[13,8],[12,8],[11,9],[10,9],[9,8],[8,7],[7,7],[6,8],[5,8],[4,7],[3,6],[2,5],[2,4],[3,3]];
+    // Fill cave interior
+    for (var x=1;x<17;x++) { for (var y=2;y<11;y++) {
+      // Simple ellipse cave
+      var cx=9,cy=6,rx=7,ry=4;
+      var dx=(x-cx)/rx, dy=(y-cy)/ry;
+      if (dx*dx+dy*dy < 1) {
+        var edge = dx*dx+dy*dy > 0.7;
+        map2Cells[x+','+y] = edge ? {wall:true,wallColor:wall} : {floor:C};
+      }
+    }}
+    // Stalactite pillars
+    [[5,4],[11,4],[8,7]].forEach(function(p){ map2Cells[p[0]+','+p[1]]={wall:true,wallColor:'#555'}; });
+    // Underground lake
+    for (var lx=2;lx<=5;lx++) { for (var ly=6;ly<=8;ly++) {
+      map2Cells[lx+','+ly]={floor:'#1a2a4a'};
+    }}
+  },
+  castle: function() {
+    map2Cells = {};
+    var S = '#4a4a4a', wall = '#888', W = '#3a3530';
+    // Great hall
+    for (var x=0;x<25;x++) { for (var y=0;y<18;y++) {
+      var k=x+','+y;
+      if (x===0||x===24||y===0||y===17) map2Cells[k]={wall:true,wallColor:wall};
+      else map2Cells[k]={floor:S};
+    }}
+    // Pillars
+    [[2,2],[2,8],[2,14],[22,2],[22,8],[22,14],[7,2],[7,14],[17,2],[17,14]].forEach(function(p){
+      map2Cells[p[0]+','+p[1]]={wall:true,wallColor:'#aaa'};
+    });
+    // Throne area
+    for (var tx=10;tx<=14;tx++) { map2Cells[tx+',1']={floor:W}; }
+    map2Cells['12,2']={wall:true,wallColor:'#ffd700'};
+    // Doors
+    ['12,17','12,0'].forEach(function(k){ delete map2Cells[k]; map2Cells[k]={floor:W}; });
+  },
+  ship: function() {
+    map2Cells = {};
+    var D = '#5c3d1e', wall = '#4a3728', water = '#1a2a4a';
+    // Ship hull shape
+    for (var x=0;x<20;x++) { for (var y=0;y<10;y++) {
+      var k=x+','+y;
+      var inHull = (x>=2&&x<=17&&y>=1&&y<=8) || (x>=3&&x<=16&&y===0) || (x>=3&&x<=16&&y===9);
+      if (!inHull) { map2Cells[k]={floor:water}; continue; }
+      var isWall = (x===2||x===17||y===1||y===8) || (x>=3&&x<=16&&(y===0||y===9));
+      map2Cells[k] = isWall ? {wall:true,wallColor:wall} : {floor:D};
+    }}
+    // Mast
+    map2Cells['10,4']={wall:true,wallColor:'#8b4513'};
+    map2Cells['10,3']={wall:true,wallColor:'#8b4513'};
+    // Cannons
+    [[3,3],[3,6],[16,3],[16,6]].forEach(function(p){ map2Cells[p[0]+','+p[1]]={wall:true,wallColor:'#555'}; });
+    // Captain's quarters
+    for (var cx=14;cx<=16;cx++) { for (var cy=3;cy<=6;cy++) {
+      if (cx===14||cy===3||cy===6) map2Cells[cx+','+cy]={wall:true,wallColor:'#6b4423'};
+    }}
+  }
+};
+
+function loadMapTemplate(name) {
+  if (!confirm('Load "' + name + '" template? This will replace your current map.')) return;
+  map2Cells = {}; map2PlacedTokens = [];
+  if (MAP_TEMPLATES[name]) MAP_TEMPLATES[name]();
+  map2Draw();
+  renderMap2PlacedTokens();
+  showToast(name.charAt(0).toUpperCase() + name.slice(1) + ' template loaded!', 'success');
+}
+
 // Legacy stubs so old campaign code doesn't break
 function renderMapSidebar() { map2Init(); }
 function setMapTool(t) { setMapTool2(t==='place'?'token':t==='erase'?'erase':'pan'); }
@@ -4304,7 +5226,6 @@ function refreshProfilePanel() {
   document.getElementById('profileDN').textContent = currentUser.dn;
   document.getElementById('pStatFriends').textContent = (currentUser.friends || []).length;
   document.getElementById('pStatCampaigns').textContent = campaigns.length;
-  // Update avatar
   var av = document.getElementById('profileAvatar');
   if (av) {
     if (currentUser.pfp) av.innerHTML = '<img src="' + esc(currentUser.pfp) + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#128100;\'">';
@@ -4312,6 +5233,18 @@ function refreshProfilePanel() {
   }
   updateVcBottomBar();
   renderFriendsList();
+  // Show pet in profile
+  var petMini = document.getElementById('profilePetMini');
+  if (petMini && _pet) {
+    petMini.style.display = '';
+    var monster = PET_MONSTERS[_pet.monsterIdx];
+    document.getElementById('profilePetEmoji').innerHTML = monster ? monster.emoji : '&#9733;';
+    document.getElementById('profilePetName').textContent = _pet.name;
+    var mood = _pet.hunger < 30 ? 'Hungry!' : _pet.happy < 30 ? 'Sad...' : _pet.energy < 20 ? 'Sleepy...' : 'Happy!';
+    document.getElementById('profilePetMood').textContent = mood;
+  } else if (petMini) {
+    petMini.style.display = 'none';
+  }
 }
 
 // ══════════════════════════════════════════════════════
@@ -4453,6 +5386,7 @@ function openNewCharSheet() {
   document.getElementById('csProf').value = 2;
   document.getElementById('csAvatarDisplay').innerHTML = '&#9876;';
   updateModifiers(); renderCsSkills(); renderCsAttacks(); renderCsRollLog();
+  renderSpellSlots();
   navigate('charsheet');
 }
 
@@ -4474,6 +5408,7 @@ function openCharSheet(charId) {
   var av = document.getElementById('csAvatarDisplay');
   if (av) { av.innerHTML = data.portrait ? '<img src="'+esc(data.portrait)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentNode.innerHTML=\'&#9876;\'">' : '&#9876;'; }
   updateModifiers(); renderCsSkills(); renderCsAttacks(); renderCsRollLog();
+  renderSpellSlots();
   navigate('charsheet');
 }
 
@@ -5537,6 +6472,1592 @@ function adminSendMessage() {
   showToast('Message sent', 'success');
 }
 
+// ══════════════════════════════════════════════════════
+//  INITIATIVE TRACKER
+// ══════════════════════════════════════════════════════
+var _initCombatants = [];
+var _initCurrentTurn = 0;
+
+var CONDITIONS = ['Blinded','Charmed','Deafened','Frightened','Grappled','Incapacitated','Invisible','Paralyzed','Petrified','Poisoned','Prone','Restrained','Stunned','Unconscious'];
+
+function initAddCombatant() {
+  document.getElementById('initName').value = '';
+  document.getElementById('initRoll').value = '';
+  document.getElementById('initHP').value = '';
+  document.getElementById('initMaxHP').value = '';
+  document.getElementById('initAddModal').style.display = 'flex';
+}
+
+function initDoAdd() {
+  var name = document.getElementById('initName').value.trim();
+  var roll = parseInt(document.getElementById('initRoll').value) || 0;
+  var hp = parseInt(document.getElementById('initHP').value) || 10;
+  var maxHP = parseInt(document.getElementById('initMaxHP').value) || hp;
+  var type = document.getElementById('initType').value;
+  if (!name) { showToast('Enter a name', 'error'); return; }
+  _initCombatants.push({ name: name, init: roll, hp: hp, maxHP: maxHP, type: type, conditions: [], id: Date.now() });
+  _initCombatants.sort(function(a,b) { return b.init - a.init; });
+  document.getElementById('initAddModal').style.display = 'none';
+  renderInitiative();
+  saveInitiativeToFb();
+  showToast(name + ' added to initiative!', 'success');
+}
+
+function renderInitiative() {
+  var el = document.getElementById('cdInitList');
+  if (!el) return;
+  if (!_initCombatants.length) {
+    el.innerHTML = '<div style="color:var(--dim);font-size:14px;text-align:center;padding:20px;">No combatants. Click + Add to start combat.</div>';
+    return;
+  }
+  el.innerHTML = _initCombatants.map(function(c, i) {
+    var isActive = i === _initCurrentTurn % _initCombatants.length;
+    var hpPct = Math.max(0, Math.min(100, (c.hp / c.maxHP) * 100));
+    var hpColor = hpPct > 60 ? '#2d6a4f' : hpPct > 30 ? '#d4a017' : '#c53030';
+    var typeColor = c.type === 'player' ? '#4a90d9' : c.type === 'enemy' ? '#e53e3e' : '#2ecc71';
+    return '<div class="init-row' + (isActive ? ' active-turn' : '') + '">' +
+      '<div class="init-badge" style="background:' + typeColor + '">' + c.init + '</div>' +
+      '<div style="flex:1;">' +
+        '<div class="init-name">' + esc(c.name) + (isActive ? ' <span style="color:var(--red);font-size:11px;">&#9654; TURN</span>' : '') + '</div>' +
+        '<div class="init-conditions">' + c.conditions.map(function(cond) {
+          return '<span class="init-condition" style="color:var(--red);">' + cond + '</span>';
+        }).join('') + '</div>' +
+      '</div>' +
+      '<div class="init-hp">' +
+        '<div>' +
+          '<input type="number" value="' + c.hp + '" onchange="initUpdateHP(' + i + ',this.value)" style="width:48px;background:var(--bg3);border:1px solid var(--border);color:' + hpColor + ';border-radius:4px;padding:3px 6px;text-align:center;font-family:\'Cinzel\',serif;font-size:14px;font-weight:700;">' +
+          '<span style="color:var(--dim);font-size:12px;"> / ' + c.maxHP + '</span>' +
+        '</div>' +
+        '<div class="init-hp-bar"><div class="init-hp-fill" style="width:' + hpPct + '%;background:' + hpColor + '"></div></div>' +
+      '</div>' +
+      '<button onclick="initAddCondition(' + i + ')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">+ Condition</button>' +
+      '<button onclick="initRemove(' + i + ')" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:0 4px;">&#10005;</button>' +
+    '</div>';
+  }).join('');
+}
+
+function initUpdateHP(idx, val) {
+  _initCombatants[idx].hp = parseInt(val) || 0;
+  renderInitiative();
+  saveInitiativeToFb();
+}
+
+function initNextTurn() {
+  if (!_initCombatants.length) return;
+  _initCurrentTurn = (_initCurrentTurn + 1) % _initCombatants.length;
+  renderInitiative();
+  saveInitiativeToFb();
+  showToast(_initCombatants[_initCurrentTurn].name + "'s turn!", 'success');
+  addNotif('&#9876; Initiative', _initCombatants[_initCurrentTurn].name + "'s turn!");
+}
+
+function initRemove(idx) {
+  _initCombatants.splice(idx, 1);
+  if (_initCurrentTurn >= _initCombatants.length) _initCurrentTurn = 0;
+  renderInitiative();
+  saveInitiativeToFb();
+}
+
+function initClear() {
+  if (!confirm('Clear all combatants?')) return;
+  _initCombatants = []; _initCurrentTurn = 0;
+  renderInitiative();
+  saveInitiativeToFb();
+}
+
+function initAddCondition(idx) {
+  var cond = prompt('Add condition:\n' + CONDITIONS.join(', '));
+  if (!cond) return;
+  var match = CONDITIONS.find(function(c) { return c.toLowerCase() === cond.toLowerCase(); }) || cond;
+  if (_initCombatants[idx].conditions.indexOf(match) < 0) {
+    _initCombatants[idx].conditions.push(match);
+    renderInitiative();
+    saveInitiativeToFb();
+  }
+}
+
+function saveInitiativeToFb() {
+  if (!_currentCampaignId) return;
+  db.ref('initiative/' + _currentCampaignId).set({ combatants: _initCombatants, turn: _initCurrentTurn });
+}
+
+function loadInitiativeFromFb() {
+  if (!_currentCampaignId) return;
+  db.ref('initiative/' + _currentCampaignId).on('value', function(snap) {
+    var d = snap.val();
+    if (d) { _initCombatants = d.combatants || []; _initCurrentTurn = d.turn || 0; }
+    else { _initCombatants = []; _initCurrentTurn = 0; }
+    renderInitiative();
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  SESSION NOTES
+// ══════════════════════════════════════════════════════
+var _notesTimeout = null;
+function saveSessionNotes() {
+  if (!_currentCampaignId) return;
+  clearTimeout(_notesTimeout);
+  _notesTimeout = setTimeout(function() {
+    var notes = document.getElementById('cdSessionNotes').value;
+    db.ref('notes/' + _currentCampaignId).set({ text: notes, updatedAt: Date.now() });
+  }, 800);
+}
+
+function loadSessionNotes() {
+  if (!_currentCampaignId) return;
+  db.ref('notes/' + _currentCampaignId).on('value', function(snap) {
+    var d = snap.val();
+    var el = document.getElementById('cdSessionNotes');
+    if (el && d && d.text !== undefined) el.value = d.text;
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  CAMPAIGN INVITE LINKS
+// ══════════════════════════════════════════════════════
+function copyInviteLink() {
+  var c = null;
+  for (var i = 0; i < campaigns.length; i++) { if (campaigns[i].id === _currentCampaignId) { c = campaigns[i]; break; } }
+  if (!c) return;
+  var link = window.location.origin + '/?join=' + c.id;
+  navigator.clipboard.writeText(link).then(function() {
+    showToast('Invite link copied!', 'success');
+  }).catch(function() {
+    prompt('Copy this invite link:', link);
+  });
+}
+
+function checkInviteLink() {
+  var params = new URLSearchParams(window.location.search);
+  var joinId = params.get('join');
+  if (!joinId) return;
+  // After login, auto-open that campaign
+  window._pendingJoin = joinId;
+}
+
+function processPendingJoin() {
+  if (!window._pendingJoin || !currentUser) return;
+  var id = window._pendingJoin;
+  window._pendingJoin = null;
+  // Find campaign in all campaigns
+  for (var i = 0; i < campaigns.length; i++) {
+    if (campaigns[i].id === id) {
+      openCampaign(id, true);
+      showToast('Opening campaign from invite link!', 'success');
+      return;
+    }
+  }
+  showToast('Campaign not found — it may be private', 'error');
+}
+
+// ══════════════════════════════════════════════════════
+//  NOTIFICATIONS
+// ══════════════════════════════════════════════════════
+var _notifications = [];
+var _notifPanelOpen = false;
+
+function addNotif(title, sub, action) {
+  _notifications.unshift({ title: title, sub: sub, action: action || null, time: Date.now(), read: false });
+  if (_notifications.length > 50) _notifications.pop();
+  saveNotifs();
+  renderNotifDot();
+  renderNotifList();
+}
+
+function saveNotifs() { try { localStorage.setItem('dnd_notifs', JSON.stringify(_notifications)); } catch(e){} }
+function loadNotifs() { try { _notifications = JSON.parse(localStorage.getItem('dnd_notifs') || '[]'); } catch(e){ _notifications = []; } renderNotifDot(); }
+
+function renderNotifDot() {
+  var unread = _notifications.filter(function(n) { return !n.read; }).length;
+  var dot = document.getElementById('notifDot');
+  if (dot) dot.style.display = unread > 0 ? '' : 'none';
+}
+
+function toggleNotifPanel() {
+  _notifPanelOpen = !_notifPanelOpen;
+  var panel = document.getElementById('notifPanel');
+  if (panel) panel.style.display = _notifPanelOpen ? '' : 'none';
+  if (_notifPanelOpen) {
+    renderNotifList();
+    _notifications.forEach(function(n) { n.read = true; });
+    saveNotifs();
+    renderNotifDot();
+  }
+}
+
+function renderNotifList() {
+  var el = document.getElementById('notifList');
+  if (!el) return;
+  if (!_notifications.length) { el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--dim);font-size:13px;">No notifications</div>'; return; }
+  el.innerHTML = _notifications.slice(0, 20).map(function(n) {
+    return '<div class="notif-item' + (n.read ? '' : ' unread') + '" onclick="if(this.dataset.action)navigate(this.dataset.action)" data-action="' + (n.action||'') + '">' +
+      '<div class="notif-title">' + n.title + '</div>' +
+      '<div class="notif-sub">' + esc(n.sub) + '</div>' +
+      '<div class="notif-time">' + fmtTime(n.time) + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function clearNotifs() {
+  _notifications = []; saveNotifs(); renderNotifDot(); renderNotifList();
+}
+
+// ══════════════════════════════════════════════════════
+//  SPELL SLOTS
+// ══════════════════════════════════════════════════════
+var _spellSlots = {
+  1: {total:4, used:0}, 2: {total:3, used:0}, 3: {total:3, used:0},
+  4: {total:3, used:0}, 5: {total:2, used:0}, 6: {total:1, used:0},
+  7: {total:1, used:0}, 8: {total:1, used:0}, 9: {total:1, used:0}
+};
+
+function renderSpellSlots() {
+  var el = document.getElementById('csSpellSlots');
+  if (!el) return;
+  var html = '';
+  for (var lvl = 1; lvl <= 9; lvl++) {
+    var s = _spellSlots[lvl];
+    if (!s || s.total === 0) continue;
+    html += '<div class="spell-slot-row">' +
+      '<div class="spell-slot-label">Level ' + lvl + '</div>' +
+      '<div class="spell-slot-pips">';
+    for (var i = 0; i < s.total; i++) {
+      var used = i < s.used;
+      html += '<div class="spell-slot-pip ' + (used ? 'used' : 'available') + '" onclick="toggleSpellSlot(' + lvl + ',' + i + ')" title="' + (used ? 'Used' : 'Available') + '"></div>';
+    }
+    html += '</div>' +
+      '<span style="font-size:11px;color:var(--dim);margin-left:8px;">' + (s.total - s.used) + '/' + s.total + '</span>' +
+      '<button onclick="editSlotTotal(' + lvl + ')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;margin-left:4px;">&#9998;</button>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function toggleSpellSlot(lvl, idx) {
+  var s = _spellSlots[lvl];
+  if (idx < s.used) { s.used = Math.max(0, s.used - 1); }
+  else { s.used = Math.min(s.total, s.used + 1); }
+  renderSpellSlots();
+}
+
+function editSlotTotal(lvl) {
+  var val = prompt('Total spell slots for level ' + lvl + ':', _spellSlots[lvl].total);
+  if (val === null) return;
+  _spellSlots[lvl].total = Math.max(0, parseInt(val) || 0);
+  _spellSlots[lvl].used = Math.min(_spellSlots[lvl].used, _spellSlots[lvl].total);
+  renderSpellSlots();
+}
+
+function csResetSpellSlots() {
+  for (var lvl in _spellSlots) _spellSlots[lvl].used = 0;
+  renderSpellSlots();
+  showToast('Spell slots reset — Long Rest taken!', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  DICE HISTORY
+// ══════════════════════════════════════════════════════
+var _diceHistory = [];
+
+function loadDiceHistory() { try { _diceHistory = JSON.parse(localStorage.getItem('dnd_dice_history') || '[]'); } catch(e){ _diceHistory = []; } }
+function saveDiceHistory() { try { localStorage.setItem('dnd_dice_history', JSON.stringify(_diceHistory.slice(0,200))); } catch(e){} }
+
+function rollDieLog(sides) {
+  var result = Math.floor(Math.random() * sides) + 1;
+  var entry = { sides: sides, result: result, mod: 0, total: result, label: 'd' + sides, time: Date.now(), username: currentUser ? currentUser.username : '?' };
+  _diceHistory.unshift(entry);
+  saveDiceHistory();
+  renderDiceHistory();
+  // Big result display
+  var bigNum = document.getElementById('diceLogBigNum');
+  var bigLabel = document.getElementById('diceLogBigLabel');
+  var bigWrap = document.getElementById('diceLogBigResult');
+  if (bigNum) { bigNum.textContent = result; bigNum.style.color = result === sides ? '#ffd700' : result === 1 ? '#555' : 'var(--red)'; }
+  if (bigLabel) bigLabel.textContent = 'd' + sides + (result === sides ? ' — CRIT!' : result === 1 ? ' — FAIL' : '');
+  if (bigWrap) bigWrap.style.display = '';
+  // Also log on home page dice roller
+  rollDie(sides, null);
+  addNotif('&#127922; Dice Roll', 'd' + sides + ': rolled ' + result);
+}
+
+function rollDiceCustom() {
+  var count = parseInt(document.getElementById('diceCustomCount').value) || 1;
+  var sides = parseInt(document.getElementById('diceCustomSides').value) || 6;
+  var mod = parseInt(document.getElementById('diceCustomMod').value) || 0;
+  var rolls = [];
+  var total = mod;
+  for (var i = 0; i < Math.min(count, 20); i++) {
+    var r = Math.floor(Math.random() * sides) + 1;
+    rolls.push(r); total += r;
+  }
+  var label = count + 'd' + sides + (mod !== 0 ? (mod > 0 ? '+' : '') + mod : '');
+  var entry = { sides: sides, result: rolls[0], mod: mod, total: total, label: label, rolls: rolls, time: Date.now(), username: currentUser ? currentUser.username : '?' };
+  _diceHistory.unshift(entry);
+  saveDiceHistory();
+  renderDiceHistory();
+  var bigNum = document.getElementById('diceLogBigNum');
+  var bigLabel = document.getElementById('diceLogBigLabel');
+  var bigWrap = document.getElementById('diceLogBigResult');
+  if (bigNum) { bigNum.textContent = total; bigNum.style.color = 'var(--red)'; }
+  if (bigLabel) bigLabel.textContent = label + ' = ' + rolls.join('+') + (mod ? (mod>0?'+':'')+mod : '') + ' = ' + total;
+  if (bigWrap) bigWrap.style.display = '';
+}
+
+function renderDiceHistory() {
+  var el = document.getElementById('diceHistoryList');
+  if (!el) return;
+  if (!_diceHistory.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:16px;">No rolls yet.</div>'; return; }
+  el.innerHTML = _diceHistory.slice(0,100).map(function(r) {
+    var isCrit = r.sides && r.result === r.sides;
+    var isFail = r.result === 1;
+    return '<div class="dice-hist-entry">' +
+      '<div class="dice-hist-val' + (isCrit?' crit':isFail?' fail':'') + '">' + r.total + '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:13px;">' + esc(r.label) + (r.rolls && r.rolls.length > 1 ? ' [' + r.rolls.join(', ') + ']' : '') + (isCrit?' &#9733;':isFail?' &#9785;':'') + '</div>' +
+        '<div style="font-size:11px;color:var(--dim);">' + esc(r.username) + ' &nbsp;&#183;&nbsp; ' + fmtTime(r.time) + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function clearDiceHistory() {
+  if (!confirm('Clear all dice history?')) return;
+  _diceHistory = []; saveDiceHistory(); renderDiceHistory();
+  showToast('Dice history cleared', 'success');
+}
+
+// Message notification listener
+var _msgNotifListeners = {};
+function startMessageNotifListener() {
+  // Listen for new convos and notify on new messages
+  fbConvosRef().on('child_changed', function(snap) {
+    var c = snap.val();
+    if (!c || !currentUser) return;
+    if (!c.members || c.members.indexOf(currentUser.dn) < 0) return;
+    if (c.lastTime && Date.now() - c.lastTime < 5000) {
+      if (c.lastMsg && c.id !== activeConvoId) {
+        var name = getConvoDisplayName(c, getAllUsers());
+        addNotif('&#128172; ' + esc(name), c.lastMsg, 'messages');
+      }
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  SOUNDBOARD
+// ══════════════════════════════════════════════════════
+var _sbCtx = null;
+var _sbPlaying = {};
+
+var SB_SOUNDS = {
+  combat: [
+    {label:'Sword Clash',   icon:'&#9876;', type:'clash'},
+    {label:'Arrow Whoosh',  icon:'&#10148;',type:'whoosh'},
+    {label:'Shield Block',  icon:'&#128737;',type:'block'},
+    {label:'Battle Cry',    icon:'&#128483;',type:'cry'},
+    {label:'Death Knell',   icon:'&#9760;', type:'death'},
+    {label:'Drum Roll',     icon:'&#9835;', type:'drum'},
+    {label:'Horn Blast',    icon:'&#127930;',type:'horn'},
+    {label:'Chain Rattle',  icon:'&#9939;', type:'chain'},
+  ],
+  atmosphere: [
+    {label:'Thunder',       icon:'&#9928;', type:'thunder'},
+    {label:'Rain',          icon:'&#127783;',type:'rain'},
+    {label:'Fire Crackle',  icon:'&#128293;',type:'fire'},
+    {label:'Wind',          icon:'&#127788;',type:'wind'},
+    {label:'Tavern Noise',  icon:'&#127867;',type:'tavern'},
+    {label:'Cave Drip',     icon:'&#128009;',type:'drip'},
+    {label:'Crowd Murmur',  icon:'&#128101;',type:'crowd'},
+    {label:'Door Creak',    icon:'&#128682;',type:'creak'},
+  ],
+  magic: [
+    {label:'Magic Missile', icon:'&#10024;', type:'missile'},
+    {label:'Fireball',      icon:'&#128293;',type:'fireball'},
+    {label:'Ice Blast',     icon:'&#10052;', type:'ice'},
+    {label:'Lightning',     icon:'&#9889;',  type:'lightning'},
+    {label:'Heal',          icon:'&#10010;', type:'heal'},
+    {label:'Teleport',      icon:'&#127787;',type:'teleport'},
+    {label:'Dark Magic',    icon:'&#128128;',type:'dark'},
+    {label:'Level Up!',     icon:'&#11088;', type:'levelup'},
+  ]
+};
+
+function sbInit() {
+  renderSbGrid('sbGridCombat', SB_SOUNDS.combat);
+  renderSbGrid('sbGridAtmo', SB_SOUNDS.atmosphere);
+  renderSbGrid('sbGridMagic', SB_SOUNDS.magic);
+}
+
+function renderSbGrid(elId, sounds) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = sounds.map(function(s) {
+    return '<div class="sound-btn" id="sb-'+s.type+'" onclick="sbPlay(\''+s.type+'\')">' +
+      '<span class="sound-icon">'+s.icon+'</span>' +
+      '<div class="sound-label">'+s.label+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function sbGetCtx() {
+  if (!_sbCtx) _sbCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _sbCtx;
+}
+
+function sbPlay(type) {
+  var ctx = sbGetCtx();
+  var vol = parseFloat(document.getElementById('sbVolume').value || 0.5);
+  var g = ctx.createGain();
+  g.gain.value = vol;
+  g.connect(ctx.destination);
+  var btn = document.getElementById('sb-' + type);
+  if (btn) { btn.classList.add('playing'); setTimeout(function(){ btn.classList.remove('playing'); }, 1200); }
+
+  // Generate sound procedurally
+  var now = ctx.currentTime;
+  if (type === 'clash' || type === 'block') {
+    var b = ctx.createOscillator(); b.type='sawtooth'; b.frequency.value=200;
+    b.frequency.exponentialRampToValueAtTime(50, now+0.3);
+    var bg = ctx.createGain(); bg.gain.setValueAtTime(vol,now); bg.gain.exponentialRampToValueAtTime(0.001,now+0.4);
+    b.connect(bg); bg.connect(ctx.destination); b.start(now); b.stop(now+0.4);
+  } else if (type === 'whoosh') {
+    var n = ctx.createOscillator(); n.type='sawtooth'; n.frequency.setValueAtTime(800,now); n.frequency.exponentialRampToValueAtTime(100,now+0.3);
+    var ng = ctx.createGain(); ng.gain.setValueAtTime(vol*0.5,now); ng.gain.exponentialRampToValueAtTime(0.001,now+0.35);
+    n.connect(ng); ng.connect(ctx.destination); n.start(now); n.stop(now+0.35);
+  } else if (type === 'thunder') {
+    var bufSize = ctx.sampleRate * 1.5;
+    var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < bufSize; i++) data[i] = (Math.random()*2-1) * Math.exp(-i/bufSize*4);
+    var src = ctx.createBufferSource(); src.buffer = buf;
+    var tg = ctx.createGain(); tg.gain.value = vol * 1.5;
+    src.connect(tg); tg.connect(ctx.destination); src.start(now);
+  } else if (type === 'fire' || type === 'fireball') {
+    var fb = ctx.createOscillator(); fb.type='sawtooth'; fb.frequency.setValueAtTime(300+Math.random()*100,now);
+    var fbg = ctx.createGain(); fbg.gain.setValueAtTime(vol*0.6,now); fbg.gain.exponentialRampToValueAtTime(0.001,now+0.6);
+    fb.connect(fbg); fbg.connect(ctx.destination); fb.start(now); fb.stop(now+0.6);
+  } else if (type === 'lightning' || type === 'missile') {
+    var lt = ctx.createOscillator(); lt.type='square'; lt.frequency.setValueAtTime(1200,now); lt.frequency.exponentialRampToValueAtTime(100,now+0.2);
+    var ltg = ctx.createGain(); ltg.gain.setValueAtTime(vol,now); ltg.gain.exponentialRampToValueAtTime(0.001,now+0.25);
+    lt.connect(ltg); ltg.connect(ctx.destination); lt.start(now); lt.stop(now+0.25);
+  } else if (type === 'heal') {
+    [523,659,784,1047].forEach(function(freq,i){
+      var ho = ctx.createOscillator(); ho.type='sine'; ho.frequency.value=freq;
+      var hg = ctx.createGain(); hg.gain.setValueAtTime(0,now+i*0.12); hg.gain.linearRampToValueAtTime(vol*0.4,now+i*0.12+0.05); hg.gain.exponentialRampToValueAtTime(0.001,now+i*0.12+0.4);
+      ho.connect(hg); hg.connect(ctx.destination); ho.start(now+i*0.12); ho.stop(now+i*0.12+0.4);
+    });
+  } else if (type === 'levelup') {
+    [523,659,784,1047,1319].forEach(function(freq,i){
+      var lo = ctx.createOscillator(); lo.type='sine'; lo.frequency.value=freq;
+      var lg = ctx.createGain(); lg.gain.setValueAtTime(0,now+i*0.08); lg.gain.linearRampToValueAtTime(vol*0.5,now+i*0.08+0.04); lg.gain.exponentialRampToValueAtTime(0.001,now+i*0.08+0.35);
+      lo.connect(lg); lg.connect(ctx.destination); lo.start(now+i*0.08); lo.stop(now+i*0.08+0.35);
+    });
+  } else if (type === 'drum' || type === 'horn' || type === 'cry' || type === 'death' || type === 'chain') {
+    var do2 = ctx.createOscillator(); do2.type = type==='horn'?'square':'triangle';
+    do2.frequency.setValueAtTime(type==='drum'?80:type==='death'?120:300, now);
+    do2.frequency.exponentialRampToValueAtTime(30, now+0.5);
+    var dg = ctx.createGain(); dg.gain.setValueAtTime(vol,now); dg.gain.exponentialRampToValueAtTime(0.001,now+0.6);
+    do2.connect(dg); dg.connect(ctx.destination); do2.start(now); do2.stop(now+0.6);
+  } else if (type === 'rain' || type === 'wind' || type === 'tavern' || type === 'drip' || type === 'crowd' || type === 'creak' || type === 'ice' || type === 'teleport' || type === 'dark') {
+    playSound('dice'); // reuse simple beep for misc
+  }
+}
+
+function sbStopAll() {
+  if (_sbCtx) { _sbCtx.close(); _sbCtx = null; }
+  document.querySelectorAll('.sound-btn').forEach(function(b){ b.classList.remove('playing'); });
+  showToast('All sounds stopped', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  WHITEBOARD
+// ══════════════════════════════════════════════════════
+var wbTool = 'pen';
+var wbColor = '#e2e2e2';
+var wbSize = 3;
+var wbDrawing = false;
+var wbLastX = 0, wbLastY = 0;
+var wbStartX = 0, wbStartY = 0;
+var wbSnapshot = null;
+
+function wbInit() {
+  var canvas = document.getElementById('wbCanvas');
+  var wrap = document.getElementById('page-whiteboard');
+  if (!canvas || !wrap) return;
+  var toolbar = wrap.querySelector('.wb-toolbar');
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight - (toolbar ? toolbar.offsetHeight : 40);
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  canvas.addEventListener('mousedown', wbMouseDown);
+  canvas.addEventListener('mousemove', wbMouseMove);
+  canvas.addEventListener('mouseup', wbMouseUp);
+  canvas.addEventListener('mouseleave', wbMouseUp);
+  document.getElementById('wbSize').addEventListener('input', function(e){
+    wbSize = parseInt(e.target.value);
+    document.getElementById('wbSizeLabel').textContent = wbSize;
+  });
+}
+
+function wbSetTool(t) {
+  wbTool = t;
+  document.querySelectorAll('.wb-tool-btn').forEach(function(b){b.classList.remove('active');});
+  var btn = document.getElementById('wb-'+t);
+  if (btn) btn.classList.add('active');
+  document.getElementById('wbCanvas').style.cursor = t==='erase'?'cell':t==='text'?'text':'crosshair';
+}
+
+function wbSetColor(c, el) {
+  wbColor = c;
+  document.querySelectorAll('.wb-color-swatch').forEach(function(s){s.classList.remove('active');});
+  el.classList.add('active');
+}
+
+function wbMouseDown(e) {
+  wbDrawing = true;
+  var r = e.target.getBoundingClientRect();
+  wbStartX = wbLastX = e.clientX - r.left;
+  wbStartY = wbLastY = e.clientY - r.top;
+  if (wbTool === 'text') {
+    var text = prompt('Enter text:');
+    if (text) {
+      var ctx = document.getElementById('wbCanvas').getContext('2d');
+      ctx.font = (wbSize * 5 + 10) + 'px Crimson Text, serif';
+      ctx.fillStyle = wbColor;
+      ctx.fillText(text, wbStartX, wbStartY);
+    }
+    wbDrawing = false;
+    return;
+  }
+  if (wbTool !== 'pen' && wbTool !== 'erase') {
+    wbSnapshot = document.getElementById('wbCanvas').getContext('2d').getImageData(0, 0, document.getElementById('wbCanvas').width, document.getElementById('wbCanvas').height);
+  }
+}
+
+function wbMouseMove(e) {
+  if (!wbDrawing) return;
+  var r = e.target.getBoundingClientRect();
+  var x = e.clientX - r.left, y = e.clientY - r.top;
+  var ctx = document.getElementById('wbCanvas').getContext('2d');
+  ctx.strokeStyle = wbTool === 'erase' ? '#111' : wbColor;
+  ctx.lineWidth = wbTool === 'erase' ? wbSize * 3 : wbSize;
+  ctx.lineCap = 'round';
+  if (wbTool === 'pen' || wbTool === 'erase') {
+    ctx.beginPath(); ctx.moveTo(wbLastX, wbLastY); ctx.lineTo(x, y); ctx.stroke();
+    wbLastX = x; wbLastY = y;
+  } else if (wbSnapshot) {
+    ctx.putImageData(wbSnapshot, 0, 0);
+    ctx.beginPath();
+    if (wbTool === 'line') { ctx.moveTo(wbStartX, wbStartY); ctx.lineTo(x, y); ctx.stroke(); }
+    else if (wbTool === 'rect') { ctx.strokeRect(wbStartX, wbStartY, x-wbStartX, y-wbStartY); }
+    else if (wbTool === 'circle') {
+      var rx = Math.abs(x-wbStartX)/2, ry = Math.abs(y-wbStartY)/2;
+      ctx.ellipse(wbStartX+(x-wbStartX)/2, wbStartY+(y-wbStartY)/2, rx, ry, 0, 0, Math.PI*2);
+      ctx.stroke();
+    }
+  }
+}
+
+function wbMouseUp() { wbDrawing = false; wbSnapshot = null; }
+
+function wbClear() {
+  if (!confirm('Clear whiteboard?')) return;
+  var c = document.getElementById('wbCanvas');
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#111'; ctx.fillRect(0, 0, c.width, c.height);
+}
+
+function wbExport() {
+  var c = document.getElementById('wbCanvas');
+  var link = document.createElement('a');
+  link.download = 'whiteboard.png';
+  link.href = c.toDataURL();
+  link.click();
+}
+
+function wbSync() {
+  if (!_currentCampaignId) { showToast('Open a campaign first to sync', 'error'); return; }
+  var c = document.getElementById('wbCanvas');
+  var data = c.toDataURL('image/jpeg', 0.5);
+  db.ref('whiteboard/' + _currentCampaignId).set({ data: data, updatedAt: Date.now() });
+  showToast('Whiteboard synced!', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  WORLD MAP
+// ══════════════════════════════════════════════════════
+var WMAP_CELL = 32;
+var wmapTool = 'paint';
+var wmapBrush = 3;
+var wmapTerrain = '#1a2a3a';
+var wmapMarkerType = 'city';
+var wmapCells = {};
+var wmapMarkers = [];
+var wmapRoads = [];
+var wmapPainting = false;
+var wmapPanStart = null;
+var wmapPanOffset = {x:0,y:0};
+var wmapRoadPoints = [];
+
+var WMAP_TERRAINS = [
+  {name:'Ocean',    color:'#1a2a4a', icon:'&#127754;'},
+  {name:'Shallow',  color:'#2a4a6a', icon:'&#127755;'},
+  {name:'Beach',    color:'#8a7a4a', icon:'&#127958;'},
+  {name:'Grassland',color:'#2a4a2a', icon:'&#127807;'},
+  {name:'Forest',   color:'#1a3a1a', icon:'&#127795;'},
+  {name:'Dense Forest',color:'#0a2a0a',icon:'&#127794;'},
+  {name:'Hills',    color:'#4a5a3a', icon:'&#9968;'},
+  {name:'Mountain', color:'#5a5a5a', icon:'&#9968;'},
+  {name:'Snow Peak',color:'#c8c8d8', icon:'&#127956;'},
+  {name:'Desert',   color:'#8a6a2a', icon:'&#127958;'},
+  {name:'Swamp',    color:'#2a3a1a', icon:'&#127981;'},
+  {name:'Volcanic', color:'#5a1a0a', icon:'&#127755;'},
+  {name:'Tundra',   color:'#6a7a8a', icon:'&#10052;'},
+  {name:'Farmland', color:'#6a8a3a', icon:'&#127807;'},
+  {name:'Road',     color:'#8a7a5a', icon:'&#9135;'},
+];
+
+var WMAP_MARKERS = [
+  {name:'City',       icon:'&#127961;', type:'city'},
+  {name:'Town',       icon:'&#127960;', type:'town'},
+  {name:'Village',    icon:'&#127978;', type:'village'},
+  {name:'Castle',     icon:'&#127981;', type:'castle'},
+  {name:'Dungeon',    icon:'&#128565;', type:'dungeon'},
+  {name:'Temple',     icon:'&#9970;',   type:'temple'},
+  {name:'Ruins',      icon:'&#9962;',   type:'ruins'},
+  {name:'Cave',       icon:'&#128009;', type:'cave'},
+  {name:'Port',       icon:'&#9875;',   type:'port'},
+  {name:'Camp',       icon:'&#9978;',   type:'camp'},
+  {name:'Mine',       icon:'&#9935;',   type:'mine'},
+  {name:'Tower',      icon:'&#127991;', type:'tower'},
+];
+
+function wmapInit() {
+  var canvas = document.getElementById('wmapCanvas');
+  var wrap = document.getElementById('wmapCanvasWrap');
+  if (!canvas || !wrap) return;
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+
+  // Init terrain swatches
+  var sw = document.getElementById('wmapTerrainSwatches');
+  if (sw) sw.innerHTML = WMAP_TERRAINS.map(function(t,i) {
+    return '<div class="wmap-terrain-swatch' + (i===0?' active':'') + '" style="background:'+t.color+'" title="'+t.name+'" onclick="wmapSetTerrain(\''+t.color+'\',this)"></div>';
+  }).join('');
+
+  // Init marker list
+  var ml = document.getElementById('wmapMarkerList');
+  if (ml) ml.innerHTML = WMAP_MARKERS.map(function(m) {
+    return '<div class="map2-token-row" onclick="wmapSetMarker(\''+m.type+'\',\''+m.icon+'\',this)">'+m.icon+' <span>'+m.name+'</span></div>';
+  }).join('');
+
+  // Init legend
+  var leg = document.getElementById('wmapLegend');
+  if (leg) leg.innerHTML = WMAP_TERRAINS.map(function(t) {
+    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;"><div style="width:12px;height:12px;background:'+t.color+';border-radius:2px;flex-shrink:0;"></div><span>'+t.name+'</span></div>';
+  }).join('');
+
+  canvas.addEventListener('mousedown', wmapMouseDown);
+  canvas.addEventListener('mousemove', wmapMouseMove);
+  canvas.addEventListener('mouseup', wmapMouseUp);
+  canvas.addEventListener('mouseleave', wmapMouseUp);
+  canvas.addEventListener('wheel', wmapWheel, {passive:false});
+
+  // Fill ocean background
+  if (!Object.keys(wmapCells).length) {
+    // Pre-fill with ocean
+    var cols = Math.ceil(canvas.width / WMAP_CELL) + 20;
+    var rows = Math.ceil(canvas.height / WMAP_CELL) + 20;
+    for (var c = -10; c < cols; c++) {
+      for (var r = -10; r < rows; r++) {
+        wmapCells[c+','+r] = '#1a2a4a';
+      }
+    }
+  }
+  wmapDraw();
+}
+
+function wmapSetTerrain(color, el) {
+  wmapTerrain = color;
+  document.querySelectorAll('.wmap-terrain-swatch').forEach(function(s){s.classList.remove('active');});
+  el.classList.add('active');
+  wmapSetTool('paint');
+}
+
+function wmapSetMarker(type, icon, el) {
+  wmapMarkerType = type;
+  document.querySelectorAll('#wmapMarkerList .map2-token-row').forEach(function(r){r.classList.remove('selected');});
+  el.classList.add('selected');
+  wmapSetTool('marker');
+}
+
+function wmapSetTool(t) {
+  wmapTool = t;
+  document.querySelectorAll('[id^="wmt-"]').forEach(function(b){b.classList.remove('active');});
+  var btn = document.getElementById('wmt-'+t);
+  if (btn) btn.classList.add('active');
+}
+
+function wmapChangeBrush(d) {
+  wmapBrush = Math.max(1, Math.min(10, wmapBrush + d));
+  document.getElementById('wmapBrushLabel').textContent = wmapBrush;
+}
+
+function wmapScreenToCell(sx, sy) {
+  return { col: Math.floor((sx - wmapPanOffset.x) / WMAP_CELL), row: Math.floor((sy - wmapPanOffset.y) / WMAP_CELL) };
+}
+
+function wmapMouseDown(e) {
+  if (e.button === 1 || (e.button===0 && wmapTool==='pan')) {
+    wmapPanStart = {x: e.clientX - wmapPanOffset.x, y: e.clientY - wmapPanOffset.y};
+    return;
+  }
+  wmapPainting = true;
+  var r = e.target.getBoundingClientRect();
+  var pos = wmapScreenToCell(e.clientX-r.left, e.clientY-r.top);
+  if (wmapTool === 'marker') {
+    var mk = WMAP_MARKERS.find(function(m){return m.type===wmapMarkerType;});
+    var label = prompt('Location name:', mk ? mk.name : 'Location');
+    if (label) {
+      wmapMarkers.push({col:pos.col,row:pos.row,type:wmapMarkerType,icon:mk?mk.icon:'&#9670;',label:label});
+      wmapDraw();
+      renderWmapMarkerList();
+    }
+    wmapPainting = false;
+    return;
+  }
+  wmapApply(pos);
+}
+
+function wmapMouseMove(e) {
+  if (wmapPanStart) {
+    wmapPanOffset.x = e.clientX - wmapPanStart.x;
+    wmapPanOffset.y = e.clientY - wmapPanStart.y;
+    wmapDraw(); return;
+  }
+  if (!wmapPainting) return;
+  var r = e.target.getBoundingClientRect();
+  var pos = wmapScreenToCell(e.clientX-r.left, e.clientY-r.top);
+  wmapApply(pos);
+}
+
+function wmapMouseUp() { wmapPainting = false; wmapPanStart = null; }
+
+function wmapWheel(e) {
+  e.preventDefault();
+  WMAP_CELL = Math.max(16, Math.min(80, WMAP_CELL + (e.deltaY > 0 ? -2 : 2)));
+  wmapDraw();
+}
+
+function wmapApply(pos) {
+  var half = Math.floor(wmapBrush/2);
+  for (var dc=-half;dc<=half;dc++) {
+    for (var dr=-half;dr<=half;dr++) {
+      var k = (pos.col+dc)+','+(pos.row+dr);
+      if (wmapTool === 'paint') wmapCells[k] = wmapTerrain;
+      else if (wmapTool === 'erase') wmapCells[k] = '#1a2a4a';
+    }
+  }
+  wmapDraw();
+}
+
+function wmapDraw() {
+  var canvas = document.getElementById('wmapCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#1a2a4a';
+  ctx.fillRect(0,0,W,H);
+
+  var startCol = Math.floor(-wmapPanOffset.x/WMAP_CELL)-1;
+  var startRow = Math.floor(-wmapPanOffset.y/WMAP_CELL)-1;
+  var endCol = startCol + Math.ceil(W/WMAP_CELL)+2;
+  var endRow = startRow + Math.ceil(H/WMAP_CELL)+2;
+
+  for (var c=startCol;c<=endCol;c++) {
+    for (var r=startRow;r<=endRow;r++) {
+      var k = c+','+r;
+      var color = wmapCells[k] || '#1a2a4a';
+      ctx.fillStyle = color;
+      ctx.fillRect(c*WMAP_CELL+wmapPanOffset.x, r*WMAP_CELL+wmapPanOffset.y, WMAP_CELL, WMAP_CELL);
+    }
+  }
+
+  // Draw markers
+  ctx.font = Math.floor(WMAP_CELL*0.6)+'px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  wmapMarkers.forEach(function(m) {
+    var px = m.col*WMAP_CELL+wmapPanOffset.x+WMAP_CELL/2;
+    var py = m.row*WMAP_CELL+wmapPanOffset.y+WMAP_CELL/2;
+    ctx.fillText(m.icon, px, py);
+    if (WMAP_CELL >= 24 && m.label) {
+      ctx.font = '10px Crimson Text, serif';
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fillText(m.label, px, py+WMAP_CELL*0.6);
+      ctx.font = Math.floor(WMAP_CELL*0.6)+'px serif';
+    }
+  });
+}
+
+function renderWmapMarkerList() {
+  var el = document.getElementById('wmapMarkerListPlaced');
+  if (!el) return;
+  el.innerHTML = wmapMarkers.map(function(m,i) {
+    return '<div style="display:flex;align-items:center;gap:4px;padding:3px 0;font-size:12px;color:var(--muted);border-bottom:1px solid rgba(42,42,42,.4);">'+
+      m.icon+' <span style="flex:1">'+esc(m.label)+'</span>'+
+      '<button onclick="wmapRemoveMarker('+i+')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;">&#10006;</button>'+
+    '</div>';
+  }).join('');
+}
+
+function wmapRemoveMarker(i) { wmapMarkers.splice(i,1); wmapDraw(); renderWmapMarkerList(); }
+
+function wmapClear() {
+  if (!confirm('Clear world map?')) return;
+  wmapCells = {}; wmapMarkers = []; wmapDraw(); renderWmapMarkerList();
+}
+
+function wmapExport() {
+  var link = document.createElement('a');
+  link.download = 'world-map.png';
+  link.href = document.getElementById('wmapCanvas').toDataURL();
+  link.click();
+}
+
+function wmapSave() {
+  var id = document.getElementById('wmapSessionId').value.trim() || 'worldmap-1';
+  sbClient.from('maps').upsert({
+    id: 'world-' + id,
+    campaign_id: _currentCampaignId || 'world',
+    owner_dn: currentUser ? currentUser.dn : 'unknown',
+    data: { cells: wmapCells, markers: wmapMarkers },
+    fog: {},
+    updated_at: new Date().toISOString()
+  }).then(function(r) {
+    if (r.error) showToast('Save failed: ' + r.error.message, 'error');
+    else showToast('World map saved!', 'success');
+  });
+}
+
+function wmapLoad() {
+  var id = document.getElementById('wmapSessionId').value.trim() || 'worldmap-1';
+  sbClient.from('maps').select('*').eq('id', 'world-' + id).single().then(function(r) {
+    if (r.error || !r.data) { showToast('No world map found', 'error'); return; }
+    wmapCells = r.data.data.cells || {};
+    wmapMarkers = r.data.data.markers || [];
+    wmapDraw(); renderWmapMarkerList();
+    showToast('World map loaded!', 'success');
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  QUEST BOARD
+// ══════════════════════════════════════════════════════
+var _quests = [];
+
+function loadQuests() {
+  try { _quests = JSON.parse(localStorage.getItem('dnd_quests') || '[]'); } catch(e) { _quests = []; }
+}
+
+function saveQuests() {
+  localStorage.setItem('dnd_quests', JSON.stringify(_quests));
+}
+
+function openAddQuestModal() {
+  document.getElementById('questTitle').value = '';
+  document.getElementById('questDesc').value = '';
+  document.getElementById('questReward').value = '';
+  document.getElementById('addQuestModal').style.display = 'flex';
+}
+
+function addQuest() {
+  var title = document.getElementById('questTitle').value.trim();
+  if (!title) { showToast('Quest needs a title', 'error'); return; }
+  _quests.push({
+    id: Date.now(),
+    title: title,
+    desc: document.getElementById('questDesc').value.trim(),
+    type: document.getElementById('questType').value,
+    reward: document.getElementById('questReward').value.trim(),
+    status: 'available',
+    createdAt: Date.now()
+  });
+  saveQuests();
+  renderQuests();
+  document.getElementById('addQuestModal').style.display = 'none';
+  showToast('Quest posted!', 'success');
+  unlockAchievement('quest_first', '&#128221;', 'Quest Giver', 'Posted your first quest');
+}
+
+function renderQuests() {
+  var active = _quests.filter(function(q){return q.status==='active';});
+  var available = _quests.filter(function(q){return q.status==='available';});
+  var completed = _quests.filter(function(q){return q.status==='complete';});
+  renderQuestList('questsActive', active);
+  renderQuestList('questsAvailable', available);
+  renderQuestList('questsCompleted', completed);
+}
+
+function renderQuestList(elId, quests) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  if (!quests.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">None</div>'; return; }
+  el.innerHTML = quests.map(function(q) {
+    return '<div class="quest-card ' + (q.status==='active'?'active':q.status==='complete'?'complete':'') + '">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
+        '<span class="quest-badge '+q.type+'">' + q.type + '</span>' +
+        '<span style="font-family:\'Cinzel\',serif;font-size:14px;font-weight:600;">' + esc(q.title) + '</span>' +
+      '</div>' +
+      (q.desc ? '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;">' + esc(q.desc) + '</div>' : '') +
+      (q.reward ? '<div style="font-size:12px;color:#d4a017;">&#128176; ' + esc(q.reward) + '</div>' : '') +
+      '<div style="display:flex;gap:6px;margin-top:8px;">' +
+        (q.status==='available' ? '<button onclick="questSetStatus('+q.id+',\'active\')" style="background:var(--red-dim);border:1px solid rgba(229,62,62,.3);color:var(--text);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif;">Accept</button>' : '') +
+        (q.status==='active' ? '<button onclick="questSetStatus('+q.id+',\'complete\')" style="background:rgba(45,106,79,.2);border:1px solid rgba(45,106,79,.4);color:#5cb88a;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif;">Complete</button>' : '') +
+        '<button onclick="questDelete('+q.id+')" style="background:transparent;border:1px solid var(--border);color:var(--dim);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif;">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function questSetStatus(id, status) {
+  var q = _quests.find(function(q){return q.id===id;});
+  if (q) { q.status = status; saveQuests(); renderQuests(); }
+  if (status === 'complete') {
+    showToast('Quest completed!', 'success');
+    unlockAchievement('quest_complete', '&#9670;', 'Quest Completed', 'Finished a quest');
+  }
+}
+
+function questDelete(id) {
+  _quests = _quests.filter(function(q){return q.id!==id;});
+  saveQuests(); renderQuests();
+}
+
+// ══════════════════════════════════════════════════════
+//  VIRTUAL PET
+// ══════════════════════════════════════════════════════
+var PET_MONSTERS = [
+  {name:'Pseudodragon',    species:'Tiny Dragon',        emoji:'&#128009;', color:'#c0392b',
+   abilities:'Keen Senses, Magic Resistance, Limited Telepathy',
+   personality:'Mischievous and loyal. Loves scratches behind the spines.',
+   sayings:["*chirps happily*","*flicks barbed tail*","*nuzzles your hand*","*purrs*"]},
+  {name:'Owlbear Cub',     species:'Beast',              emoji:'&#129437;', color:'#8B4513',
+   abilities:'Darkvision, Keen Sight and Smell',
+   personality:'Fiercely protective and surprisingly cuddly for something that could eat you.',
+   sayings:["*hoots softly*","*ruffles feathers*","*nuzzles aggressively*","HOOT!"]},
+  {name:'Imp',             species:'Fiend (Devil)',       emoji:'&#128520;', color:'#8b0000',
+   abilities:'Shapechanger, Devil\'s Sight, Invisibility',
+   personality:'Snarky and sarcastic but secretly devoted to you.',
+   sayings:["*cackles*","Oh FINE, I suppose you\'re tolerable.","*pokes you with tiny pitchfork*","Your enemies shall TREMBLE... eventually."]},
+  {name:'Beholder Eyeling', species:'Aberration',         emoji:'&#128065;', color:'#4a2c6e',
+   abilities:'Antimagic Cone (tiny), Eye Rays (weak)',
+   personality:'Paranoid about everything but oddly attached to you specifically.',
+   sayings:["TRUST NO ONE. Except you.","*all eyes stare simultaneously*","Do you think that rock is suspicious?","I have catalogued 47 potential threats nearby."]},
+  {name:'Mimic Pup',       species:'Monstrosity',        emoji:'&#128228;', color:'#7a6000',
+   abilities:'Shapechanger (small objects), Adhesive, False Appearance',
+   personality:'Imitates objects to hide, but always reveals itself for treats.',
+   sayings:["*transforms into a shoe*","*becomes a suspicious rock*","*mimics your voice badly*","NOM NOM NOM"]},
+  {name:'Gelatinous Cube Jr',species:'Ooze',             emoji:'&#129520;', color:'#2ecc71',
+   abilities:'Engulf (small items), Transparent, Ooze Cube',
+   personality:'Cheerful and hungry. Digests everything except you.',
+   sayings:["*jiggles happily*","*slowly absorbs a pebble*","*transparent blob noises*","...","*jiggle jiggle*"]},
+  {name:'Displacer Beast Kitten',species:'Monstrosity',  emoji:'&#128008;', color:'#4a2c6e',
+   abilities:'Displacement (sometimes), Avoidance',
+   personality:'Appears to be 2 feet away from where it actually is. Still somehow trips you.',
+   sayings:["*is not where it appears to be*","*phases through your hand somehow*","*yowls from a different location*","*tentacles*"]},
+  {name:'Flumph',          species:'Aberration',         emoji:'&#129529;', color:'#c0e0ff',
+   abilities:'Telepathic Shroud, Stench Spray (only when scared)',
+   personality:'Gentle, psychic, and deeply philosophical. Reads your emotions.',
+   sayings:["I sense great destiny within you.","*floats serenely*","Your aura is... complicated.","Have you considered the nature of existence today?"]},
+  {name:'Baby Tarrasque',  species:'Monstrosity (Titan)', emoji:'&#129429;', color:'#8b0000',
+   abilities:'Reflective Carapace, Legendary Resistance (1/day)',
+   personality:'Inexplicably small. Still terrifying. Somehow housebroken.',
+   sayings:["RAAAAAWR","*destroys a small twig*","*legendary resistances against bathtime*","*eats a rock contentedly*"]},
+  {name:'Sprite',          species:'Fey',                emoji:'&#129497;', color:'#2ecc71',
+   abilities:'Heart Sight, Invisibility, Shortbow',
+   personality:'Judges your alignment constantly. Has opinions about everything.',
+   sayings:["I can SEE your soul, you know.","*shoots a tiny arrow at your ankle*","Your intentions are... acceptable.","*becomes invisible mid-conversation*"]},
+];
+
+var _pet = null;
+var _petDecayInterval = null;
+
+function loadPet() {
+  try { _pet = JSON.parse(localStorage.getItem('dnd_pet') || 'null'); } catch(e) { _pet = null; }
+}
+function savePet() { if (_pet) localStorage.setItem('dnd_pet', JSON.stringify(_pet)); }
+
+function renderPetPage() {
+  loadPet();
+  if (_pet) {
+    showActivePet();
+  } else {
+    showChoosePet();
+  }
+}
+
+function showChoosePet() {
+  document.getElementById('petChoose').style.display = '';
+  document.getElementById('petActive').style.display = 'none';
+  var grid = document.getElementById('petChooseGrid');
+  grid.innerHTML = PET_MONSTERS.map(function(p,i) {
+    return '<div class="pet-choose-card" onclick="choosePet('+i+')">' +
+      '<span class="pet-choose-emoji">'+p.emoji+'</span>' +
+      '<div class="pet-choose-name">'+p.name+'</div>' +
+      '<div class="pet-choose-species">'+p.species+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function choosePet(idx) {
+  var monster = PET_MONSTERS[idx];
+  var name = prompt('Name your ' + monster.name + ':', monster.name);
+  if (!name) return;
+  _pet = {
+    name: name,
+    monsterIdx: idx,
+    hunger: 80,
+    happy: 80,
+    energy: 80,
+    level: 1,
+    xp: 0,
+    journal: ['You bonded with ' + name + ' the ' + monster.species + '!'],
+    lastInteract: Date.now()
+  };
+  savePet();
+  showActivePet();
+  unlockAchievement('pet_adopt', '&#9733;', 'Companion Bonded', 'You adopted a monster companion!');
+  showToast('You bonded with ' + name + '!', 'success');
+}
+
+function showActivePet() {
+  document.getElementById('petChoose').style.display = 'none';
+  document.getElementById('petActive').style.display = '';
+  updatePetUI();
+  startPetDecay();
+}
+
+function updatePetUI() {
+  if (!_pet) return;
+  var monster = PET_MONSTERS[_pet.monsterIdx];
+  document.getElementById('petSprite').innerHTML = monster.emoji;
+  document.getElementById('petNameDisplay').textContent = _pet.name;
+  document.getElementById('petSpeciesDisplay').textContent = monster.name + ' — ' + monster.species;
+  document.getElementById('petLevelDisplay').textContent = _pet.level;
+  document.getElementById('petHungerVal').textContent = Math.round(_pet.hunger);
+  document.getElementById('petHappyVal').textContent = Math.round(_pet.happy);
+  document.getElementById('petEnergyVal').textContent = Math.round(_pet.energy);
+  document.getElementById('petHungerBar').style.width = _pet.hunger + '%';
+  document.getElementById('petHappyBar').style.width = _pet.happy + '%';
+  document.getElementById('petEnergyBar').style.width = _pet.energy + '%';
+  var xpNeeded = _pet.level * 100;
+  document.getElementById('petXpBar').style.width = Math.min(100, (_pet.xp / xpNeeded * 100)) + '%';
+  // Mood
+  var sprite = document.getElementById('petSprite');
+  sprite.className = 'pet-sprite';
+  if (_pet.energy < 20) sprite.classList.add('sleeping');
+  else if (_pet.happy > 70) sprite.classList.add('happy');
+  // Journal
+  var journal = document.getElementById('petJournal');
+  if (journal) journal.innerHTML = _pet.journal.slice(-20).reverse().map(function(j) {
+    return '<div style="padding:4px 0;border-bottom:1px solid rgba(42,42,42,.3);">'+esc(j)+'</div>';
+  }).join('');
+  // Abilities
+  var ab = document.getElementById('petAbilities');
+  if (ab) ab.innerHTML = '<div style="margin-bottom:6px;"><strong style="color:var(--text)">Abilities:</strong> '+esc(monster.abilities)+'</div>' +
+    '<div style="margin-bottom:6px;"><strong style="color:var(--text)">Personality:</strong> '+esc(monster.personality)+'</div>' +
+    '<div><strong style="color:var(--text)">Level:</strong> '+_pet.level+' &nbsp; <strong style="color:var(--text)">XP:</strong> '+_pet.xp+'/'+(_pet.level*100)+'</div>';
+  // Auto-speak based on mood
+  var mood = _pet.hunger < 30 ? 'hungry' : _pet.happy < 30 ? 'sad' : _pet.energy < 20 ? 'tired' : 'normal';
+  var speeches = {
+    hungry: ['*stomach growls*','FEED ME.','...is that food?','I\'m STARVING over here.'],
+    sad: ['*whimpers*','...','*looks away*','*sulks in the corner*'],
+    tired: ['*yawns*','zzz...','*barely opens eyes*','too... sleepy...'],
+    normal: monster.sayings
+  };
+  var speechArr = speeches[mood];
+  petSay(speechArr[Math.floor(Math.random() * speechArr.length)]);
+}
+
+function petSay(text) {
+  var el = document.getElementById('petSpeech');
+  if (el) el.textContent = text;
+}
+
+function petFeed() {
+  if (!_pet) return;
+  _pet.hunger = Math.min(100, _pet.hunger + 25);
+  _pet.happy = Math.min(100, _pet.happy + 5);
+  petGainXP(10);
+  _pet.journal.push(_pet.name + ' gobbled up the food eagerly!');
+  savePet(); updatePetUI();
+  petSay('NOM NOM NOM! *happy noises*');
+  animatePet();
+  showToast(_pet.name + ' is fed!', 'success');
+}
+
+function petPlay() {
+  if (!_pet) return;
+  if (_pet.energy < 20) { petSay('*too tired to play*'); return; }
+  _pet.happy = Math.min(100, _pet.happy + 20);
+  _pet.energy = Math.max(0, _pet.energy - 15);
+  _pet.hunger = Math.max(0, _pet.hunger - 10);
+  petGainXP(15);
+  _pet.journal.push('Played with ' + _pet.name + '. Pure joy.');
+  savePet(); updatePetUI();
+  var monster = PET_MONSTERS[_pet.monsterIdx];
+  petSay(monster.sayings[Math.floor(Math.random() * monster.sayings.length)]);
+  animatePet();
+}
+
+function petSleep() {
+  if (!_pet) return;
+  _pet.energy = Math.min(100, _pet.energy + 40);
+  petGainXP(5);
+  _pet.journal.push(_pet.name + ' took a nap and feels refreshed.');
+  savePet(); updatePetUI();
+  petSay('zzZZZzz...');
+}
+
+function petPet() {
+  if (!_pet) return;
+  _pet.happy = Math.min(100, _pet.happy + 15);
+  petGainXP(5);
+  _pet.journal.push('You petted ' + _pet.name + '. Bonding moment!');
+  savePet(); updatePetUI();
+  petSay('*purrs/growls/vibrates contentedly*');
+  animatePet();
+}
+
+function petChat() {
+  var input = document.getElementById('petChatInput');
+  var msg = input.value.trim();
+  if (!msg || !_pet) return;
+  input.value = '';
+  var monster = PET_MONSTERS[_pet.monsterIdx];
+  _pet.happy = Math.min(100, _pet.happy + 5);
+  petGainXP(8);
+  _pet.journal.push('You said: "' + msg + '"');
+  // Use Anthropic API for response
+  petSay('*thinking...*');
+  fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:150,
+      messages:[{
+        role:'user',
+        content:'You are ' + _pet.name + ', a ' + monster.name + ' ('+monster.species+') companion in D&D. Personality: ' + monster.personality + '. The player said: "' + msg + '". Respond in character in 1-2 short sentences. Be cute, funny, and in-character for the monster type. Use *actions* in asterisks.'
+      }]
+    })
+  }).then(function(r){return r.json();}).then(function(d){
+    var reply = d.content && d.content[0] ? d.content[0].text : monster.sayings[0];
+    petSay(reply);
+    _pet.journal.push(_pet.name + ' said: "' + reply + '"');
+    savePet(); updatePetUI();
+  }).catch(function(){
+    petSay(monster.sayings[Math.floor(Math.random() * monster.sayings.length)]);
+  });
+}
+
+function petGainXP(amount) {
+  if (!_pet) return;
+  _pet.xp += amount;
+  var needed = _pet.level * 100;
+  if (_pet.xp >= needed) {
+    _pet.xp -= needed;
+    _pet.level++;
+    _pet.journal.push(_pet.name + ' leveled up to level ' + _pet.level + '!');
+    showToast(_pet.name + ' reached level ' + _pet.level + '!', 'success');
+    playSound('join');
+    unlockAchievement('pet_level', '&#11088;', 'Growing Companion', _pet.name + ' reached level ' + _pet.level);
+  }
+}
+
+function animatePet() {
+  var sprite = document.getElementById('petSprite');
+  if (!sprite) return;
+  sprite.style.animation = 'none';
+  setTimeout(function(){
+    sprite.style.animation = 'pet-shake 0.4s ease';
+    setTimeout(function(){ sprite.style.animation = ''; }, 400);
+  }, 10);
+}
+
+function startPetDecay() {
+  if (_petDecayInterval) clearInterval(_petDecayInterval);
+  _petDecayInterval = setInterval(function() {
+    if (!_pet) return;
+    _pet.hunger = Math.max(0, _pet.hunger - 0.5);
+    _pet.happy = Math.max(0, _pet.happy - 0.3);
+    _pet.energy = Math.max(0, _pet.energy - 0.2);
+    if (_pet.hunger < 10) addNotif('&#9733; ' + _pet.name, _pet.name + ' is starving!');
+    if (_pet.happy < 10) addNotif('&#9733; ' + _pet.name, _pet.name + ' is very sad!');
+    savePet();
+    if (document.getElementById('page-pet').classList.contains('active')) updatePetUI();
+  }, 30000); // decay every 30s
+}
+
+function petAbandon() {
+  if (!confirm('Release ' + _pet.name + '? They will return to the wild.')) return;
+  if (_petDecayInterval) clearInterval(_petDecayInterval);
+  _pet = null;
+  localStorage.removeItem('dnd_pet');
+  showChoosePet();
+  showToast('Your companion was released.', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  DM TOOLS
+// ══════════════════════════════════════════════════════
+var LOOT_TABLES = {
+  easy:   { cp:[5,20], sp:[1,10], gp:[0,2],  pp:0, items:['Torch','Rope','Ration','Waterskin','Blanket'] },
+  medium: { cp:[0,5],  sp:[2,20], gp:[1,10], pp:0, items:['Healing Potion','Thieves\' Tools','Lantern','Map Fragment','Gemstone (10gp)','Short Sword'] },
+  hard:   { cp:0, sp:[0,5], gp:[5,30], pp:[0,2], items:['Potion of Greater Healing','Spell Scroll (1st level)','+1 Weapon','Gems (50gp)','Magic Ammunition x10','Splint Armor'] },
+  deadly: { cp:0, sp:0, gp:[20,100], pp:[2,10], items:['Potion of Superior Healing','Spell Scroll (3rd level)','Rare Magic Item','+2 Weapon','Legendary Artifact Fragment','1000gp gems'] }
+};
+
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function generateLoot() {
+  var diff = document.getElementById('lootDifficulty').value;
+  var level = parseInt(document.getElementById('lootLevel').value) || 5;
+  var table = LOOT_TABLES[diff];
+  var html = '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">';
+  html += '<div style="font-family:\'Cinzel\',serif;font-size:13px;color:var(--red);margin-bottom:8px;">&#128176; LOOT FOUND</div>';
+  var coins = [];
+  if (table.cp && Array.isArray(table.cp)) coins.push(rand(table.cp[0],table.cp[1]) + ' cp');
+  if (table.sp && Array.isArray(table.sp)) coins.push(rand(table.sp[0],table.sp[1]) + ' sp');
+  if (table.gp && Array.isArray(table.gp)) {
+    var gp = rand(table.gp[0], table.gp[1]) * Math.ceil(level/4);
+    if (gp > 0) coins.push(gp + ' gp');
+  }
+  if (table.pp && Array.isArray(table.pp)) {
+    var pp = rand(table.pp[0], table.pp[1]);
+    if (pp > 0) coins.push(pp + ' pp');
+  }
+  if (coins.length) html += '<div style="margin-bottom:6px;color:#d4a017;">&#128176; ' + coins.join(', ') + '</div>';
+  var numItems = diff==='easy'?rand(0,1):diff==='medium'?rand(1,2):diff==='hard'?rand(1,3):rand(2,4);
+  for (var i=0;i<numItems;i++) {
+    html += '<div style="color:var(--text);">&#9670; ' + pick(table.items) + '</div>';
+  }
+  html += '</div>';
+  document.getElementById('lootResult').innerHTML = html;
+}
+
+var ENCOUNTER_TABLES = {
+  Forest:    ['1d4 Wolves','2d4 Goblins','1 Brown Bear','1d6 Bandits','1 Green Hag','1d4 Kenku','1 Owlbear','2d6 Kobolds'],
+  Dungeon:   ['1d6 Skeletons','1d4 Zombies','1 Gelatinous Cube','1d4 Mimics','1 Wight','2d4 Ghouls','1 Vampire Spawn','1 Mind Flayer'],
+  City:      ['1d4 Thugs','1d6 Bandits','1 Cult Fanatic','1d4 Spies','1 Assassin','2d4 Guards','1 Master Thief','1 Crime Boss'],
+  Plains:    ['1d6 Bandits','1 Giant Eagle','2d4 Orcs','1d4 Hobgoblins','1 Hill Giant','1d6 Gnolls','1 Wyvern','2d4 Centaurs'],
+  Mountain:  ['1d4 Ogres','1 Stone Giant','1d6 Griffins','2d4 Gnolls','1 Roc','1d4 Trolls','2d4 Hobgoblins','1 Frost Giant'],
+  Swamp:     ['1d6 Lizardfolk','1 Black Dragon Wyrmling','2d4 Bullywugs','1d4 Will-o-Wisps','1 Green Hag','1d6 Zombies','1 Hydra','1d4 Yuan-ti'],
+  Desert:    ['1d6 Gnolls','1 Blue Dragon Wyrmling','2d4 Bandits','1 Lamia','1d4 Mummies','1 Androsphinx','2d4 Yuan-ti','1 Roc'],
+  Underdark: ['1d6 Drow','1 Mind Flayer','1d4 Driders','1 Beholder','2d4 Duergar','1 Aboleth','1 Purple Worm','1d4 Intellect Devourers'],
+  Ocean:     ['1d4 Merrow','1 Kraken Tentacle','2d4 Sahuagin','1 Giant Shark','1 Dragon Turtle','1d6 Sea Hags','1 Marid','2d4 Pirates'],
+};
+
+function generateEncounter() {
+  var terrain = document.getElementById('encTerrain').value;
+  var level = parseInt(document.getElementById('encLevel').value) || 5;
+  var table = ENCOUNTER_TABLES[terrain] || ENCOUNTER_TABLES.Forest;
+  var encounter = pick(table);
+  var diff = level < 3 ? 'Easy' : level < 7 ? 'Medium' : level < 13 ? 'Hard' : 'Deadly';
+  var xp = level * rand(50, 200);
+  var html = '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">' +
+    '<div style="font-family:\'Cinzel\',serif;font-size:14px;color:var(--red);margin-bottom:8px;">&#9876; ENCOUNTER</div>' +
+    '<div style="font-size:16px;color:var(--text);margin-bottom:8px;">'+encounter+'</div>' +
+    '<div style="font-size:13px;color:var(--muted);">Difficulty: <span style="color:var(--red)">'+diff+'</span> &nbsp;|&nbsp; XP Reward: <span style="color:#d4a017">'+xp+'</span></div>' +
+    '<div style="font-size:12px;color:var(--dim);margin-top:6px;">Terrain: '+terrain+'  &nbsp;|&nbsp; Party Level: '+level+'</div>' +
+  '</div>';
+  document.getElementById('encResult').innerHTML = html;
+}
+
+var NAME_DATA = {
+  Human: {M:['Aldric','Brennan','Caspian','Darian','Edmund','Fabian','Gareth','Harold','Ivan','Jasper'],F:['Amara','Brenna','Celeste','Diana','Elena','Fiona','Grace','Helena','Iris','Jade'],N:['Ash','Blake','Casey','Drew','Ellis','Flynn','Gray','Harper','Indigo','Jordan'],last:['Ashford','Blackwood','Crane','Dunbar','Everhart','Fairfax','Gale','Harrow','Irons','Jade']},
+  Elf:   {M:['Aelindra','Caladrel','Daeron','Erevan','Fenris','Galadir','Haldir','Iorel','Jariel','Kylen'],F:['Aelindel','Calaniel','Daelindra','Erevan','Fenriel','Galindra','Halindra','Iorel','Jariel','Kylindra'],N:['Ael','Cal','Dae','Ere','Fen','Gal','Hal','Ior','Jar','Kyl'],last:['Aesandoral','Brightwood','Celanil','Dawntracker','Everwood','Farlight','Galanodel','Holimion','Ilanis','Liadon']},
+  Dwarf: {M:['Aldric','Balin','Corrik','Durin','Egrin','Farin','Gorin','Harin','Irik','Jorn'],F:['Amber','Brunhilde','Cressa','Dagny','Edda','Freya','Groa','Hilda','Ingrid','Jora'],N:['Anvil','Bronze','Copper','Flint','Granite','Hammer','Iron','Jade','Keg','Lager'],last:['Battlehammer','Copperkettle','Deepdelve','Evermeadow','Fireforge','Goldseeker','Hammerfall','Ironfoot','Jade','Kevrin']},
+  Halfling:{M:['Alton','Beau','Corwin','Danby','Errich','Finnan','Garret','Heath','Idris','Jasper'],F:['Andry','Bree','Cora','Dona','Euphemia','Fern','Gilda','Henny','Isembard','Jade'],N:['Apple','Berry','Clover','Daisy','Elm','Fern','Grove','Honey','Ivy','Jade'],last:['Brushgather','Copperpot','Deephollow','Eveninglight','Ferngrass','Goodbarrel','Hilltopple','Ironsaddle','Jade','Kettleblack']},
+  Gnome:  {M:['Alston','Boddynock','Codger','Dabble','Eldon','Frug','Gerbo','Jebeddo','Kellen','Namfoodle'],F:['Bimpnottin','Caramip','Duvamil','Ellywick','Fizzban','Iana','Lilli','Mardnab','Nissa','Oda'],N:['Click','Cog','Fizzle','Gear','Gizmo','Plink','Spark','Sprocket','Tick','Tock'],last:['Beren','Daergel','Folkor','Garrick','Nackle','Murnig','Ningel','Raulnor','Scheppen','Timbers']},
+  Tiefling:{M:['Akmenos','Amnon','Barakas','Damakos','Ekemon','Iados','Kairon','Leucis','Melech','Mordai'],F:['Akta','Anakis','Bryseis','Criella','Damaia','Ea','Kallista','Lerissa','Makaria','Nemeia'],N:['Carrion','Chant','Cruelty','Despair','Doom','Dread','Fate','Gloom','Hope','Ideal'],last:['Baneful','Darkbane','Dreadmore','Eviltide','Grimtide','Hellscar','Ironwill','Jadeheart','Kingsfall','Malice']},
+  Dragonborn:{M:['Arjhan','Balasar','Bharash','Donaar','Ghesh','Heskan','Kriv','Medrash','Mehen','Nadarr'],F:['Akra','Biri','Daar','Farideh','Harann','Havilar','Jheri','Kava','Korinn','Mishann'],N:['Ash','Cinder','Ember','Flame','Flint','Scale','Scorch','Sear','Singe','Spark'],last:['Clethtinthiallor','Daardendrian','Delmirev','Drachedandion','Fenkenkabradon','Kepeshkmolik','Kerrhylon','Kimbatuul','Linxakasendalor','Myastan']},
+  Orc:    {M:['Gorgrak','Hrothgar','Krag','Morg','Rorg','Skrag','Thrak','Ugrak','Vorg','Worg'],F:['Grasha','Hurga','Kraga','Morga','Rorga','Skraga','Thraka','Ugraka','Vorga','Worga'],N:['Bash','Crush','Gash','Gore','Maim','Rend','Ruin','Slash','Smash','Wrath'],last:['Bonebreaker','Cleaveskull','Deathgrip','Eyeripper','Fleshrender','Goreaxe','Headbiter','Ironjaw','Jawcrusher','Killfist']},
+  Goblin: {M:['Bigtoe','Clickit','Drip','Filch','Gnash','Grib','Nix','Pox','Retch','Skrit'],F:['Blinky','Crinkle','Dribble','Fizz','Gloop','Muck','Nit','Pip','Snot','Yuck'],N:['Bite','Claw','Drool','Filth','Grime','Mold','Ooze','Rust','Slime','Stench'],last:['Bigears','Clawfoot','Dirtmunch','Eyestealer','Filchpurse','Garbageeater','Headlicker','Ickypaws','Jawripper','Kneebiter']},
+  Undead: {M:['Azrael','Bane','Crypt','Death','Entropy','Fear','Grave','Hate','Ire','Korroth'],F:['Ash','Blight','Cinder','Dust','Ember','Fear','Gloom','Hate','Ire','Jade'],N:['Ash','Bone','Crypt','Death','Dust','Fate','Gloom','Grave','Hate','Ire'],last:['Ashenblood','Bonechill','Cryptwhisper','Deathsong','Dustwalker','Fearhaven','Gloomweaver','Hatebringer','Ireheart','Jadefall']},
+  Demon:  {M:['Abraxas','Baphomet','Codricaal','Demogorgon','Errtu','Fraz','Graz\'zt','Hezrou','Iggwilv','Juiblex'],F:['Abyss','Bloodwrath','Chaos','Dread','Entropy','Fear','Gore','Hate','Ire','Jade'],N:['Bane','Chaos','Dread','Entropy','Fear','Gore','Hate','Ire','Jade','Khorne'],last:['Abyssborn','Blooddrinker','Chaosbringer','Dreadweaver','Entropywalker','Fearmonger','Goreseeker','Hatebound','Irebringer','Jadeheart']},
+  Celestial:{M:['Adroniel','Barachiel','Cadriel','Dadriel','Edriel','Fadriel','Gadriel','Hadriel','Iadriel','Jadriel'],F:['Adrael','Badrael','Cadrael','Dadrael','Edrael','Fadrael','Gadrael','Hadrael','Iadrael','Jadrael'],N:['Dawn','Dusk','Glory','Grace','Hope','Joy','Light','Love','Peace','Truth'],last:['Brightblade','Celestborn','Dawnheart','Everlight','Faithkeeper','Glorywing','Hopebringer','Ironhalo','Jadefeather','Kindleflame']},
+};
+
+function generateName() {
+  var race = document.getElementById('nameRace').value;
+  var gender = document.getElementById('nameGender').value;
+  var data = NAME_DATA[race] || NAME_DATA.Human;
+  var names = [];
+  for (var i=0;i<5;i++) {
+    var genderArr = gender==='Male'?data.M:gender==='Female'?data.F:gender==='Neutral'?data.N:pick([data.M,data.F,data.N]);
+    var first = pick(genderArr);
+    var last = data.last ? pick(data.last) : '';
+    names.push(first + (last ? ' ' + last : ''));
+  }
+  document.getElementById('nameResult').innerHTML = names.map(function(n) {
+    return '<div style="padding:4px 0;border-bottom:1px solid rgba(42,42,42,.3);color:var(--text);cursor:pointer;" onclick="navigator.clipboard.writeText(\''+n+'\').then(function(){showToast(\'Copied: '+n+'\',\'success\')})">'+esc(n)+' <span style="color:var(--dim);font-size:11px;">&#128203;</span></div>';
+  }).join('');
+}
+
+var TAVERN_PREFIXES = ['The Rusty','The Golden','The Broken','The Silver','The Wandering','The Drunken','The Sleeping','The Lucky','The Laughing','The Howling'];
+var TAVERN_SUFFIXES = ['Flagon','Dragon','Wyvern','Sword','Shield','Goblin','Axe','Crown','Boot','Lantern'];
+var TAVERN_FOODS = ['Hearty Stew (2cp)','Roasted Boar (5sp)','Elven Bread (1sp)','Mystery Pie (1cp)','Salted Fish (3cp)','Roasted Vegetables (2cp)','Venison Steak (8sp)','Mushroom Soup (1sp)'];
+var TAVERN_DRINKS = ['Cheap Ale (4cp)','Fine Wine (2sp)','Dwarven Stout (1sp)','Elven Spirits (5sp)','Mead (6cp)','Honeywine (1sp)','Suspicious Brew (2cp)','Dragon\'s Breath Whiskey (1gp)'];
+var TAVERN_RUMORS = ['A dragon was spotted near the old ruins to the east.','The blacksmith\'s daughter went missing three nights ago.','Strange lights have been seen in the graveyard at midnight.','The mayor is secretly in league with the thieves\' guild.','An ancient tomb was discovered beneath the old mill.','A bounty has been placed on a group of bandits harassing merchants.','The local wizard hasn\'t been seen in weeks.','Something is poisoning the wells in the lower district.'];
+var TAVERN_NPCS = ['A grizzled dwarf mercenary nursing a drink','A nervous halfling scribe with ink-stained fingers','A cloaked figure who refuses to show their face','An off-duty town guard bragging loudly','A traveling merchant with exotic wares','A bard tuning their lute in the corner','An elf who watches everyone a little too carefully','A gnome tinkerer with suspicious pouches'];
+
+function generateTavern() {
+  var name = pick(TAVERN_PREFIXES) + ' ' + pick(TAVERN_SUFFIXES);
+  var food = [pick(TAVERN_FOODS), pick(TAVERN_FOODS.filter(function(f){return f!==food;}))].filter(Boolean);
+  var drinks = [pick(TAVERN_DRINKS), pick(TAVERN_DRINKS)];
+  var rumor = pick(TAVERN_RUMORS);
+  var npc = pick(TAVERN_NPCS);
+  var quality = pick(['Seedy dive','Respectable inn','Lively tavern','Upscale establishment','Rundown shack']);
+  document.getElementById('tavernResult').innerHTML =
+    '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">' +
+    '<div style="font-family:\'Cinzel\',serif;font-size:16px;color:var(--red);margin-bottom:8px;">&#127867; ' + name + '</div>' +
+    '<div style="font-size:12px;color:var(--muted);margin-bottom:10px;">' + quality + '</div>' +
+    '<div style="margin-bottom:6px;"><strong style="color:var(--text);font-size:12px;">FOOD:</strong> <span style="color:var(--muted);font-size:13px;">' + food.join(' &nbsp;|&nbsp; ') + '</span></div>' +
+    '<div style="margin-bottom:6px;"><strong style="color:var(--text);font-size:12px;">DRINKS:</strong> <span style="color:var(--muted);font-size:13px;">' + drinks.join(' &nbsp;|&nbsp; ') + '</span></div>' +
+    '<div style="margin-bottom:6px;"><strong style="color:var(--text);font-size:12px;">NPC:</strong> <span style="color:var(--muted);font-size:13px;">' + npc + '</span></div>' +
+    '<div><strong style="color:var(--text);font-size:12px;">RUMOR:</strong> <span style="color:var(--muted);font-size:13px;font-style:italic;">"' + rumor + '"</span></div>' +
+    '</div>';
+}
+
+var TRAP_TYPES = [
+  {name:'Pit Trap',desc:'A concealed pit covered by a thin floor panel.',dc:'Perception DC {dc} to spot, Dexterity DC {dc2} to avoid',damage:'{dmg} bludgeoning from the fall'},
+  {name:'Poison Dart Trap',desc:'Spring-loaded darts coated in poison fire from hidden holes.',dc:'Perception DC {dc} to spot, Dexterity DC {dc2} to dodge',damage:'{dmg} piercing + {dmg2} poison'},
+  {name:'Magical Glyph',desc:'An invisible arcane glyph triggers when stepped on.',dc:'Arcana DC {dc} to detect, no save to avoid if triggered',damage:'{dmg} of a random element (fire/cold/lightning)'},
+  {name:'Collapsing Ceiling',desc:'Pressure plates trigger a section of ceiling to collapse.',dc:'Perception DC {dc} to notice, Dexterity DC {dc2} to escape',damage:'{dmg} bludgeoning, restrained until freed'},
+  {name:'Net Trap',desc:'A hidden net drops from above and restrains victims.',dc:'Perception DC {dc} to spot',damage:'Restrained condition, DC {dc2} Athletics to break free'},
+  {name:'Flame Jet',desc:'Hidden nozzles spray fire across a section of corridor.',dc:'Perception DC {dc} to notice the scorch marks',damage:'{dmg} fire, Dexterity DC {dc2} for half'},
+];
+
+function generateTrap() {
+  var level = parseInt(document.getElementById('trapLevel').value) || 5;
+  var trap = pick(TRAP_TYPES);
+  var dc = 10 + Math.floor(level/2);
+  var dc2 = 12 + Math.floor(level/3);
+  var dmgDice = level < 5 ? '2d6' : level < 10 ? '4d6' : level < 15 ? '6d6' : '8d6';
+  var dmg2 = level < 5 ? '1d6' : '2d6';
+  var desc = trap.dc.replace(/{dc}/g, dc).replace(/{dc2}/g, dc2);
+  var damage = trap.damage.replace(/{dmg}/g, dmgDice).replace(/{dmg2}/g, dmg2);
+  document.getElementById('trapResult').innerHTML =
+    '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;">' +
+    '<div style="font-family:\'Cinzel\',serif;font-size:14px;color:var(--red);margin-bottom:6px;">&#9888; ' + trap.name + '</div>' +
+    '<div style="font-size:13px;color:var(--muted);margin-bottom:8px;font-style:italic;">' + trap.desc + '</div>' +
+    '<div style="font-size:13px;margin-bottom:4px;"><strong style="color:var(--text);">Detection/Avoid:</strong> ' + desc + '</div>' +
+    '<div style="font-size:13px;"><strong style="color:var(--text);">Damage:</strong> <span style="color:var(--red);">' + damage + '</span></div>' +
+    '</div>';
+}
+
+var ENC_MONSTER_XP = {'Bandit':25,'Cultist':25,'Guard':25,'Kobold':25,'Merfolk':25,'Stirge':25,'Zombie':50,'Skeleton':50,'Goblin':50,'Grimlock':50,'Wolf':50,'Orc':100,'Bugbear':200,'Hobgoblin':100,'Gnoll':100,'Lizardfolk':100,'Werewolf':700,'Ogre':450,'Troll':1800,'Vampire Spawn':1800,'Manticore':700,'Mind Flayer':2900,'Lich':18000,'Beholder':13000,'Adult Red Dragon':18000,'Tarrasque':155000};
+var _encMonsters = [];
+
+function encBuilderAdd() {
+  var name = document.getElementById('encBuilderMonster').value.trim();
+  var count = parseInt(document.getElementById('encBuilderCount').value) || 1;
+  if (!name) return;
+  _encMonsters.push({name: name, count: count});
+  document.getElementById('encBuilderMonster').value = '';
+  renderEncBuilder();
+}
+
+function renderEncBuilder() {
+  var el = document.getElementById('encBuilderList');
+  el.innerHTML = _encMonsters.map(function(m,i) {
+    return '<div class="enc-monster-card">'+
+      '<div style="flex:1;font-size:14px;">'+esc(m.count)+'x '+esc(m.name)+'</div>'+
+      '<button onclick="_encMonsters.splice('+i+',1);renderEncBuilder()" style="background:none;border:none;color:var(--dim);cursor:pointer;">&#10006;</button>'+
+    '</div>';
+  }).join('');
+  // Calculate difficulty
+  var partySize = parseInt(document.getElementById('encPartySize').value) || 4;
+  var partyLevel = parseInt(document.getElementById('encPartyLevel').value) || 5;
+  var totalXP = 0;
+  _encMonsters.forEach(function(m) {
+    var xp = ENC_MONSTER_XP[m.name] || (partyLevel * 50);
+    totalXP += xp * m.count;
+  });
+  var thresholds = {
+    easy:   partySize * (partyLevel < 5 ? 25 : partyLevel < 11 ? 50 : partyLevel < 17 ? 75 : 100),
+    medium: partySize * (partyLevel < 5 ? 50 : partyLevel < 11 ? 100 : partyLevel < 17 ? 150 : 200),
+    hard:   partySize * (partyLevel < 5 ? 75 : partyLevel < 11 ? 150 : partyLevel < 17 ? 225 : 300),
+    deadly: partySize * (partyLevel < 5 ? 100 : partyLevel < 11 ? 200 : partyLevel < 17 ? 400 : 500),
+  };
+  var diff = totalXP < thresholds.easy ? 'Trivial' : totalXP < thresholds.medium ? 'Easy' : totalXP < thresholds.hard ? 'Medium' : totalXP < thresholds.deadly ? 'Hard' : 'Deadly';
+  var cls = diff==='Trivial'||diff==='Easy'?'enc-easy':diff==='Medium'?'enc-medium':diff==='Hard'?'enc-hard':'enc-deadly';
+  document.getElementById('encBuilderDifficulty').innerHTML = totalXP > 0 ?
+    '<div class="enc-difficulty '+cls+'">'+diff+' — '+totalXP+' XP</div>' : '';
+}
+
+var CONDITIONS_DATA = [
+  {name:'Blinded',    desc:'Can\'t see, auto-fails sight checks. Attack rolls have disadvantage, attacks against have advantage.'},
+  {name:'Charmed',    desc:'Can\'t attack the charmer. Charmer has advantage on social checks with you.'},
+  {name:'Deafened',   desc:'Can\'t hear, auto-fails hearing checks.'},
+  {name:'Exhaustion', desc:'Cumulative levels: 1=disadv checks, 2=halved speed, 3=disadv attacks/saves, 4=halved HP max, 5=speed 0, 6=death.'},
+  {name:'Frightened', desc:'Disadvantage on ability checks and attack rolls while source of fear is in line of sight. Can\'t willingly move closer.'},
+  {name:'Grappled',   desc:'Speed becomes 0. Ends if grappler is incapacitated or you are pulled away.'},
+  {name:'Incapacitated',desc:'Can\'t take actions or reactions.'},
+  {name:'Invisible',  desc:'Can\'t be seen. Attack rolls have advantage, attacks against have disadvantage.'},
+  {name:'Paralyzed',  desc:'Incapacitated. Auto-fails Str and Dex saves. Attacks have advantage. Melee hits within 5ft are critical.'},
+  {name:'Petrified',  desc:'Transformed into stone. Incapacitated, weight x10, immune to poison and disease, resistance to all damage.'},
+  {name:'Poisoned',   desc:'Disadvantage on attack rolls and ability checks.'},
+  {name:'Prone',      desc:'Disadvantage on attack rolls. Attackers within 5ft have advantage, ranged attackers have disadvantage.'},
+  {name:'Restrained', desc:'Speed 0. Disadvantage on attack rolls and Dex saves. Attacks against have advantage.'},
+  {name:'Stunned',    desc:'Incapacitated, can\'t move, can only speak falteringly. Auto-fails Str and Dex saves. Attacks have advantage.'},
+  {name:'Unconscious',desc:'Incapacitated, can\'t move or speak. Drops whatever it\'s holding and falls prone. Auto-fails Str and Dex saves. Attacks have advantage. Melee hits within 5ft are critical.'},
+];
+
+var RULES_DATA = [
+  {name:'Grapple',    desc:'Use Attack action. Make Athletics check vs target\'s Athletics or Acrobatics. Success = Grappled condition.'},
+  {name:'Shove',      desc:'Use Attack action. Make Athletics check vs target\'s Athletics or Acrobatics. Push 5ft away or knock prone.'},
+  {name:'Hide',       desc:'Use Hide action. Make Stealth check. Must be obscured. Enemies must succeed Perception vs your Stealth to find you.'},
+  {name:'Dash',       desc:'Extra movement equal to your speed this turn.'},
+  {name:'Disengage',  desc:'Your movement doesn\'t provoke opportunity attacks for the rest of the turn.'},
+  {name:'Dodge',      desc:'Until next turn, any attack roll against you has disadvantage (if you can see attacker). Dex saves have advantage.'},
+  {name:'Help',       desc:'Give an ally advantage on their next ability check or attack roll.'},
+  {name:'Ready',      desc:'Choose an action and a trigger. When trigger occurs, use your reaction to perform the action.'},
+  {name:'Opportunity Attack',desc:'When a creature you can see leaves your reach, use your reaction to make one melee attack.'},
+  {name:'Two-Weapon Fighting',desc:'When you attack with a light melee weapon, use bonus action to attack with a different light melee weapon in other hand. Don\'t add ability modifier to damage.'},
+  {name:'Concentration',desc:'Maintaining a spell. Taking damage requires Con save DC 10 or half damage taken (whichever is higher). Fail = lose spell.'},
+  {name:'Surprise',   desc:'If unaware of combat start, you can\'t move or take actions on your first turn. You also can\'t take reactions until that turn ends.'},
+  {name:'Death Saves',desc:'On your turn when at 0 HP, roll d20. 10+ = success, 1-9 = failure. 3 successes = stable, 3 failures = dead. Natural 1 = 2 failures. Natural 20 = 1 HP.'},
+  {name:'Flanking',   desc:'(Optional rule) If you and an ally are on opposite sides of an enemy, both have advantage on melee attacks against it.'},
+];
+
+function renderConditionsRef() {
+  var el = document.getElementById('conditionsRef');
+  if (!el) return;
+  el.innerHTML = CONDITIONS_DATA.map(function(c) {
+    return '<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(42,42,42,.3);">' +
+      '<div style="font-family:\'Cinzel\',serif;font-size:12px;color:var(--red);margin-bottom:2px;">'+c.name+'</div>' +
+      '<div style="color:var(--muted);">'+c.desc+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderRulesRef() {
+  var el = document.getElementById('rulesRef');
+  if (!el) return;
+  el.innerHTML = RULES_DATA.map(function(r) {
+    return '<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(42,42,42,.3);">' +
+      '<div style="font-family:\'Cinzel\',serif;font-size:12px;color:var(--red);margin-bottom:2px;">'+r.name+'</div>' +
+      '<div style="color:var(--muted);">'+r.desc+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function convertCurrency(from) {
+  var pp = parseInt(document.getElementById('currPP').value)||0;
+  var gp = parseInt(document.getElementById('currGP').value)||0;
+  var sp = parseInt(document.getElementById('currSP').value)||0;
+  var cp = parseInt(document.getElementById('currCP').value)||0;
+  var totalCP = pp*1000 + gp*100 + sp*10 + cp;
+  document.getElementById('currResult').innerHTML =
+    'Total: <span style="color:var(--red);font-family:\'Cinzel\',serif;">'+totalCP+'</span> cp &nbsp;=&nbsp; '+
+    Math.floor(totalCP/1000)+' pp &nbsp; '+
+    Math.floor((totalCP%1000)/100)+' gp &nbsp; '+
+    Math.floor((totalCP%100)/10)+' sp &nbsp; '+
+    (totalCP%10)+' cp';
+}
+
+// ══════════════════════════════════════════════════════
+//  ACHIEVEMENTS
+// ══════════════════════════════════════════════════════
+var _achievements = {};
+function loadAchievements() { try { _achievements = JSON.parse(localStorage.getItem('dnd_achievements')||'{}'); } catch(e){ _achievements={}; } }
+function saveAchievements() { localStorage.setItem('dnd_achievements', JSON.stringify(_achievements)); }
+
+function unlockAchievement(id, icon, title, desc) {
+  if (_achievements[id]) return;
+  _achievements[id] = { icon:icon, title:title, desc:desc, time:Date.now() };
+  saveAchievements();
+  // Show popup
+  var pop = document.getElementById('achievementPop');
+  document.getElementById('achievementIcon').innerHTML = icon;
+  document.getElementById('achievementTitle').textContent = title;
+  document.getElementById('achievementDesc').textContent = desc;
+  if (pop) {
+    pop.classList.add('show');
+    playSound('join');
+    setTimeout(function(){ pop.classList.remove('show'); }, 4000);
+  }
+  addNotif(icon + ' Achievement!', title + ' — ' + desc);
+}
+
+// ══════════════════════════════════════════════════════
+//  DYNAMIC THEME
+// ══════════════════════════════════════════════════════
+function updateDynamicTheme() {
+  var hour = new Date().getHours();
+  var theme = hour >= 5 && hour < 8 ? 'dawn' : hour >= 8 && hour < 18 ? 'day' : hour >= 18 && hour < 21 ? 'dusk' : 'night';
+  document.body.className = document.body.className.replace(/theme-\w+/g,'').trim();
+  document.body.classList.add('theme-' + theme);
+}
+
+// ══════════════════════════════════════════════════════
+//  TYPING INDICATORS
+// ══════════════════════════════════════════════════════
+var _typingTimeout = null;
+var _typingRef = null;
+
+function msgInputTyping() {
+  if (!activeConvoId || !currentUser) return;
+  if (_typingTimeout) clearTimeout(_typingTimeout);
+  db.ref('typing/' + activeConvoId + '/' + currentUser.dn).set({ username: currentUser.username, time: Date.now() });
+  _typingTimeout = setTimeout(function() {
+    db.ref('typing/' + activeConvoId + '/' + currentUser.dn).remove();
+  }, 3000);
+}
+
+function startTypingListener(convoId) {
+  if (_typingRef) db.ref('typing/' + (activeConvoId||convoId)).off('value', _typingRef);
+  _typingRef = db.ref('typing/' + convoId).on('value', function(snap) {
+    var typing = snap.val() || {};
+    var others = Object.values(typing).filter(function(t){
+      return t.username !== (currentUser&&currentUser.username) && Date.now()-t.time < 5000;
+    });
+    var el = document.getElementById('msgTypingIndicator');
+    if (el) {
+      el.className = 'typing-indicator' + (others.length ? ' visible' : '');
+      el.querySelector('span') && (el.querySelector('span').textContent = others.length === 1 ? others[0].username + ' is typing' : others.length > 1 ? 'Several people are typing' : '');
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  XP TRACKER (Campaign level)
+// ══════════════════════════════════════════════════════
+var XP_BY_LEVEL = [0,300,900,2700,6500,14000,23000,34000,48000,64000,85000,100000,120000,140000,165000,195000,225000,265000,305000,355000];
+
+function calcLevel(xp) {
+  for (var i = XP_BY_LEVEL.length-1; i >= 0; i--) {
+    if (xp >= XP_BY_LEVEL[i]) return i+1;
+  }
+  return 1;
+}
+
+// ══════════════════════════════════════════════════════
+//  SESSION HISTORY / FEED
+// ══════════════════════════════════════════════════════
+function logSessionEvent(type, message) {
+  if (!currentUser || !_currentCampaignId) return;
+  var entry = { type:type, message:message, user:currentUser.username, time:Date.now() };
+  db.ref('feed/' + _currentCampaignId).push(entry);
+}
+
+
 // ── UTIL
 function pwaInstall() {
   if (window._pwaPrompt) {
@@ -5595,6 +8116,7 @@ function escHTML(s) {
   });
   // Pre-generate DN for registration
   rerollDN();
+  checkInviteLink();
   // Hide app until logged in
   document.getElementById('mainContent').style.display = 'none';
   document.querySelector('.navbar').style.display = 'none';
