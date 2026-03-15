@@ -1337,8 +1337,85 @@ body.map-view .main,body.messages-view .main{padding:0;max-width:none;}
 
   <!-- ADMIN -->
   <div class="page" id="page-admin">
-    <div class="page-header"><div class="page-title">Admin</div></div>
-    <div class="section-card"><div class="section-title">&#9881; Administration Panel</div><p style="color:var(--muted);font-size:15px">Manage users, campaigns, and site settings.</p></div>
+    <!-- LOCKED STATE -->
+    <div id="adminLocked" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;">
+      <div style="font-size:64px;opacity:.2;">&#9881;</div>
+      <div style="font-family:'Cinzel',serif;font-size:24px;color:var(--red)">Admin Access</div>
+      <div style="font-size:14px;color:var(--muted)">Enter the admin password to continue</div>
+      <div style="display:flex;gap:10px;width:100%;max-width:360px;">
+        <input class="form-input" id="adminPassInput" type="password" placeholder="Admin password..." onkeydown="if(event.key==='Enter')adminUnlock()" style="flex:1;">
+        <button class="btn-primary" onclick="adminUnlock()">&#9658; Enter</button>
+      </div>
+      <div id="adminPassError" style="color:var(--red);font-size:13px;min-height:18px;"></div>
+    </div>
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" style="display:none;">
+      <div class="page-header">
+        <div class="page-title">&#9881; Admin Panel</div>
+        <button class="btn-secondary" onclick="adminLock()">&#128274; Lock</button>
+      </div>
+      <!-- TABS -->
+      <div class="tab-row" style="margin-bottom:24px;">
+        <button class="tab-btn active" id="adminTabUsers" onclick="adminSwitchTab('users')">&#128100; Users</button>
+        <button class="tab-btn" id="adminTabCampaigns" onclick="adminSwitchTab('campaigns')">&#9876; Campaigns</button>
+        <button class="tab-btn" id="adminTabMessages" onclick="adminSwitchTab('messages')">&#128172; Messages</button>
+      </div>
+
+      <!-- USERS TAB -->
+      <div id="adminTabContentUsers">
+        <div class="section-card" style="margin-bottom:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div class="section-title" style="margin:0;">All Users</div>
+            <input class="form-input" id="adminUserSearch" placeholder="Search users..." oninput="adminRenderUsers()" style="width:200px;">
+          </div>
+          <div id="adminUsersList"></div>
+        </div>
+      </div>
+
+      <!-- CAMPAIGNS TAB -->
+      <div id="adminTabContentCampaigns" style="display:none;">
+        <div class="section-card">
+          <div class="section-title">All Campaigns</div>
+          <div id="adminCampaignsList"></div>
+        </div>
+      </div>
+
+      <!-- MESSAGES TAB -->
+      <div id="adminTabContentMessages" style="display:none;">
+        <div class="section-card">
+          <div class="section-title">All Conversations</div>
+          <div id="adminConvosList"></div>
+        </div>
+        <div class="section-card" style="margin-top:16px;display:none;" id="adminConvoMessages">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div class="section-title" style="margin:0;" id="adminConvoTitle">Messages</div>
+            <button class="btn-secondary" onclick="document.getElementById('adminConvoMessages').style.display='none'">&#10005; Close</button>
+          </div>
+          <div id="adminMessagesList" style="max-height:400px;overflow-y:auto;"></div>
+          <!-- Admin send as user -->
+          <div style="margin-top:16px;display:flex;gap:10px;">
+            <input class="form-input" id="adminSendAsMsg" placeholder="Send message as impersonated user..." style="flex:1;" onkeydown="if(event.key==='Enter')adminSendMessage()">
+            <button class="btn-primary" onclick="adminSendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN RESET PASSWORD MODAL -->
+  <div class="pfp-modal" id="adminResetModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="pfp-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:700;">Reset Password</div>
+        <button onclick="document.getElementById('adminResetModal').style.display='none'" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px">&#10005;</button>
+      </div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:16px;">Resetting password for: <strong id="adminResetUsername" style="color:var(--text)"></strong></div>
+      <div class="auth-form-group">
+        <label class="auth-label">New Password</label>
+        <input class="auth-input" id="adminResetNewPass" type="password" placeholder="New password...">
+      </div>
+      <button class="auth-btn" onclick="adminDoResetPassword()">Reset Password</button>
+    </div>
   </div>
 
 </div>
@@ -1578,6 +1655,7 @@ function doLogin() {
     var u = snap.val();
     if (!u) { errEl.textContent = 'Username not found. Create an account first.'; return; }
     if (u.passwordHash !== hashPass(password)) { errEl.textContent = 'Incorrect password.'; return; }
+    if (u.banned) { errEl.textContent = 'This account has been banned.'; return; }
     currentUser = u;
     fbUsersRef().once('value').then(function(s) {
       _allUsersCache = s.val() || {};
@@ -2203,6 +2281,7 @@ function navigate(page) {
   if (page === 'messages') { renderConvoList(); }
   if (page === 'browse') renderBrowse();
   if (page === 'music') musicInit();
+  if (page === 'admin') { if (!adminUnlocked) { document.getElementById('adminLocked').style.display='flex'; document.getElementById('adminPanel').style.display='none'; } }
 }
 
 // PROFILE
@@ -5211,6 +5290,252 @@ function getMusicEmoji(artist) {
   return '&#9836;';
 }
 
+
+// ══════════════════════════════════════════════════════
+//  ADMIN PANEL
+// ══════════════════════════════════════════════════════
+var ADMIN_PASS = 'fat mind flayer';
+var adminUnlocked = false;
+var _adminImpersonating = null; // { username, key }
+var _adminViewingConvoId = null;
+
+function adminUnlock() {
+  var pass = document.getElementById('adminPassInput').value;
+  var errEl = document.getElementById('adminPassError');
+  if (pass !== ADMIN_PASS) { errEl.textContent = 'Incorrect password.'; return; }
+  adminUnlocked = true;
+  document.getElementById('adminLocked').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  document.getElementById('adminPassInput').value = '';
+  errEl.textContent = '';
+  adminSwitchTab('users');
+  showToast('Admin access granted', 'success');
+}
+
+function adminLock() {
+  adminUnlocked = false;
+  _adminImpersonating = null;
+  document.getElementById('adminLocked').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+function adminSwitchTab(tab) {
+  ['users','campaigns','messages'].forEach(function(t) {
+    document.getElementById('adminTabContent' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? '' : 'none';
+    document.getElementById('adminTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  });
+  if (tab === 'users') adminRenderUsers();
+  if (tab === 'campaigns') adminRenderCampaigns();
+  if (tab === 'messages') adminRenderConvos();
+}
+
+// ── USERS ──
+function adminRenderUsers() {
+  var el = document.getElementById('adminUsersList');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--muted);font-size:14px">Loading...</div>';
+  fbUsersRef().once('value').then(function(snap) {
+    var users = snap.val() || {};
+    var search = (document.getElementById('adminUserSearch').value || '').toLowerCase();
+    var html = '<table style="width:100%;border-collapse:collapse;font-size:14px;">' +
+      '<tr style="border-bottom:1px solid var(--border);color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.08em;">' +
+      '<th style="padding:8px;text-align:left">Username</th>' +
+      '<th style="padding:8px;text-align:left">DN</th>' +
+      '<th style="padding:8px;text-align:left">Email</th>' +
+      '<th style="padding:8px;text-align:left">Password Hash</th>' +
+      '<th style="padding:8px;text-align:left">Race</th>' +
+      '<th style="padding:8px;text-align:left">Status</th>' +
+      '<th style="padding:8px;text-align:left">Actions</th>' +
+      '</tr>';
+    var count = 0;
+    for (var k in users) {
+      var u = users[k];
+      if (search && !u.username.toLowerCase().includes(search) && !(u.email||'').toLowerCase().includes(search) && !u.dn.toLowerCase().includes(search)) continue;
+      count++;
+      var isBanned = u.banned || false;
+      var isAdmin = u.isAdmin || false;
+      var kEsc = k.replace(/'/g,"\\'");
+      html += '<tr style="border-bottom:1px solid rgba(42,42,42,.4);' + (isBanned ? 'opacity:.5;' : '') + '">' +
+        '<td style="padding:8px;font-family:\'Cinzel\',serif;font-size:13px;">' + esc(u.username) + (isAdmin ? ' <span style="color:var(--red);font-size:10px">ADMIN</span>' : '') + '</td>' +
+        '<td style="padding:8px;font-family:monospace;color:var(--red);font-size:12px;">' + esc(u.dn) + '</td>' +
+        '<td style="padding:8px;color:var(--muted);font-size:12px;">' + esc(u.email || '—') + '</td>' +
+        '<td style="padding:8px;font-family:monospace;font-size:11px;color:var(--dim);max-width:100px;overflow:hidden;text-overflow:ellipsis;" title="' + esc(u.passwordHash||'') + '">' + esc((u.passwordHash||'').slice(0,12) + '...') + '</td>' +
+        '<td style="padding:8px;color:var(--muted);font-size:12px;">' + esc(u.race || '—') + '</td>' +
+        '<td style="padding:8px;">' + (isBanned ? '<span style="color:#fc8181;font-size:12px">Banned</span>' : '<span style="color:#5cb88a;font-size:12px">Active</span>') + '</td>' +
+        '<td style="padding:8px;">' +
+          '<div style="display:flex;gap:4px;flex-wrap:wrap;">' +
+            '<button onclick="adminResetPass(\'' + kEsc + '\',\'' + esc(u.username) + '\')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">Reset Pass</button>' +
+            '<button onclick="adminImpersonate(\'' + kEsc + '\')" style="background:rgba(229,62,62,.15);border:1px solid rgba(229,62,62,.3);color:var(--red);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">Login As</button>' +
+            '<button onclick="adminToggleBan(\'' + kEsc + '\',' + isBanned + ')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">' + (isBanned ? 'Unban' : 'Ban') + '</button>' +
+            '<button onclick="adminToggleAdmin(\'' + kEsc + '\',' + isAdmin + ')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">' + (isAdmin ? 'Remove Admin' : 'Make Admin') + '</button>' +
+            '<button onclick="adminDeleteUser(\'' + kEsc + '\',\'' + esc(u.username) + '\')" style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);color:#fc8181;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">Delete</button>' +
+          '</div>' +
+        '</td>' +
+      '</tr>';
+    }
+    html += '</table>';
+    if (!count) html = '<div style="color:var(--dim);padding:20px;text-align:center">No users found</div>';
+    el.innerHTML = '<div style="overflow-x:auto">' + html + '</div>';
+    el.innerHTML += '<div style="font-size:12px;color:var(--dim);margin-top:8px;padding:4px">' + count + ' users total</div>';
+  });
+}
+
+function adminResetPass(key, username) {
+  document.getElementById('adminResetUsername').textContent = username;
+  document.getElementById('adminResetNewPass').value = '';
+  document.getElementById('adminResetModal').style.display = 'flex';
+  document.getElementById('adminResetModal')._key = key;
+}
+
+function adminDoResetPassword() {
+  var key = document.getElementById('adminResetModal')._key;
+  var newPass = document.getElementById('adminResetNewPass').value;
+  if (!newPass || newPass.length < 6) { showToast('Password must be 6+ chars', 'error'); return; }
+  fbUserRef(key).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) return;
+    u.passwordHash = hashPass(newPass);
+    fbUserRef(key).set(u).then(function() {
+      document.getElementById('adminResetModal').style.display = 'none';
+      showToast('Password reset!', 'success');
+    });
+  });
+}
+
+function adminImpersonate(key) {
+  fbUserRef(key).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) return;
+    if (!confirm('Login as ' + u.username + '? Your admin session will be saved.')) return;
+    _adminImpersonating = { key: key, originalUser: currentUser };
+    currentUser = u;
+    _allUsersCache[key] = u;
+    bootApp();
+    showToast('Now acting as: ' + u.username + ' — go to Admin to switch back', 'success');
+  });
+}
+
+function adminToggleBan(key, isBanned) {
+  fbUserRef(key).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) return;
+    u.banned = !isBanned;
+    fbUserRef(key).set(u).then(function() {
+      showToast(u.banned ? 'User banned' : 'User unbanned', 'success');
+      adminRenderUsers();
+    });
+  });
+}
+
+function adminToggleAdmin(key, isAdmin) {
+  fbUserRef(key).once('value').then(function(snap) {
+    var u = snap.val();
+    if (!u) return;
+    u.isAdmin = !isAdmin;
+    fbUserRef(key).set(u).then(function() {
+      showToast(u.isAdmin ? 'Admin granted' : 'Admin removed', 'success');
+      adminRenderUsers();
+    });
+  });
+}
+
+function adminDeleteUser(key, username) {
+  if (!confirm('Permanently delete user "' + username + '"? This cannot be undone.')) return;
+  fbUserRef(key).remove().then(function() {
+    showToast('User deleted', 'success');
+    adminRenderUsers();
+  });
+}
+
+// ── CAMPAIGNS ──
+function adminRenderCampaigns() {
+  var el = document.getElementById('adminCampaignsList');
+  if (!el) return;
+  var html = '';
+  if (!campaigns.length) { el.innerHTML = '<div style="color:var(--dim);padding:20px">No campaigns</div>'; return; }
+  var users = getAllUsers();
+  campaigns.forEach(function(c) {
+    var ownerName = c.ownerDN || '?';
+    for (var k in users) { if (users[k].dn === c.ownerDN) { ownerName = users[k].username; break; } }
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid rgba(42,42,42,.4);">' +
+      '<div style="flex:1;">' +
+        '<div style="font-family:\'Cinzel\',serif;font-size:14px;">' + esc(c.name) + '</div>' +
+        '<div style="font-size:12px;color:var(--muted);">DM: ' + esc(ownerName) + ' &nbsp;|&nbsp; Players: ' + (c.players||[]).length + '/' + c.maxPlayers + ' &nbsp;|&nbsp; ' + (c.visibility||'public') + '</div>' +
+      '</div>' +
+      '<button onclick="adminDeleteCampaign(\'' + c.id + '\')" style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);color:#fc8181;border-radius:4px;padding:4px 10px;cursor:pointer;font-size:12px;font-family:\'Crimson Text\',serif;">Delete</button>' +
+    '</div>';
+  });
+  el.innerHTML = html || '<div style="color:var(--dim);padding:20px">No campaigns</div>';
+}
+
+function adminDeleteCampaign(id) {
+  if (!confirm('Delete this campaign?')) return;
+  campaigns = campaigns.filter(function(c) { return c.id !== id; });
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  showToast('Campaign deleted', 'success');
+  adminRenderCampaigns();
+}
+
+// ── MESSAGES ──
+function adminRenderConvos() {
+  var el = document.getElementById('adminConvosList');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--muted);font-size:14px">Loading...</div>';
+  fbConvosRef().once('value').then(function(snap) {
+    var convos = snap.val() || {};
+    var users = getAllUsers();
+    var html = '';
+    var keys = Object.keys(convos).sort(function(a,b){ return (convos[b].lastTime||0)-(convos[a].lastTime||0); });
+    if (!keys.length) { el.innerHTML = '<div style="color:var(--dim);padding:20px">No conversations</div>'; return; }
+    keys.forEach(function(id) {
+      var c = convos[id];
+      var name = c.type === 'group' ? (c.name || 'Group Chat') : ('DM: ' + (c.members||[]).map(function(dn){ for(var k in users){ if(users[k].dn===dn) return users[k].username; } return dn; }).join(' & '));
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid rgba(42,42,42,.4);cursor:pointer;" onclick="adminViewConvo(\'' + id.replace(/'/g,"\\'") + '\',\'' + esc(name) + '\')">' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:14px;color:var(--text);">' + esc(name) + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);">' + esc(c.lastMsg||'No messages') + ' &nbsp;|&nbsp; ' + (c.members||[]).length + ' members</div>' +
+        '</div>' +
+        '<span style="color:var(--red);font-size:12px;">View &#8250;</span>' +
+      '</div>';
+    });
+    el.innerHTML = html;
+  });
+}
+
+function adminViewConvo(convoId, name) {
+  _adminViewingConvoId = convoId;
+  document.getElementById('adminConvoTitle').textContent = name;
+  document.getElementById('adminConvoMessages').style.display = '';
+  var el = document.getElementById('adminMessagesList');
+  el.innerHTML = '<div style="color:var(--muted)">Loading...</div>';
+  fbMsgsRef(convoId).once('value').then(function(snap) {
+    var msgs = snap.val() || {};
+    var arr = Object.values(msgs).sort(function(a,b){ return a.time-b.time; });
+    if (!arr.length) { el.innerHTML = '<div style="color:var(--dim);padding:20px">No messages</div>'; return; }
+    el.innerHTML = arr.map(function(m) {
+      return '<div style="padding:8px;border-bottom:1px solid rgba(42,42,42,.3);">' +
+        '<span style="font-family:\'Cinzel\',serif;font-size:12px;color:var(--red);">' + esc(m.senderName||m.senderDN) + '</span>' +
+        '<span style="font-size:11px;color:var(--dim);margin-left:8px;">' + new Date(m.time).toLocaleString() + '</span>' +
+        '<div style="font-size:14px;margin-top:4px;">' + esc(m.text) + '</div>' +
+      '</div>';
+    }).join('');
+    el.scrollTop = el.scrollHeight;
+  });
+}
+
+function adminSendMessage() {
+  if (!_adminViewingConvoId || !currentUser) return;
+  var input = document.getElementById('adminSendAsMsg');
+  var text = input.value.trim();
+  if (!text) return;
+  var now = Date.now();
+  var msg = { id: now, senderDN: currentUser.dn, senderName: currentUser.username + ' [Admin]', text: text, time: now };
+  fbMsgsRef(_adminViewingConvoId).child(String(now)).set(msg);
+  fbConvoRef(_adminViewingConvoId).update({ lastMsg: text.slice(0,40), lastTime: now });
+  input.value = '';
+  adminViewConvo(_adminViewingConvoId, document.getElementById('adminConvoTitle').textContent);
+  showToast('Message sent', 'success');
+}
 
 // ── UTIL
 function pwaInstall() {
