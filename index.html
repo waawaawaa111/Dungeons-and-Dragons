@@ -663,6 +663,60 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 .typing-dot:nth-child(3){animation-delay:.4s;}
 @keyframes typing-pulse{0%,80%,100%{transform:scale(.8);opacity:.5}40%{transform:scale(1);opacity:1}}
 
+/* ── DM AI ── */
+.dmai-layout{display:flex;height:calc(100vh - 52px);background:var(--bg);overflow:hidden;}
+.dmai-sidebar{width:260px;background:#0a0a0a;border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.dmai-sidebar-header{padding:16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.dmai-sidebar-title{font-family:'Cinzel',serif;font-size:16px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:8px;}
+.dmai-sidebar-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.dmai-convo-list{flex:1;overflow-y:auto;}
+.dmai-convo-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid rgba(42,42,42,.3);transition:background .15s;}
+.dmai-convo-item:hover{background:var(--bg3);}
+.dmai-convo-item.active{background:rgba(229,62,62,.1);border-left:2px solid var(--red);}
+.dmai-convo-title{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dmai-convo-preview{font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.dmai-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.dmai-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:#0d0d0d;}
+.dmai-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#8b0000,#4a148c);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 12px rgba(229,62,62,.3);}
+.dmai-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;}
+.dmai-msg{display:flex;gap:12px;max-width:85%;}
+.dmai-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.dmai-msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.dmai-msg-avatar.ai{background:linear-gradient(135deg,#8b0000,#4a148c);box-shadow:0 0 8px rgba(229,62,62,.2);}
+.dmai-msg-avatar.user{background:var(--bg3);border:1px solid var(--border);}
+.dmai-msg-bubble{padding:12px 16px;border-radius:12px;font-family:'Crimson Text',serif;font-size:15px;line-height:1.6;}
+.dmai-msg-bubble.ai{background:var(--bg2);border:1px solid var(--border);border-top-left-radius:4px;color:var(--text);}
+.dmai-msg-bubble.user{background:var(--red);color:white;border-top-right-radius:4px;}
+.dmai-msg-bubble.ai h3{font-family:'Cinzel',serif;color:var(--red);font-size:14px;margin:8px 0 4px;}
+.dmai-msg-bubble.ai strong{color:var(--red);}
+.dmai-msg-bubble.ai ul{margin:6px 0 6px 16px;}
+.dmai-msg-bubble.ai li{margin-bottom:3px;}
+.dmai-msg-bubble.ai hr{border-color:var(--border);margin:8px 0;}
+.dmai-msg-bubble.ai code{background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:13px;color:#fc8181;}
+.dmai-typing{display:flex;align-items:center;gap:8px;padding:8px 16px;color:var(--muted);font-size:13px;}
+.dmai-input-area{padding:16px 20px;border-top:1px solid var(--border);background:#0d0d0d;flex-shrink:0;}
+.dmai-input-row{display:flex;gap:10px;align-items:flex-end;}
+.dmai-input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:12px 16px;font-family:'Crimson Text',serif;font-size:15px;outline:none;resize:none;min-height:44px;max-height:120px;transition:border-color .15s;line-height:1.5;}
+.dmai-input:focus{border-color:var(--red);}
+.dmai-send-btn{width:44px;height:44px;border-radius:50%;background:var(--red);border:none;color:white;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.dmai-send-btn:hover{background:var(--red-dark);transform:scale(1.05);}
+.dmai-send-btn:disabled{background:var(--dim);cursor:not-allowed;transform:none;}
+.dmai-suggestions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.dmai-suggest-btn{padding:6px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Crimson Text',serif;transition:all .15s;white-space:nowrap;}
+.dmai-suggest-btn:hover{background:var(--red-dim);border-color:rgba(229,62,62,.4);color:var(--text);}
+.dmai-action-bar{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.dmai-action-btn{padding:5px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:12px;cursor:pointer;font-family:'Crimson Text',serif;transition:all .15s;}
+.dmai-action-btn:hover{background:var(--red-dim);border-color:rgba(229,62,62,.4);color:var(--red);}
+.dmai-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;}
+.dmai-empty-icon{font-size:64px;opacity:.3;}
+.dmai-empty-title{font-family:'Cinzel',serif;font-size:22px;color:var(--text);}
+.dmai-empty-sub{font-size:15px;color:var(--muted);text-align:center;max-width:400px;line-height:1.6;}
+.dmai-quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:500px;}
+.dmai-quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;text-align:left;}
+.dmai-quick-card:hover{border-color:var(--red);background:var(--bg3);}
+.dmai-quick-card-icon{font-size:24px;margin-bottom:6px;}
+.dmai-quick-card-title{font-family:'Cinzel',serif;font-size:13px;color:var(--text);margin-bottom:3px;}
+.dmai-quick-card-desc{font-size:12px;color:var(--dim);}
 /* ── ACHIEVEMENT ── */
 .achievement-pop{position:fixed;bottom:80px;right:24px;background:var(--bg2);border:1px solid var(--red);border-radius:12px;padding:14px 20px;z-index:300;display:flex;align-items:center;gap:12px;transform:translateY(100px);opacity:0;transition:all .4s;box-shadow:0 4px 20px rgba(229,62,62,.2);}
 .achievement-pop.show{transform:translateY(0);opacity:1;}
@@ -690,6 +744,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <button class="nav-item" id="nav-browse" onclick="navigate('browse')">&#128269; Browse</button>
   <button class="nav-item" id="nav-quests" onclick="navigate('quests')">&#128221; Quests</button>
   <button class="nav-item" id="nav-tools" onclick="navigate('tools')">&#9881; DM Tools</button>
+  <button class="nav-item" id="nav-dmai" onclick="navigate('dmai')" style="background:linear-gradient(135deg,rgba(229,62,62,.2),rgba(139,0,139,.2));border-color:rgba(229,62,62,.4);color:var(--red);">&#9670; DM AI</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#128737; Admin</button>
   <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;font-size:13px;">&#8659; Install</button>
 </nav>
@@ -2015,6 +2070,71 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   </div>
 
 
+  <!-- DUNGEON MASTER AI -->
+  <div class="page" id="page-dmai" style="padding:0;max-width:none;">
+    <div class="dmai-layout">
+      <!-- SIDEBAR: conversation history -->
+      <div class="dmai-sidebar">
+        <div class="dmai-sidebar-header">
+          <div class="dmai-sidebar-title">&#9670; DungeonMaster AI</div>
+          <div class="dmai-sidebar-sub">Your personal D&D assistant</div>
+        </div>
+        <div style="padding:10px;">
+          <button onclick="dmaiNewChat()" style="width:100%;background:var(--red);border:none;color:white;border-radius:8px;padding:10px;cursor:pointer;font-family:'Cinzel',serif;font-size:13px;letter-spacing:.06em;">+ New Chat</button>
+        </div>
+        <div class="dmai-convo-list" id="dmaiConvoList"></div>
+        <div style="padding:10px;border-top:1px solid var(--border);flex-shrink:0;">
+          <button onclick="dmaiClearAll()" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--dim);border-radius:6px;padding:6px;cursor:pointer;font-family:'Crimson Text',serif;font-size:13px;">&#128465; Clear All Chats</button>
+        </div>
+      </div>
+      <!-- MAIN CHAT AREA -->
+      <div class="dmai-main">
+        <!-- Header -->
+        <div class="dmai-header">
+          <div class="dmai-avatar">&#9670;</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--text);">DungeonMaster AI</div>
+            <div style="font-size:12px;color:var(--muted);" id="dmaiStatusText">Powered by Claude — Ready to adventure</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px;">
+            <button onclick="dmaiExportChat()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;">&#8659; Export</button>
+            <button onclick="dmaiNewChat()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px;font-family:'Crimson Text',serif;">+ New</button>
+          </div>
+        </div>
+        <!-- Messages -->
+        <div class="dmai-messages" id="dmaiMessages">
+          <!-- Empty state shown by JS -->
+        </div>
+        <!-- Typing indicator -->
+        <div class="dmai-typing" id="dmaiTyping" style="display:none;">
+          <div class="dmai-avatar" style="width:28px;height:28px;font-size:14px;">&#9670;</div>
+          <div style="display:flex;gap:4px;align-items:center;">
+            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+            <span style="margin-left:4px;">DungeonMaster AI is thinking...</span>
+          </div>
+        </div>
+        <!-- Input -->
+        <div class="dmai-input-area">
+          <div class="dmai-suggestions" id="dmaiSuggestions"></div>
+          <div class="dmai-input-row">
+            <textarea class="dmai-input" id="dmaiInput" placeholder="Ask anything — build a campaign, create NPCs, describe a scene, roll encounters..." onkeydown="dmaiHandleKey(event)" oninput="this.style.height='';this.style.height=Math.min(this.scrollHeight,120)+'px';" rows="1"></textarea>
+            <button class="dmai-send-btn" id="dmaiSendBtn" onclick="dmaiSend()">&#9658;</button>
+          </div>
+          <div class="dmai-action-bar">
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('campaign')">&#9876; Build Campaign</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('character')">&#128100; Create Character</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('npc')">&#128483; Generate NPC</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('encounter')">&#9760; Random Encounter</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('location')">&#127981; Describe Location</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('lore')">&#128218; World Lore</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('riddle')">&#9670; Riddle/Puzzle</button>
+            <button class="dmai-action-btn" onclick="dmaiQuickAction('shop')">&#128176; Magic Shop</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="page" id="page-admin">
     <!-- LOCKED STATE -->
     <div id="adminLocked" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:20px;">
@@ -2038,6 +2158,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
         <button class="tab-btn active" id="adminTabUsers" onclick="adminSwitchTab('users')">&#128100; Users</button>
         <button class="tab-btn" id="adminTabCampaigns" onclick="adminSwitchTab('campaigns')">&#9876; Campaigns</button>
         <button class="tab-btn" id="adminTabMessages" onclick="adminSwitchTab('messages')">&#128172; Messages</button>
+        <button class="tab-btn" id="adminTabData" onclick="adminSwitchTab('data')">&#128465; Data</button>
       </div>
 
       <!-- USERS TAB -->
@@ -2062,20 +2183,69 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
       <!-- MESSAGES TAB -->
       <div id="adminTabContentMessages" style="display:none;">
         <div class="section-card">
-          <div class="section-title">All Conversations</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div class="section-title" style="margin:0;">All Conversations</div>
+            <button class="btn-secondary" style="padding:6px 12px;font-size:13px;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;" onclick="adminDeleteAllConvos()">&#128465; Delete All Convos</button>
+          </div>
           <div id="adminConvosList"></div>
         </div>
         <div class="section-card" style="margin-top:16px;display:none;" id="adminConvoMessages">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
             <div class="section-title" style="margin:0;" id="adminConvoTitle">Messages</div>
-            <button class="btn-secondary" onclick="document.getElementById('adminConvoMessages').style.display='none'">&#10005; Close</button>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-secondary" style="padding:6px 12px;font-size:13px;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;" onclick="adminDeleteConvo(_adminViewingConvoId)">&#128465; Delete Convo</button>
+              <button class="btn-secondary" onclick="document.getElementById('adminConvoMessages').style.display='none'">&#10005; Close</button>
+            </div>
           </div>
           <div id="adminMessagesList" style="max-height:400px;overflow-y:auto;"></div>
-          <!-- Admin send as user -->
           <div style="margin-top:16px;display:flex;gap:10px;">
             <input class="form-input" id="adminSendAsMsg" placeholder="Send message as impersonated user..." style="flex:1;" onkeydown="if(event.key==='Enter')adminSendMessage()">
             <button class="btn-primary" onclick="adminSendMessage()">Send</button>
           </div>
+        </div>
+      </div>
+
+      <!-- DATA TAB -->
+      <div id="adminTabContentData" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+          <!-- Campaigns -->
+          <div class="section-card">
+            <div class="section-title">&#9876; Campaigns</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Delete individual campaigns or wipe all at once.</p>
+            <div id="adminDataCampaignsList" style="max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+            <button class="btn-secondary" style="width:100%;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;" onclick="adminNukeAllCampaigns()">&#128465; Delete ALL Campaigns</button>
+          </div>
+
+          <!-- Conversations -->
+          <div class="section-card">
+            <div class="section-title">&#128172; All Conversations (DMs & GCs)</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Delete individual conversations or all at once.</p>
+            <div id="adminDataConvosList" style="max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+            <button class="btn-secondary" style="width:100%;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;" onclick="adminNukeAllConvos()">&#128465; Delete ALL Conversations</button>
+          </div>
+
+          <!-- Messages in a convo -->
+          <div class="section-card">
+            <div class="section-title">&#128196; Messages</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Select a conversation then delete individual messages or all messages inside it.</p>
+            <select class="form-input" id="adminMsgConvoSelect" style="margin-bottom:8px;" onchange="adminLoadMsgsForDelete()">
+              <option value="">— Select a conversation —</option>
+            </select>
+            <div id="adminDataMsgsList" style="max-height:250px;overflow-y:auto;margin-bottom:10px;"></div>
+            <button class="btn-secondary" id="adminNukeMsgsBtn" style="width:100%;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;display:none;" onclick="adminNukeMsgsInConvo()">&#128465; Delete ALL Messages in this Convo</button>
+          </div>
+
+          <!-- Users -->
+          <div class="section-card">
+            <div class="section-title">&#128100; Users</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Nuclear option — wipe all users from the database.</p>
+            <div style="background:rgba(229,62,62,.08);border:1px solid rgba(229,62,62,.3);border-radius:8px;padding:12px;margin-bottom:10px;">
+              <div style="font-size:13px;color:#fc8181;margin-bottom:6px;">⚠️ This cannot be undone. Everyone will be logged out.</div>
+            </div>
+            <button class="btn-secondary" style="width:100%;background:rgba(229,62,62,.1);border-color:rgba(229,62,62,.3);color:#fc8181;" onclick="adminNukeAllUsers()">&#128465; Delete ALL Users</button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -3072,6 +3242,7 @@ function navigate(page) {
   if (page === 'quests') { loadQuests(); renderQuests(); }
   if (page === 'pet') { renderPetPage(); }
   if (page === 'tools') { renderConditionsRef(); renderRulesRef(); renderEncBuilder(); }
+  if (page === 'dmai') { dmaiInit(); }
   if (page === 'admin') { if (!adminUnlocked) { document.getElementById('adminLocked').style.display='flex'; document.getElementById('adminPanel').style.display='none'; } }
   // Close notif panel on navigate
   _notifPanelOpen = false;
@@ -6912,13 +7083,16 @@ function adminLock() {
 }
 
 function adminSwitchTab(tab) {
-  ['users','campaigns','messages'].forEach(function(t) {
-    document.getElementById('adminTabContent' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? '' : 'none';
-    document.getElementById('adminTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  ['users','campaigns','messages','data'].forEach(function(t) {
+    var content = document.getElementById('adminTabContent' + t.charAt(0).toUpperCase() + t.slice(1));
+    var btn = document.getElementById('adminTab' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (content) content.style.display = t === tab ? '' : 'none';
+    if (btn) btn.classList.toggle('active', t === tab);
   });
   if (tab === 'users') adminRenderUsers();
   if (tab === 'campaigns') adminRenderCampaigns();
   if (tab === 'messages') adminRenderConvos();
+  if (tab === 'data') adminSwitchTabData();
 }
 
 // ── USERS ──
@@ -8807,6 +8981,477 @@ function startCdDiceListener() {
       '</div>';
     }).join('');
   });
+}
+
+// ── Admin Data Tab ──
+function adminSwitchTabData() {
+  adminRenderDataCampaigns();
+  adminRenderDataConvos();
+}
+
+function adminRenderDataCampaigns() {
+  var el = document.getElementById('adminDataCampaignsList');
+  if (!el) return;
+  if (!campaigns.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">No campaigns</div>'; return; }
+  el.innerHTML = campaigns.map(function(c) {
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid rgba(42,42,42,.4);">' +
+      '<div style="flex:1;font-size:13px;color:var(--text);">'+esc(c.name)+'</div>' +
+      '<div style="font-size:11px;color:var(--dim);">'+(c.players||[]).length+' players</div>' +
+      '<button onclick="adminDeleteCampaignData(\''+c.id+'\')" style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);color:#fc8181;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">Delete</button>' +
+    '</div>';
+  }).join('');
+}
+
+function adminDeleteCampaignData(id) {
+  if (!confirm('Delete this campaign permanently?')) return;
+  campaigns = campaigns.filter(function(c){return c.id!==id;});
+  localStorage.setItem('dnd_campaigns', JSON.stringify(campaigns));
+  showToast('Campaign deleted', 'success');
+  adminRenderDataCampaigns();
+  adminRenderCampaigns();
+}
+
+function adminNukeAllCampaigns() {
+  if (!confirm('Delete ALL campaigns? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? Type YES in the next prompt.')) return;
+  var confirm2 = window.prompt('Type DELETE to confirm:');
+  if (confirm2 !== 'DELETE') { showToast('Cancelled', 'error'); return; }
+  campaigns = [];
+  localStorage.setItem('dnd_campaigns', JSON.stringify([]));
+  showToast('All campaigns deleted', 'success');
+  adminRenderDataCampaigns();
+}
+
+function adminRenderDataConvos() {
+  var el = document.getElementById('adminDataConvosList');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">Loading...</div>';
+  // Also populate the message convo select
+  fbConvosRef().once('value').then(function(snap) {
+    var convos = snap.val() || {};
+    var users = getAllUsers();
+    var keys = Object.keys(convos);
+    if (!keys.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">No conversations</div>'; return; }
+
+    var sel = document.getElementById('adminMsgConvoSelect');
+    if (sel) sel.innerHTML = '<option value="">— Select a conversation —</option>';
+
+    el.innerHTML = keys.map(function(id) {
+      var c = convos[id];
+      var name = c.type === 'group' ? (c.name || 'Group Chat') : ('DM: ' + (c.members||[]).map(function(dn){ for(var k in users){ if(users[k].dn===dn) return users[k].username; } return dn; }).join(' & '));
+      if (sel) sel.innerHTML += '<option value="'+id+'">'+esc(name)+'</option>';
+      return '<div style="display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid rgba(42,42,42,.4);">' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:13px;color:var(--text);">'+esc(name)+'</div>' +
+          '<div style="font-size:11px;color:var(--dim);">'+(c.type==='group'?'Group':'DM')+' &nbsp;|&nbsp; '+(c.members||[]).length+' members</div>' +
+        '</div>' +
+        '<button onclick="adminDeleteConvo(\''+id+'\')" style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);color:#fc8181;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px;font-family:\'Crimson Text\',serif;">Delete</button>' +
+      '</div>';
+    }).join('');
+  });
+}
+
+function adminDeleteConvo(id) {
+  if (!id) return;
+  if (!confirm('Delete this conversation and all its messages?')) return;
+  fbConvoRef(id).remove();
+  fbMsgsRef(id).remove();
+  showToast('Conversation deleted', 'success');
+  document.getElementById('adminConvoMessages').style.display = 'none';
+  adminRenderDataConvos();
+  adminRenderConvos();
+}
+
+function adminDeleteAllConvos() {
+  if (!confirm('Delete ALL conversations?')) return;
+  adminNukeAllConvos();
+}
+
+function adminNukeAllConvos() {
+  if (!confirm('Delete ALL conversations and messages? Cannot be undone.')) return;
+  db.ref('convos').remove();
+  db.ref('messages').remove();
+  showToast('All conversations deleted', 'success');
+  adminRenderDataConvos();
+}
+
+function adminLoadMsgsForDelete() {
+  var convoId = document.getElementById('adminMsgConvoSelect').value;
+  var el = document.getElementById('adminDataMsgsList');
+  var btn = document.getElementById('adminNukeMsgsBtn');
+  if (!convoId) { el.innerHTML = ''; if(btn) btn.style.display='none'; return; }
+  if (btn) btn.style.display = '';
+  el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">Loading...</div>';
+  fbMsgsRef(convoId).once('value').then(function(snap) {
+    var msgs = snap.val() || {};
+    var arr = Object.entries(msgs).sort(function(a,b){return a[1].time-b[1].time;});
+    if (!arr.length) { el.innerHTML = '<div style="color:var(--dim);font-size:13px;padding:8px;">No messages</div>'; return; }
+    el.innerHTML = arr.map(function(entry) {
+      var key = entry[0], m = entry[1];
+      return '<div style="display:flex;align-items:center;gap:8px;padding:6px;border-bottom:1px solid rgba(42,42,42,.3);">' +
+        '<div style="flex:1;">' +
+          '<span style="font-size:12px;color:var(--red);">'+esc(m.senderName||m.senderDN)+'</span>' +
+          '<span style="font-size:12px;color:var(--dim);margin-left:6px;">'+new Date(m.time).toLocaleTimeString()+'</span>' +
+          '<div style="font-size:13px;color:var(--muted);">'+esc(m.text||'')+'</div>' +
+        '</div>' +
+        '<button onclick="adminDeleteMsg(\''+convoId+'\',\''+key+'\')" style="background:rgba(229,62,62,.1);border:1px solid rgba(229,62,62,.3);color:#fc8181;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:11px;">&#10005;</button>' +
+      '</div>';
+    }).join('');
+  });
+}
+
+function adminDeleteMsg(convoId, msgKey) {
+  fbMsgsRef(convoId).child(msgKey).remove().then(function() {
+    showToast('Message deleted', 'success');
+    adminLoadMsgsForDelete();
+  });
+}
+
+function adminNukeMsgsInConvo() {
+  var convoId = document.getElementById('adminMsgConvoSelect').value;
+  if (!convoId) return;
+  if (!confirm('Delete ALL messages in this conversation?')) return;
+  fbMsgsRef(convoId).remove().then(function() {
+    fbConvoRef(convoId).update({lastMsg: '', lastTime: Date.now()});
+    showToast('All messages deleted', 'success');
+    adminLoadMsgsForDelete();
+  });
+}
+
+function adminNukeAllUsers() {
+  if (!confirm('DELETE ALL USERS? Everyone will be locked out.')) return;
+  if (!confirm('This is irreversible. Are you certain?')) return;
+  fbUsersRef().remove().then(function() {
+    showToast('All users deleted', 'success');
+    adminRenderUsers();
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  DUNGEON MASTER AI
+// ══════════════════════════════════════════════════════
+
+var _dmaiChats = [];       // all saved chat sessions
+var _dmaiActiveId = null;  // current chat id
+var _dmaiLoading = false;
+
+var DMAI_SYSTEM_PROMPT = `You are DungeonMaster AI, the ultimate D&D 5e assistant and storytelling companion. You are knowledgeable, creative, and deeply immersed in the world of Dungeons & Dragons.
+
+You can help with:
+- Building full campaign settings, story arcs, and adventures
+- Creating detailed NPCs with personalities, voices, secrets, and motivations
+- Generating random encounters balanced for any party level
+- Describing locations, dungeons, cities, and environments in vivid detail
+- Creating character backstories and personalities
+- Running mini solo adventures or encounter scenes
+- Generating riddles, puzzles, traps, and dungeon rooms
+- Providing D&D 5e rules clarifications and tactical advice
+- Creating magic items, spells, and homebrew content
+- Building faction relationships and political intrigue
+- Generating loot tables, quest hooks, and plot twists
+- World-building: history, religions, cultures, languages
+- Tavern names, rumor tables, random tables of all kinds
+
+Format your responses beautifully using markdown-style headers and lists. Be descriptive, atmospheric, and evocative. When describing locations or NPCs, use sensory details. When building encounters, provide stat block hints and tactical notes.
+
+If the user asks you to create something (like a campaign or character), provide it in full structured detail they can actually use at the table.
+
+Always stay in the spirit of D&D — dangerous, wondrous, and full of adventure.`;
+
+var DMAI_SUGGESTIONS = [
+  "Create a mysterious villain for my campaign",
+  "Describe a haunted tavern in vivid detail",
+  "Give me a plot twist for my next session",
+  "Generate 5 interesting quest hooks",
+  "Create a memorable NPC shopkeeper",
+  "What's a good encounter for a level 5 party in a forest?",
+  "Describe a cursed magic item",
+  "Give me a riddle a sphinx would ask",
+  "Build a thieves guild for a city campaign",
+  "Create a backstory for a tiefling warlock",
+];
+
+var DMAI_QUICK_PROMPTS = {
+  campaign: "Build me a full campaign outline. Include: a compelling main antagonist, 3 major story arcs, 5 key locations, a central conflict, and 3 factions the players can interact with. Make it dark, epic, and full of moral complexity.",
+  character: "Create a fully detailed D&D 5e character for me. Include: name, race, class, background, personality traits (flaws, bonds, ideals), a compelling backstory, physical description, and 2 secrets they keep from the party.",
+  npc: "Generate a memorable NPC I can use in my next session. Include: name, race, occupation, physical description, personality, speech patterns/quirks, their goal, their secret, how they react to adventurers, and 3 things they might say.",
+  encounter: "Generate a creative random encounter for a level 5 party. Include: the setup/description, enemy stat hints, interesting terrain features, a potential twist, and what loot/rewards the players might find.",
+  location: "Describe a unique and atmospheric D&D location in vivid detail. Include: what it looks like, smells like, sounds like, its history, who or what inhabits it, any dangers, and 3 interesting things players can discover there.",
+  lore: "Generate rich world lore for a D&D campaign setting. Include: the history of the world, major historical events, the pantheon of gods, the current political situation, and 3 ancient mysteries that could drive a campaign.",
+  riddle: "Create 3 clever riddles or puzzles a DM could use in a D&D dungeon. For each: the riddle itself, the answer, the context (who made it, why), and what happens if players get it wrong.",
+  shop: "Describe a unique magic shop and its owner. Include: the shop name and atmosphere, the owner's appearance and personality, 8 interesting magic items for sale (with evocative descriptions and prices), and a secret the shop is hiding."
+};
+
+function dmaiInit() {
+  dmaiLoadChats();
+  dmaiRenderConvoList();
+  if (_dmaiChats.length === 0) {
+    dmaiNewChat();
+  } else {
+    dmaiLoadChat(_dmaiChats[0].id);
+  }
+  dmaiRenderSuggestions();
+}
+
+function dmaiLoadChats() {
+  try { _dmaiChats = JSON.parse(localStorage.getItem('dmai_chats') || '[]'); } catch(e) { _dmaiChats = []; }
+}
+
+function dmaiSaveChats() {
+  try { localStorage.setItem('dmai_chats', JSON.stringify(_dmaiChats)); } catch(e) {
+    // If storage full, remove oldest chats
+    if (_dmaiChats.length > 5) _dmaiChats = _dmaiChats.slice(0, 5);
+    try { localStorage.setItem('dmai_chats', JSON.stringify(_dmaiChats)); } catch(e2) {}
+  }
+}
+
+function dmaiNewChat() {
+  var id = 'dmai_' + Date.now();
+  var chat = { id: id, title: 'New Adventure', messages: [], createdAt: Date.now() };
+  _dmaiChats.unshift(chat);
+  _dmaiActiveId = id;
+  dmaiSaveChats();
+  dmaiRenderConvoList();
+  dmaiRenderMessages();
+  dmaiShowEmpty();
+  dmaiRenderSuggestions();
+  document.getElementById('dmaiInput').focus();
+}
+
+function dmaiLoadChat(id) {
+  _dmaiActiveId = id;
+  dmaiRenderConvoList();
+  dmaiRenderMessages();
+  if (dmaiGetActive() && dmaiGetActive().messages.length === 0) dmaiShowEmpty();
+}
+
+function dmaiGetActive() {
+  return _dmaiChats.find(function(c){ return c.id === _dmaiActiveId; });
+}
+
+function dmaiRenderConvoList() {
+  var el = document.getElementById('dmaiConvoList');
+  if (!el) return;
+  if (!_dmaiChats.length) { el.innerHTML = '<div style="padding:12px;color:var(--dim);font-size:13px;">No chats yet</div>'; return; }
+  el.innerHTML = _dmaiChats.map(function(c) {
+    var isActive = c.id === _dmaiActiveId;
+    var lastMsg = c.messages.length ? c.messages[c.messages.length-1].content.slice(0,50) + '...' : 'Start chatting...';
+    return '<div class="dmai-convo-item' + (isActive?' active':'') + '" onclick="dmaiLoadChat(\''+c.id+'\')">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div class="dmai-convo-title">'+esc(c.title)+'</div>' +
+        '<button onclick="event.stopPropagation();dmaiDeleteChat(\''+c.id+'\')" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px;padding:2px 4px;">&#10005;</button>' +
+      '</div>' +
+      '<div class="dmai-convo-preview">'+esc(lastMsg)+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function dmaiDeleteChat(id) {
+  _dmaiChats = _dmaiChats.filter(function(c){ return c.id !== id; });
+  if (_dmaiActiveId === id) {
+    if (_dmaiChats.length) dmaiLoadChat(_dmaiChats[0].id);
+    else dmaiNewChat();
+  }
+  dmaiSaveChats();
+  dmaiRenderConvoList();
+}
+
+function dmaiClearAll() {
+  if (!confirm('Clear all DM AI chat history?')) return;
+  _dmaiChats = [];
+  _dmaiActiveId = null;
+  dmaiSaveChats();
+  dmaiNewChat();
+}
+
+function dmaiShowEmpty() {
+  var el = document.getElementById('dmaiMessages');
+  if (!el) return;
+  el.innerHTML = '<div class="dmai-empty">' +
+    '<div class="dmai-empty-icon">&#9670;</div>' +
+    '<div class="dmai-empty-title">DungeonMaster AI</div>' +
+    '<div class="dmai-empty-sub">Your personal D&D companion. Ask me anything — build worlds, create characters, plan sessions, or just explore ideas together.</div>' +
+    '<div class="dmai-quick-grid">' +
+      '<div class="dmai-quick-card" onclick="dmaiQuickAction(\'campaign\')">' +
+        '<div class="dmai-quick-card-icon">&#9876;</div>' +
+        '<div class="dmai-quick-card-title">Build a Campaign</div>' +
+        '<div class="dmai-quick-card-desc">Full story arcs, villains, factions</div>' +
+      '</div>' +
+      '<div class="dmai-quick-card" onclick="dmaiQuickAction(\'character\')">' +
+        '<div class="dmai-quick-card-icon">&#128100;</div>' +
+        '<div class="dmai-quick-card-title">Create a Character</div>' +
+        '<div class="dmai-quick-card-desc">Backstory, personality, secrets</div>' +
+      '</div>' +
+      '<div class="dmai-quick-card" onclick="dmaiQuickAction(\'npc\')">' +
+        '<div class="dmai-quick-card-icon">&#128483;</div>' +
+        '<div class="dmai-quick-card-title">Generate an NPC</div>' +
+        '<div class="dmai-quick-card-desc">Memorable characters for your world</div>' +
+      '</div>' +
+      '<div class="dmai-quick-card" onclick="dmaiQuickAction(\'encounter\')">' +
+        '<div class="dmai-quick-card-icon">&#9760;</div>' +
+        '<div class="dmai-quick-card-title">Random Encounter</div>' +
+        '<div class="dmai-quick-card-desc">Balanced, creative combat scenarios</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function dmaiRenderMessages() {
+  var chat = dmaiGetActive();
+  var el = document.getElementById('dmaiMessages');
+  if (!el || !chat) return;
+  if (!chat.messages.length) { dmaiShowEmpty(); return; }
+
+  el.innerHTML = chat.messages.map(function(m) {
+    var isUser = m.role === 'user';
+    return '<div class="dmai-msg' + (isUser?' user':'') + '">' +
+      '<div class="dmai-msg-avatar ' + (isUser?'user':'ai') + '">' + (isUser ? (currentUser ? currentUser.username[0].toUpperCase() : '?') : '&#9670;') + '</div>' +
+      '<div class="dmai-msg-bubble ' + (isUser?'user':'ai') + '">' + (isUser ? esc(m.content) : dmaiFormatAI(m.content)) + '</div>' +
+    '</div>';
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function dmaiFormatAI(text) {
+  // Convert markdown-like formatting to HTML
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^# (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^---+$/gm,'<hr>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,'<ul>$&</ul>')
+    .replace(/^(\d+)\. (.+)$/gm,'<li>$2</li>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>')
+    .replace(/^(.)/,'<p>$1')
+    .replace(/(.)$/,'$1</p>');
+}
+
+function dmaiRenderSuggestions() {
+  var el = document.getElementById('dmaiSuggestions');
+  if (!el) return;
+  var chat = dmaiGetActive();
+  // Only show suggestions for empty chats
+  if (chat && chat.messages.length > 0) { el.innerHTML = ''; return; }
+  var picked = [];
+  var pool = DMAI_SUGGESTIONS.slice();
+  for (var i=0;i<4;i++) {
+    var idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(idx,1)[0]);
+  }
+  el.innerHTML = picked.map(function(s) {
+    return '<button class="dmai-suggest-btn" onclick="dmaiUseSuggestion(\''+s.replace(/'/g,"\\'")+'\')">' + esc(s) + '</button>';
+  }).join('');
+}
+
+function dmaiUseSuggestion(text) {
+  document.getElementById('dmaiInput').value = text;
+  dmaiSend();
+}
+
+function dmaiQuickAction(type) {
+  var prompt = DMAI_QUICK_PROMPTS[type];
+  if (!prompt) return;
+  document.getElementById('dmaiInput').value = prompt;
+  dmaiSend();
+}
+
+function dmaiHandleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    dmaiSend();
+  }
+}
+
+function dmaiSend() {
+  if (_dmaiLoading) return;
+  var input = document.getElementById('dmaiInput');
+  var text = input.value.trim();
+  if (!text) return;
+
+  var chat = dmaiGetActive();
+  if (!chat) { dmaiNewChat(); chat = dmaiGetActive(); }
+
+  // Add user message
+  chat.messages.push({ role: 'user', content: text });
+
+  // Auto-title from first message
+  if (chat.messages.length === 1) {
+    chat.title = text.slice(0, 40) + (text.length > 40 ? '...' : '');
+  }
+
+  input.value = '';
+  input.style.height = '';
+  document.getElementById('dmaiSuggestions').innerHTML = '';
+  dmaiSaveChats();
+  dmaiRenderMessages();
+  dmaiRenderConvoList();
+
+  // Show typing
+  _dmaiLoading = true;
+  document.getElementById('dmaiTyping').style.display = 'flex';
+  document.getElementById('dmaiSendBtn').disabled = true;
+  document.getElementById('dmaiStatusText').textContent = 'Thinking...';
+
+  // Build message history for API (last 20 messages for context)
+  var history = chat.messages.slice(-20).map(function(m) {
+    return { role: m.role, content: m.content };
+  });
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      system: DMAI_SYSTEM_PROMPT,
+      messages: history
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    _dmaiLoading = false;
+    document.getElementById('dmaiTyping').style.display = 'none';
+    document.getElementById('dmaiSendBtn').disabled = false;
+    document.getElementById('dmaiStatusText').textContent = 'Powered by Claude — Ready to adventure';
+
+    var reply = data.content && data.content[0] ? data.content[0].text : 'I seem to have lost my spell components. Please try again.';
+
+    chat.messages.push({ role: 'assistant', content: reply });
+    dmaiSaveChats();
+    dmaiRenderMessages();
+    dmaiRenderConvoList();
+    unlockAchievement('dmai_first', '&#9670;', 'Consulted the Oracle', 'First chat with DungeonMaster AI');
+  })
+  .catch(function(err) {
+    _dmaiLoading = false;
+    document.getElementById('dmaiTyping').style.display = 'none';
+    document.getElementById('dmaiSendBtn').disabled = false;
+    document.getElementById('dmaiStatusText').textContent = 'Ready to adventure';
+    chat.messages.push({ role: 'assistant', content: '⚠️ A magical interference disrupted my connection. Check your API access and try again.' });
+    dmaiSaveChats();
+    dmaiRenderMessages();
+  });
+}
+
+function dmaiExportChat() {
+  var chat = dmaiGetActive();
+  if (!chat || !chat.messages.length) { showToast('No messages to export', 'error'); return; }
+  var text = '# ' + chat.title + '\n\n';
+  chat.messages.forEach(function(m) {
+    text += (m.role === 'user' ? '**You:** ' : '**DungeonMaster AI:** ') + m.content + '\n\n---\n\n';
+  });
+  var blob = new Blob([text], {type:'text/plain'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = chat.title.replace(/[^a-z0-9]/gi,'_') + '.txt';
+  a.click();
+  showToast('Chat exported!', 'success');
 }
 
 // ── UTIL
