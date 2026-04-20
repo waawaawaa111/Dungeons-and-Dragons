@@ -9405,10 +9405,10 @@ function dmaiExportChat() {
 // ══════════════════════════════════════════════════════
 //  AI API HELPER (OpenRouter — free, no restrictions)
 // ══════════════════════════════════════════════════════
-var AI_KEY = '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';
-var AI_URL = 'https://openrouter.ai/api/v1/chat/completions';
-var AI_MODEL = 'meta-llama/llama-3.3-70b-instruct:free';
-var AI_VISION_MODEL = 'meta-llama/llama-3.2-11b-vision-instruct:free';
+var AI_KEY = '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';
+var AI_URL = 'https://api.groq.com/openai/v1/chat/completions';
+var AI_MODEL = 'llama-3.3-70b-versatile';
+var AI_VISION_MODEL = 'llama-3.2-11b-vision-preview';
 
 // Simple text chat
 function geminiChat(messages, systemPrompt, maxTokens, cb) {
@@ -9420,9 +9420,7 @@ function geminiChat(messages, systemPrompt, maxTokens, cb) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + AI_KEY,
-      'HTTP-Referer': 'https://campaign-dnd.vercel.app',
-      'X-Title': 'DnD Campaign Manager'
-    },
+      },
     body: JSON.stringify({ model: AI_MODEL, messages: msgs, max_tokens: maxTokens || 1000 })
   }).then(function(r) { return r.json(); })
   .then(function(d) {
@@ -9438,9 +9436,7 @@ function geminiVision(base64, mediaType, prompt, cb) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + AI_KEY,
-      'HTTP-Referer': 'https://campaign-dnd.vercel.app',
-      'X-Title': 'DnD Campaign Manager'
-    },
+      },
     body: JSON.stringify({
       model: AI_VISION_MODEL,
       messages: [{ role: 'user', content: [
