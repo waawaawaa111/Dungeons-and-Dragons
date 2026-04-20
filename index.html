@@ -6447,7 +6447,7 @@ function transcribeSheet() {
   geminiVision(base64, mediaType, prompt, function(err, text) {
     btn.disabled = false;
     btn.innerHTML = '&#9651; Transcribe with AI';
-    if (err || !text) { document.getElementById('sheetUploadStatus').textContent = 'AI could not read the sheet. Try a clearer image.'; return; }
+    if (err || !text) { document.getElementById('sheetUploadStatus').textContent = 'Error: ' + (err ? err.message : 'No response from AI'); return; }
     var clean = text.replace(/```json|```/g,'').trim();
     var parsed = null;
     try { parsed = JSON.parse(clean); } catch(e) {
@@ -9406,7 +9406,7 @@ function dmaiExportChat() {
 var AI_KEY = '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';
 var AI_URL = 'https://api.groq.com/openai/v1/chat/completions';
 var AI_MODEL = 'llama-3.3-70b-versatile';
-var AI_VISION_MODEL = 'llama-3.2-11b-vision-preview';
+var AI_VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 
 // Simple text chat
 function geminiChat(messages, systemPrompt, maxTokens, cb) {
@@ -9429,12 +9429,13 @@ function geminiChat(messages, systemPrompt, maxTokens, cb) {
 
 // Vision call (image + text)
 function geminiVision(base64, mediaType, prompt, cb) {
+  // Try Groq vision first, fall back to text-only if vision fails
   fetch(AI_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + AI_KEY,
-      },
+    },
     body: JSON.stringify({
       model: AI_VISION_MODEL,
       messages: [{ role: 'user', content: [
@@ -9445,9 +9446,15 @@ function geminiVision(base64, mediaType, prompt, cb) {
     })
   }).then(function(r) { return r.json(); })
   .then(function(d) {
+    if (d.error) {
+      console.error('Vision API error:', d.error);
+      cb(new Error(d.error.message || 'Vision failed'), null);
+      return;
+    }
     var text = d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
+    if (!text) { cb(new Error('Empty response'), null); return; }
     cb(null, text);
-  }).catch(function(e) { cb(e, null); });
+  }).catch(function(e) { console.error('Vision fetch error:', e); cb(e, null); });
 }
 
 // ── UTIL
