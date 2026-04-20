@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D&D Campaign</title>
+<title>D&D Campaign Manager</title>
 <meta name="description" content="D&D Campaign Manager — campaigns, characters, voice chat and more">
 <meta name="theme-color" content="#0d0d0d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -6444,39 +6444,18 @@ function transcribeSheet() {
 
   var prompt = 'This is a D&D 5e character sheet image. Please extract all information and return ONLY a valid JSON object with these exact keys (use empty string if not found):\n{\n  "name": "",\n  "class": "",\n  "level": "",\n  "race": "",\n  "background": "",\n  "str": "",\n  "dex": "",\n  "con": "",\n  "int": "",\n  "wis": "",\n  "cha": "",\n  "hp_current": "",\n  "hp_max": "",\n  "ac": "",\n  "speed": "",\n  "prof_bonus": "",\n  "equipment": "",\n  "features": "",\n  "backstory": "",\n  "attacks": []\n}\nReturn ONLY the JSON, no explanation.';
 
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-          { type: 'text', text: prompt }
-        ]
-      }]
-    })
-  }).then(function(r) { return r.json(); }).then(function(data) {
+  geminiVision(base64, mediaType, prompt, function(err, text) {
     btn.disabled = false;
     btn.innerHTML = '&#9651; Transcribe with AI';
-    var text = data.content && data.content[0] ? data.content[0].text : '';
-    if (!text) { document.getElementById('sheetUploadStatus').textContent = 'AI could not read the sheet. Try a clearer image.'; return; }
-    // Parse JSON
+    if (err || !text) { document.getElementById('sheetUploadStatus').textContent = 'AI could not read the sheet. Try a clearer image.'; return; }
     var clean = text.replace(/```json|```/g,'').trim();
     var parsed = null;
     try { parsed = JSON.parse(clean); } catch(e) {
       document.getElementById('sheetUploadStatus').textContent = 'Could not parse response. Try again.'; return;
     }
-    // Fill in the sheet
     applyTranscribedSheet(parsed);
     closeSheetUploadModal();
     showToast('Sheet transcribed successfully!', 'success');
-  }).catch(function(e) {
-    btn.disabled = false;
-    btn.innerHTML = '&#9651; Transcribe with AI';
-    document.getElementById('sheetUploadStatus').textContent = 'Error: ' + e.message;
   });
 }
 
@@ -8527,24 +8506,11 @@ function petChat() {
   _pet.journal.push('You said: "' + msg + '"');
   // Use Anthropic API for response
   petSay('*thinking...*');
-  fetch('https://api.anthropic.com/v1/messages', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({
-      model:'claude-sonnet-4-20250514',
-      max_tokens:150,
-      messages:[{
-        role:'user',
-        content:'You are ' + _pet.name + ', a ' + monster.name + ' ('+monster.species+') companion in D&D. Personality: ' + monster.personality + '. The player said: "' + msg + '". Respond in character in 1-2 short sentences. Be cute, funny, and in-character for the monster type. Use *actions* in asterisks.'
-      }]
-    })
-  }).then(function(r){return r.json();}).then(function(d){
-    var reply = d.content && d.content[0] ? d.content[0].text : monster.sayings[0];
+  geminiChat([{role:'user', content:'You are ' + _pet.name + ', a ' + monster.name + ' ('+monster.species+') companion in D&D. Personality: ' + monster.personality + '. The player said: "' + msg + '". Respond in character in 1-2 short sentences. Be cute, funny, and in-character for the monster type. Use *actions* in asterisks.'}], null, 150, function(err, reply) {
+    if (err || !reply) reply = monster.sayings[Math.floor(Math.random() * monster.sayings.length)];
     petSay(reply);
     _pet.journal.push(_pet.name + ' said: "' + reply + '"');
     savePet(); updatePetUI();
-  }).catch(function(){
-    petSay(monster.sayings[Math.floor(Math.random() * monster.sayings.length)]);
   });
 }
 
@@ -9403,39 +9369,21 @@ function dmaiSend() {
     return { role: m.role, content: m.content };
   });
 
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
-      system: DMAI_SYSTEM_PROMPT,
-      messages: history
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  geminiChat(history, DMAI_SYSTEM_PROMPT, 2000, function(err, reply) {
     _dmaiLoading = false;
     document.getElementById('dmaiTyping').style.display = 'none';
     document.getElementById('dmaiSendBtn').disabled = false;
-    document.getElementById('dmaiStatusText').textContent = 'Powered by Claude — Ready to adventure';
+    document.getElementById('dmaiStatusText').textContent = 'Powered by Gemini — Ready to adventure';
 
-    var reply = data.content && data.content[0] ? data.content[0].text : 'I seem to have lost my spell components. Please try again.';
+    if (err || !reply) {
+      reply = '⚠️ A magical interference disrupted my connection. Please try again.';
+    }
 
     chat.messages.push({ role: 'assistant', content: reply });
     dmaiSaveChats();
     dmaiRenderMessages();
     dmaiRenderConvoList();
     unlockAchievement('dmai_first', '&#9670;', 'Consulted the Oracle', 'First chat with DungeonMaster AI');
-  })
-  .catch(function(err) {
-    _dmaiLoading = false;
-    document.getElementById('dmaiTyping').style.display = 'none';
-    document.getElementById('dmaiSendBtn').disabled = false;
-    document.getElementById('dmaiStatusText').textContent = 'Ready to adventure';
-    chat.messages.push({ role: 'assistant', content: '⚠️ A magical interference disrupted my connection. Check your API access and try again.' });
-    dmaiSaveChats();
-    dmaiRenderMessages();
   });
 }
 
@@ -9452,6 +9400,60 @@ function dmaiExportChat() {
   a.download = chat.title.replace(/[^a-z0-9]/gi,'_') + '.txt';
   a.click();
   showToast('Chat exported!', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  AI API HELPER (OpenRouter — free, no restrictions)
+// ══════════════════════════════════════════════════════
+var AI_KEY = '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';
+var AI_URL = 'https://openrouter.ai/api/v1/chat/completions';
+var AI_MODEL = 'meta-llama/llama-3.3-70b-instruct:free';
+var AI_VISION_MODEL = 'meta-llama/llama-3.2-11b-vision-instruct:free';
+
+// Simple text chat
+function geminiChat(messages, systemPrompt, maxTokens, cb) {
+  var msgs = [];
+  if (systemPrompt) msgs.push({ role: 'system', content: systemPrompt });
+  messages.forEach(function(m) { msgs.push({ role: m.role, content: m.content }); });
+  fetch(AI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + AI_KEY,
+      'HTTP-Referer': 'https://campaign-dnd.vercel.app',
+      'X-Title': 'DnD Campaign Manager'
+    },
+    body: JSON.stringify({ model: AI_MODEL, messages: msgs, max_tokens: maxTokens || 1000 })
+  }).then(function(r) { return r.json(); })
+  .then(function(d) {
+    var text = d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
+    cb(null, text);
+  }).catch(function(e) { cb(e, null); });
+}
+
+// Vision call (image + text)
+function geminiVision(base64, mediaType, prompt, cb) {
+  fetch(AI_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + AI_KEY,
+      'HTTP-Referer': 'https://campaign-dnd.vercel.app',
+      'X-Title': 'DnD Campaign Manager'
+    },
+    body: JSON.stringify({
+      model: AI_VISION_MODEL,
+      messages: [{ role: 'user', content: [
+        { type: 'image_url', image_url: { url: 'data:' + mediaType + ';base64,' + base64 } },
+        { type: 'text', text: prompt }
+      ]}],
+      max_tokens: 1500
+    })
+  }).then(function(r) { return r.json(); })
+  .then(function(d) {
+    var text = d.choices && d.choices[0] && d.choices[0].message ? d.choices[0].message.content : '';
+    cb(null, text);
+  }).catch(function(e) { cb(e, null); });
 }
 
 // ── UTIL
