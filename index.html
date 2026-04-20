@@ -2512,6 +2512,14 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 //  AUTH + USER SYSTEM  (Firebase Realtime Database)
 // ══════════════════════════════════════════════════════
 var currentUser = null;   // { username, dn, passwordHash, race, friends:[] }
+// ── Per-user localStorage key helper ──
+// All personal data is stored under the user's DN so different users
+// on the same browser never see each other's pets, dice history, AI chats, etc.
+function uKey(key) {
+  var dn = (currentUser && currentUser.dn) ? currentUser.dn.replace(/[^a-zA-Z0-9]/g, '_') : 'anon';
+  return 'u_' + dn + '_' + key;
+}
+
 var _pendingDN  = '';
 var _allUsersCache = {};  // local cache refreshed on login
 
@@ -6214,7 +6222,7 @@ function openNewCharSheet() {
 
 function openCharSheet(charId) {
   _currentCharId = charId;
-  var data = JSON.parse(localStorage.getItem('cs_' + charId) || 'null');
+  var data = JSON.parse(localStorage.getItem(uKey('cs_' + charId)) || 'null');
   if (!data) { openNewCharSheet(); _currentCharId = charId; return; }
   _csAttacks = data.attacks || [];
   _csSkillProfs = data.skillProfs || {};
@@ -6245,7 +6253,7 @@ function saveCharSheet() {
   });
   var av = document.getElementById('csAvatarDisplay');
   if (av && av.querySelector('img')) data.portrait = av.querySelector('img').src;
-  localStorage.setItem('cs_' + _currentCharId, JSON.stringify(data));
+  localStorage.setItem(uKey('cs_' + _currentCharId), JSON.stringify(data));
   // Push to Firebase so DM can see it
   if (currentUser) db.ref('charsheets/' + currentUser.dn + '/' + _currentCharId).set(Object.assign({}, data, { ownerDN: currentUser.dn, ownerName: currentUser.username, updatedAt: Date.now() }));
   showToast('Character sheet saved!', 'success');
@@ -6255,12 +6263,13 @@ function saveCharSheet() {
 
 function loadCharacters() {
   var html = '';
-  // Scan localStorage for chars
+  // Scan localStorage for chars belonging to current user only
+  var prefix = uKey('cs_');
   for (var k in localStorage) {
-    if (k.startsWith('cs_')) {
+    if (k.startsWith(prefix)) {
       var d = null; try { d = JSON.parse(localStorage.getItem(k)); } catch(e) {}
       if (!d) continue;
-      var cid = k.replace('cs_','');
+      var cid = k.replace(prefix,'');
       var pfp = d.portrait ? '<img src="'+esc(d.portrait)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.style.display=\'none\'">' : '&#9876;';
       html += '<div class="char-card" onclick="openCharSheet(\'' + cid + '\')">' +
         '<div class="char-avatar">' + pfp + '</div>' +
@@ -7475,8 +7484,8 @@ function addNotif(title, sub, action) {
   renderNotifList();
 }
 
-function saveNotifs() { try { localStorage.setItem('dnd_notifs', JSON.stringify(_notifications)); } catch(e){} }
-function loadNotifs() { try { _notifications = JSON.parse(localStorage.getItem('dnd_notifs') || '[]'); } catch(e){ _notifications = []; } renderNotifDot(); }
+function saveNotifs() { try { localStorage.setItem(uKey('dnd_notifs'), JSON.stringify(_notifications)); } catch(e){} }
+function loadNotifs() { try { _notifications = JSON.parse(localStorage.getItem(uKey('dnd_notifs')) || '[]'); } catch(e){ _notifications = []; } renderNotifDot(); }
 
 function renderNotifDot() {
   var unread = _notifications.filter(function(n) { return !n.read; }).length;
@@ -7574,8 +7583,8 @@ function csResetSpellSlots() {
 // ══════════════════════════════════════════════════════
 var _diceHistory = [];
 
-function loadDiceHistory() { try { _diceHistory = JSON.parse(localStorage.getItem('dnd_dice_history') || '[]'); } catch(e){ _diceHistory = []; } }
-function saveDiceHistory() { try { localStorage.setItem('dnd_dice_history', JSON.stringify(_diceHistory.slice(0,200))); } catch(e){} }
+function loadDiceHistory() { try { _diceHistory = JSON.parse(localStorage.getItem(uKey('dnd_dice_history')) || '[]'); } catch(e){ _diceHistory = []; } }
+function saveDiceHistory() { try { localStorage.setItem(uKey('dnd_dice_history'), JSON.stringify(_diceHistory.slice(0,200))); } catch(e){} }
 
 function rollDieLog(sides) {
   var result = Math.floor(Math.random() * sides) + 1;
@@ -7899,7 +7908,7 @@ function wbSync() {
   var c = document.getElementById('wbCanvas');
   var data = c.toDataURL('image/jpeg', 0.5);
   try {
-    localStorage.setItem('dnd_whiteboard_' + (_currentCampaignId || 'default'), data);
+    localStorage.setItem(uKey('dnd_whiteboard_' + (_currentCampaignId || 'default')), data);
     showToast('Whiteboard saved locally!', 'success');
   } catch(e) {
     showToast('Could not save — canvas too large', 'error');
@@ -7907,7 +7916,7 @@ function wbSync() {
 }
 
 function wbLoad() {
-  var data = localStorage.getItem('dnd_whiteboard_' + (_currentCampaignId || 'default'));
+  var data = localStorage.getItem(uKey('dnd_whiteboard_' + (_currentCampaignId || 'default')));
   if (!data) { showToast('No saved whiteboard', 'error'); return; }
   var c = document.getElementById('wbCanvas');
   var img = new Image();
@@ -8190,11 +8199,11 @@ function wmapLoad() {
 var _quests = [];
 
 function loadQuests() {
-  try { _quests = JSON.parse(localStorage.getItem('dnd_quests') || '[]'); } catch(e) { _quests = []; }
+  try { _quests = JSON.parse(localStorage.getItem(uKey('dnd_quests')) || '[]'); } catch(e) { _quests = []; }
 }
 
 function saveQuests() {
-  localStorage.setItem('dnd_quests', JSON.stringify(_quests));
+  localStorage.setItem(uKey('dnd_quests'), JSON.stringify(_quests));
 }
 
 function openAddQuestModal() {
@@ -8317,9 +8326,9 @@ var _pet = null;
 var _petDecayInterval = null;
 
 function loadPet() {
-  try { _pet = JSON.parse(localStorage.getItem('dnd_pet') || 'null'); } catch(e) { _pet = null; }
+  try { _pet = JSON.parse(localStorage.getItem(uKey('dnd_pet')) || 'null'); } catch(e) { _pet = null; }
 }
-function savePet() { if (_pet) localStorage.setItem('dnd_pet', JSON.stringify(_pet)); }
+function savePet() { if (_pet) localStorage.setItem(uKey('dnd_pet'), JSON.stringify(_pet)); }
 
 function renderPetPage() {
   loadPet();
@@ -8556,7 +8565,7 @@ function petAbandon() {
   if (!confirm('Release ' + _pet.name + '? They will return to the wild.')) return;
   if (_petDecayInterval) clearInterval(_petDecayInterval);
   _pet = null;
-  localStorage.removeItem('dnd_pet');
+  localStorage.removeItem(uKey('dnd_pet'));
   showChoosePet();
   showToast('Your companion was released.', 'success');
 }
@@ -8826,8 +8835,8 @@ function convertCurrency(from) {
 //  ACHIEVEMENTS
 // ══════════════════════════════════════════════════════
 var _achievements = {};
-function loadAchievements() { try { _achievements = JSON.parse(localStorage.getItem('dnd_achievements')||'{}'); } catch(e){ _achievements={}; } }
-function saveAchievements() { localStorage.setItem('dnd_achievements', JSON.stringify(_achievements)); }
+function loadAchievements() { try { _achievements = JSON.parse(localStorage.getItem(uKey('dnd_achievements'))||'{}'); } catch(e){ _achievements={}; } }
+function saveAchievements() { localStorage.setItem(uKey('dnd_achievements'), JSON.stringify(_achievements)); }
 
 function unlockAchievement(id, icon, title, desc) {
   if (_achievements[id]) return;
@@ -9158,14 +9167,14 @@ function dmaiInit() {
 }
 
 function dmaiLoadChats() {
-  try { _dmaiChats = JSON.parse(localStorage.getItem('dmai_chats') || '[]'); } catch(e) { _dmaiChats = []; }
+  try { _dmaiChats = JSON.parse(localStorage.getItem(uKey('dmai_chats')) || '[]'); } catch(e) { _dmaiChats = []; }
 }
 
 function dmaiSaveChats() {
-  try { localStorage.setItem('dmai_chats', JSON.stringify(_dmaiChats)); } catch(e) {
+  try { localStorage.setItem(uKey('dmai_chats'), JSON.stringify(_dmaiChats)); } catch(e) {
     // If storage full, remove oldest chats
     if (_dmaiChats.length > 5) _dmaiChats = _dmaiChats.slice(0, 5);
-    try { localStorage.setItem('dmai_chats', JSON.stringify(_dmaiChats)); } catch(e2) {}
+    try { localStorage.setItem(uKey('dmai_chats'), JSON.stringify(_dmaiChats)); } catch(e2) {}
   }
 }
 
