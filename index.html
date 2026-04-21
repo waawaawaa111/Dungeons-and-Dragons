@@ -6908,7 +6908,7 @@ function renderMusicList(filter) {
     var realIdx = PLAYLIST.indexOf(s);
     var active = realIdx === musicCurrentIndex;
     return '<div class="music-item' + (active ? ' active' : '') + '" onclick="musicPlay(' + realIdx + ')">' +
-      '<img class="music-thumb" src="' + musicThumb(s.v) + '" onerror="this.style.opacity='.3'">' +
+      '<img class="music-thumb" src="' + musicThumb(s.v) + '" onerror="this.style.opacity='3'">' +
       '<div class="music-item-info">' +
         '<div class="music-item-title">' + esc(s.t) + '</div>' +
         '<div class="music-item-artist">' + esc(s.a) + '</div>' +
