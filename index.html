@@ -685,28 +685,22 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 .music-item-title{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .music-item-artist{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .music-main{flex:1;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
-.music-now-playing{width:100%;display:flex;flex-direction:column;align-items:center;padding:20px 32px 12px;gap:14px;}
-.music-album-art-wrap{width:180px;height:180px;border-radius:12px;overflow:hidden;border:2px solid var(--border);flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:64px;color:var(--dim);}
+.music-now-playing{width:100%;display:flex;flex-direction:column;align-items:center;padding:28px 32px 16px;gap:16px;}
+.music-album-art-wrap{width:200px;height:200px;border-radius:12px;overflow:hidden;border:1px solid var(--border);flex-shrink:0;background:var(--bg3);display:flex;align-items:center;justify-content:center;}
 .music-album-art-img{width:100%;height:100%;object-fit:cover;display:block;}
 .music-track-info{text-align:center;}
-.music-track-title{font-family:'Cinzel',serif;font-size:19px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.music-track-title{font-family:'Cinzel',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;}
 .music-track-artist{font-size:15px;color:var(--muted);}
 .music-track-album{font-size:12px;color:var(--dim);margin-top:3px;}
-.music-yt-wrap{width:100%;max-width:540px;padding:0 20px;}
-.music-yt-box{width:100%;border-radius:10px;overflow:hidden;background:#000;aspect-ratio:16/9;border:1px solid var(--border);position:relative;}
-.music-yt-box iframe{width:100%;height:100%;border:none;display:block;}
-.music-unavail{position:absolute;inset:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);}
-.music-unavail-icon{font-size:36px;opacity:.4;}
-.music-unavail-txt{font-size:13px;text-align:center;line-height:1.5;}
-.music-unavail-link{color:var(--red);text-decoration:none;font-size:13px;border:1px solid rgba(229,62,62,.4);padding:6px 14px;border-radius:6px;}
-.music-unavail-link:hover{background:var(--red-dim);}
-.music-ctrl-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;}
+.music-player-wrap{width:100%;max-width:560px;padding:0 24px;}
+.music-yt-frame{width:100%;border-radius:10px;border:1px solid var(--border);overflow:hidden;background:#000;aspect-ratio:16/9;}
+.music-yt-frame iframe{width:100%;height:100%;border:none;display:block;}
+.music-ctrl-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;}
 .music-ctrl-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:14px;padding:7px 14px;border-radius:8px;font-family:'Crimson Text',serif;transition:all .15s;}
 .music-ctrl-btn:hover{background:var(--red);border-color:var(--red);color:white;}
-.music-ctrl-btn.primary{background:var(--red);border-color:var(--red);color:white;padding:8px 18px;}
-.music-sync-bar{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);margin-top:4px;}
-.music-sync-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex-shrink:0;}
-.music-sync-dot.live{background:#2d6a4f;box-shadow:0 0 6px rgba(45,106,79,.6);}
+.music-ctrl-btn.primary{background:var(--red);border-color:var(--red);color:white;padding:8px 20px;font-size:15px;}
+.music-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);padding:40px;}
+.music-empty-icon{font-size:56px;opacity:.2;}
 /* mini player in profile */
 .music-mini{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;}
 .music-mini-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
@@ -757,7 +751,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
     <div class="auth-logo">
       <div class="auth-logo-icon">&#9876;</div>
       <div class="auth-title">D&amp;D Manager</div>
-      <div class="auth-sub">Join the realms</div>
+      <div class="auth-sub">Forge your legend. Join the realm.</div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="authTabLogin" onclick="switchAuthTab('login')">Sign In</button>
@@ -947,7 +941,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
     <div class="hero-card">
       <div class="hero-eyebrow">&#128293; WELCOME BACK</div>
       <div class="hero-title">D&amp;D</div>
-      <p class="hero-desc">Build campaigns, create characters, and embark on epic adventures with fellow adventurers.</p>
+      <p class="hero-desc">Forge your destiny. Build campaigns, create characters, and embark on epic adventures with fellow adventurers.</p>
       <div class="btn-row">
         <button class="btn-primary" onclick="navigate('campaigns')">&#9876; My Campaigns</button>
         <button class="btn-secondary" onclick="navigate('browse')">&#128269; Browse Campaigns</button>
@@ -1653,6 +1647,7 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
   <!-- MUSIC PLAYER -->
   <div class="page" id="page-music" style="padding:0;max-width:none;">
     <div class="music-layout">
+      <!-- SIDEBAR: Song List -->
       <div class="music-sidebar">
         <div class="music-sidebar-header">
           <div class="music-sidebar-title">&#9836; Music</div>
@@ -1663,38 +1658,37 @@ body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
         </div>
         <div class="music-list" id="musicList"></div>
       </div>
+      <!-- MAIN AREA -->
       <div class="music-main">
-        <div class="music-now-playing">
-          <div class="music-album-art-wrap" id="musicArtWrap">&#9836;</div>
+        <!-- now playing -->
+        <div class="music-now-playing" id="musicNowPlaying">
+          <div class="music-album-art-wrap">
+            <img class="music-album-art-img" id="musicAlbumImg" src="" onerror="this.src=''">
+          </div>
           <div class="music-track-info">
             <div class="music-track-title" id="musicTrackTitle">Select a song</div>
             <div class="music-track-artist" id="musicTrackArtist">—</div>
             <div class="music-track-album" id="musicTrackAlbum"></div>
           </div>
         </div>
-        <div class="music-yt-wrap">
-          <div class="music-yt-box" id="musicYTBox">
-            <div class="music-unavail" id="musicUnavail">
-              <div class="music-unavail-icon">&#9836;</div>
-              <div class="music-unavail-txt">Select a song from the list<br>to start playing</div>
-            </div>
+        <!-- youtube embed -->
+        <div class="music-player-wrap">
+          <div class="music-yt-frame" id="musicYTFrame" style="display:none;">
+            <iframe id="musicYTIframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
           </div>
-          <div class="music-ctrl-row" style="margin-top:10px;">
-            <button class="music-ctrl-btn" onclick="musicPrev()">&#9664;&#9664; Prev</button>
-            <button class="music-ctrl-btn primary" id="musicPlayBtn" onclick="musicTogglePlay()" disabled>&#9654; Play</button>
-            <button class="music-ctrl-btn" onclick="musicNext()">Next &#9654;&#9654;</button>
+          <div class="music-ctrl-row">
+            <button class="music-ctrl-btn" onclick="musicPrev()" title="Previous">&#9664;&#9664; Prev</button>
+            <button class="music-ctrl-btn primary" onclick="musicReplay()" title="Replay">&#9654; Play Again</button>
+            <button class="music-ctrl-btn" onclick="musicNext()" title="Next">Next &#9654;&#9654;</button>
           </div>
-          <div class="music-sync-bar">
-            <div class="music-sync-dot" id="musicSyncDot"></div>
-            <span id="musicSyncLabel">Not synced</span>
-            <span style="margin-left:auto;color:var(--muted);font-size:11px;" id="musicDMLabel"></span>
+          <div style="text-align:center;font-size:12px;color:var(--dim);margin-top:10px;">
+            Click any song in the list to play &nbsp;&#8226;&nbsp; Audio plays in the embedded YouTube player
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ADMIN -->
   <!-- ADMIN -->
   <!-- DICE HISTORY -->
   <div class="page" id="page-dice">
@@ -6577,317 +6571,234 @@ function doPasswordReset() {
 }
 
 // ══════════════════════════════════════════════════════
-//  MUSIC PLAYER  — YouTube IFrame API + Firebase sync
-//  Everyone in the same session hears the same song.
-//  DM controls playback; others follow.
+//  MUSIC PLAYER  (YouTube nocookie embed — no IFrame API needed)
 // ══════════════════════════════════════════════════════
+// Each entry: t=title, a=artist, al=album, v=YouTube video ID
 var PLAYLIST = [
   {t:'Black Hole Sun',a:'Soundgarden',al:'Superunknown',v:'3mbBbFH9fAg'},
+  {t:'Paradise City',a:"Guns N' Roses",al:'Appetite For Destruction',v:'i0p1bmr0EmE'},
   {t:'American Idiot',a:'Green Day',al:'American Idiot',v:'Ee_uujKuJMI'},
   {t:'Seven Nation Army',a:'The White Stripes',al:'Elephant',v:'0J2QdDbelmY'},
-  {t:'Creep',a:'Radiohead',al:'Pablo Honey',v:'XFkzRNyygfk'},
-  {t:'1979',a:'The Smashing Pumpkins',al:'Mellon Collie And The Infinite Sadness',v:'4aeETEoNfOg'},
-  {t:'Bullet With Butterfly Wings',a:'The Smashing Pumpkins',al:'Mellon Collie And The Infinite Sadness',v:'NzG5-b36GV4'},
-  {t:'Heart-Shaped Box',a:'Nirvana',al:'In Utero',v:'LFduOI_XR9A'},
-  {t:'About A Girl',a:'Nirvana',al:'Bleach',v:'DPLlXTdPRMY'},
-  {t:'All Apologies',a:'Nirvana',al:'In Utero',v:'WoHxoz_KhvU'},
-  {t:'Breed',a:'Nirvana',al:'Nevermind',v:'UTLsVDjyMmY'},
-  {t:'Smells Like Teen Spirit',a:'Nirvana',al:'Nevermind',v:'hTWKbfoikeg'},
-  {t:'The Man Who Sold The World',a:'Nirvana',al:'MTV Unplugged In New York',v:'9gRMsTEF5o0'},
-  {t:'The Pretender',a:'Foo Fighters',al:'Echoes, Silence, Patience & Grace',v:'SBjQ9tuuTJQ'},
-  {t:'Everlong',a:'Foo Fighters',al:'The Colour And The Shape',v:'eBG7P-K-r1Y'},
-  {t:'My Hero',a:'Foo Fighters',al:'The Colour And The Shape',v:'EqPtz5qN7HM'},
-  {t:'All My Life',a:'Foo Fighters',al:'One By One',v:'jhgVpg2nPpU'},
-  {t:'Learn to Fly',a:'Foo Fighters',al:'There Is Nothing Left To Lose',v:'1VQ9TOeAiAg'},
-  {t:'Notion',a:'The Rare Occasions',al:'Notion',v:'pTNMHvbZBzM'},
-  {t:'Freaks',a:'Surf Curse',al:'Freaks',v:'_bFXuLNBrHs'},
-  {t:'505',a:'Arctic Monkeys',al:'Favourite Worst Nightmare',v:'s4CNpPDP2pA'},
-  {t:'Do I Wanna Know?',a:'Arctic Monkeys',al:'AM',v:'bpOSxM0UIJ4'},
-  {t:"Ain't No Rest for the Wicked",a:'Cage The Elephant',al:'Cage The Elephant',v:'qqfNkeMxMHc'},
-  {t:'Mr. Brightside',a:'The Killers',al:'Hot Fuss',v:'gGdGFtwCNBE'},
-  {t:'Somebody Told Me',a:'The Killers',al:'Hot Fuss',v:'pCeKMcetZOI'},
-  {t:'Could Have Been Me',a:'The Struts',al:'Everybody Wants',v:'tNu9JGJ2DP8'},
-  {t:'Song 2',a:'Blur',al:'Blur',v:'SSbBvKaM6sk'},
-  {t:'Everybody Wants To Rule The World',a:'Tears For Fears',al:'Songs From The Big Chair',v:'ST76gFPCN3k'},
-  {t:'Should I Stay or Should I Go',a:'The Clash',al:'Combat Rock',v:'BN1WwnEDWAM'},
-  {t:'Carry on Wayward Son',a:'Kansas',al:'Leftoverture',v:'2X_2IdybTV0'},
-  {t:'Dream On',a:'Aerosmith',al:'Aerosmith',v:'E_k7-USacBE'},
-  {t:'Walk This Way',a:'Aerosmith',al:'Toys In The Attic',v:'4B_UYYPb-Gk'},
-  {t:'Free Bird',a:'Lynyrd Skynyrd',al:"Pronounced Leh-Nerd Skin-Nerd",v:'CqnU4zr_Hjk'},
-  {t:'Fortunate Son',a:'Creedence Clearwater Revival',al:'Willy And The Poor Boys',v:'E09h6GKfxhI'},
-  {t:'Californication',a:'Red Hot Chili Peppers',al:'Californication',v:'YlUKcNNmywk'},
-  {t:'Otherside',a:'Red Hot Chili Peppers',al:'Californication',v:'XIiH3DOGWuI'},
-  {t:'Under the Bridge',a:'Red Hot Chili Peppers',al:'Blood Sugar Sex Magik',v:'glen_951HxQ'},
-  {t:"Can't Stop",a:'Red Hot Chili Peppers',al:'By the Way',v:'8DyziWtkfBw'},
-  {t:'Dani California',a:'Red Hot Chili Peppers',al:'Stadium Arcadium',v:'Jd9VahCnp7A'},
-  {t:'Snow (Hey Oh)',a:'Red Hot Chili Peppers',al:'Stadium Arcadium',v:'_ByEBjf9Nx0'},
-  {t:'By the Way',a:'Red Hot Chili Peppers',al:'By the Way',v:'KR1HfwTzAmE'},
-  {t:'Toxicity',a:'System Of A Down',al:'Toxicity',v:'-OxsyOGnBFQ'},
-  {t:'Chop Suey!',a:'System Of A Down',al:'Toxicity',v:'CSvFpBOe8eY'},
-  {t:'Aerials',a:'System Of A Down',al:'Toxicity',v:'L-iepu3EtyE'},
-  {t:'B.Y.O.B.',a:'System Of A Down',al:'Mezmerize',v:'byU5PgfYAH4'},
-  {t:'Lonely Day',a:'System Of A Down',al:'Hypnotize',v:'FRD_1bEoYxY'},
-  {t:'Killing In The Name',a:'Rage Against The Machine',al:'Rage Against The Machine',v:'bWXazVeUs00'},
-  {t:'One Step Closer',a:'Linkin Park',al:'Hybrid Theory',v:'XmKSY9jE56c'},
-  {t:'Crawling',a:'Linkin Park',al:'Hybrid Theory',v:'Gd9OhYroLN0'},
-  {t:'Numb',a:'Linkin Park',al:'Meteora',v:'kXYiU_JCYtU'},
-  {t:'In the End',a:'Linkin Park',al:'Hybrid Theory',v:'eVTXPUF4Oz4'},
-  {t:'Faint',a:'Linkin Park',al:'Meteora',v:'LYU-8IFcDPw'},
-  {t:'Papercut',a:'Linkin Park',al:'Hybrid Theory',v:'vjVkXlxsO8Q'},
-  {t:'Given Up',a:'Linkin Park',al:'Minutes to Midnight',v:'PQF0SFXmMFw'},
-  {t:'Lying from You',a:'Linkin Park',al:'Meteora',v:'uHVEcClWiRQ'},
-  {t:'Runaway',a:'Linkin Park',al:'Hybrid Theory',v:'CFNHerTBFdE'},
-  {t:'The Emptiness Machine',a:'Linkin Park',al:'From Zero',v:'P5n9CWLR4wo'},
-  {t:'Feel Good Inc.',a:'Gorillaz',al:'Demon Days',v:'HyHNuVaZJ-k'},
-  {t:'Boulevard of Broken Dreams',a:'Green Day',al:'American Idiot',v:'Yz6H0QBKDHE'},
-  {t:'Basket Case',a:'Green Day',al:'Dookie',v:'NUTGr5t3MoY'},
-  {t:'When I Come Around',a:'Green Day',al:'Dookie',v:'yBCBqK8JQQU'},
-  {t:'Good Riddance (Time of Your Life)',a:'Green Day',al:'Nimrod',v:'CnQ8N1KgrGk'},
-  {t:'Brain Stew',a:'Green Day',al:'Insomniac',v:'wGNBjRNguBo'},
-  {t:'Holiday',a:'Green Day',al:'American Idiot',v:'0UFXNB-GNQ8'},
-  {t:'Wake Me up When September Ends',a:'Green Day',al:'American Idiot',v:'NU9nuMJSNpY'},
-  {t:'21 Guns',a:'Green Day',al:'21st Century Breakdown',v:'iGSMHkCXqKY'},
-  {t:'One Eyed Bastard',a:'Green Day',al:'Saviors',v:'gD25p9fFMoE'},
-  {t:'All The Small Things',a:'blink-182',al:'Enema Of The State',v:'9X_ViIPA-Gc'},
-  {t:'Duality',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'4MNANgBt_a0'},
-  {t:'Psychosocial',a:'Slipknot',al:'All Hope Is Gone',v:'0bVFpKgqSxI'},
-  {t:'Before I Forget',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'fVgBxFCgWKQ'},
-  {t:'Dead Memories',a:'Slipknot',al:'All Hope Is Gone',v:'HG7Sm87Pf3A'},
-  {t:'Wait and Bleed',a:'Slipknot',al:'Slipknot',v:'H5BmEUTlBiE'},
-  {t:'Custer',a:'Slipknot',al:'.5: The Gray Chapter',v:'2h8X03_f6mc'},
-  {t:'The Blister Exists',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'fVgBxFCgWKQ'},
-  {t:'Down with the Sickness',a:'Disturbed',al:'The Sickness',v:'BrsVGfWGKMg'},
-  {t:'I Hate Everything About You',a:'Three Days Grace',al:'Three Days Grace',v:'Xjk6L6gHgqc'},
-  {t:'Animal I Have Become',a:'Three Days Grace',al:'One-X',v:'sZ-KVCN0mFQ'},
-  {t:'Riot',a:'Three Days Grace',al:'One-X',v:'4m7LkJKtN5I'},
-  {t:'Bodies',a:'Drowning Pool',al:'Sinner',v:'04F4xlWSFh0'},
-  {t:'Last Resort',a:'Papa Roach',al:'Infest',v:'VVohqBBNGG4'},
-  {t:'Even If It Kills Me',a:'Papa Roach',al:'Even If It Kills Me',v:'WJA3FuGWDls'},
-  {t:'Break Stuff',a:'Limp Bizkit',al:'Significant Other',v:'ZpUYjpKg9KY'},
-  {t:"Rollin' (Air Raid Vehicle)",a:'Limp Bizkit',al:'Chocolate Starfish',v:'VfBgs-1SKNQ'},
-  {t:'Nookie',a:'Limp Bizkit',al:'Significant Other',v:'lJvjgKxhv58'},
-  {t:'My Generation',a:'Limp Bizkit',al:'Chocolate Starfish',v:'IhXtJiSZE6k'},
-  {t:'Take A Look Around',a:'Limp Bizkit',al:'Chocolate Starfish',v:'uH5GCN0VeX0'},
-  {t:'My Way',a:'Limp Bizkit',al:'Chocolate Starfish',v:'4QLq1tqewGk'},
-  {t:'Freak On a Leash',a:'Korn',al:'Follow The Leader',v:'LlGGkHXhZJQ'},
-  {t:'Twisted Transistor',a:'Korn',al:'See You On the Other Side',v:'JVfVmZujFOI'},
-  {t:'Coming Undone',a:'Korn',al:'See You On the Other Side',v:'oGTtBNHhZBo'},
-  {t:'Unholy Confessions',a:'Avenged Sevenfold',al:'Waking The Fallen',v:'lcO1RGOkKJM'},
-  {t:'Blurry',a:'Puddle Of Mudd',al:'Come Clean',v:'oUJHAGG9eRM'},
-  {t:'Fake It',a:'Seether',al:'Finding Beauty In Negative Spaces',v:'1nG_7eVJu90'},
-  {t:'Remedy',a:'Seether',al:'Karma and Effect',v:'gAqkKQV5sIA'},
-  {t:'Slither',a:'Velvet Revolver',al:'Contraband',v:'lMBmSJGX__4'},
-  {t:'How You Remind Me',a:'Nickelback',al:'Silver Side Up',v:'1cQh1ccqu8M'},
-  {t:"Savin' Me",a:'Nickelback',al:'All The Right Reasons',v:'04F4xlWSFh0'},
-  {t:'Higher',a:'Creed',al:'Human Clay',v:'7xRBEMFSBQg'},
-  {t:'One Last Breath',a:'Creed',al:'Weathered',v:'W5KJsNi5ywY'},
-  {t:'My Sacrifice',a:'Creed',al:'Weathered',v:'5FmFsZd1GSo'},
-  {t:"It's Been Awhile",a:'Staind',al:'Break the Cycle',v:'FSsRIFcJPzU'},
-  {t:'Drive',a:'Incubus',al:'Make Yourself',v:'qlBLFMD0EXg'},
-  {t:'Wish You Were Here',a:'Incubus',al:'Morning View',v:'M6dPQb0bGCc'},
-  {t:'The Red',a:'Chevelle',al:"Wonder What's Next",v:'t_-KMEXFrUQ'},
-  {t:'Fly Away',a:'Lenny Kravitz',al:'5',v:'9ILkPPeUCNA'},
-  {t:'Say It Aint So',a:'Weezer',al:'Weezer (Blue Album)',v:'Fm7Gvr9eOSI'},
-  {t:"Come Out and Play",a:'The Offspring',al:'Smash',v:'NrI-UBIB9dE'},
-  {t:'Self Esteem',a:'The Offspring',al:'Smash',v:'aaMvHl1BSAQ'},
-  {t:'Pretty Fly (For A White Guy)',a:'The Offspring',al:'Americana',v:'XKdmFexA5CA'},
-  {t:"The Kids Aren't Alright",a:'The Offspring',al:'Americana',v:'KPgpKBK7xAY'},
-  {t:"You're Gonna Go Far, Kid",a:'The Offspring',al:'Rise And Fall, Rage And Grace',v:'SZvxH7UyS4Q'},
-  {t:"Why Don't You Get A Job",a:'The Offspring',al:'Americana',v:'AjNGAu1JFiI'},
-  {t:'Gone Away',a:'The Offspring',al:'Ixnay On The Hombre',v:'tCWaQeKkjXs'},
-  {t:'Smash',a:'The Offspring',al:'Smash',v:'8RLQFdHIHBE'},
-  {t:'Smooth Criminal',a:'Alien Ant Farm',al:'Anthology',v:'vGCQAFWGWFw'},
-  {t:'Here Without You',a:'3 Doors Down',al:'Away From The Sun',v:'OQspFEXbNh8'},
-  {t:'Kryptonite',a:'3 Doors Down',al:'The Better Life',v:'gd6obFABMKE'},
-  {t:'Symphony Of Destruction',a:'Megadeth',al:'Countdown To Extinction',v:'q2EMWlFGhKU'},
-  {t:'I Want It That Way',a:'Backstreet Boys',al:'Millennium',v:'4fndeDfaWCg'},
-  {t:'Take It On the Run',a:'REO Speedwagon',al:'Hi Infidelity',v:'LXSxkKpPVOY'},
-  {t:'Runaway',a:'Bon Jovi',al:'Bon Jovi',v:'IDJJ2jTdVK4'},
-  {t:"Livin' On A Prayer",a:'Bon Jovi',al:'Slippery When Wet',v:'lDK9QqIzhwk'},
-  {t:'Wanted Dead Or Alive',a:'Bon Jovi',al:'Slippery When Wet',v:'E2GkCzDjTbY'},
-  {t:'You Give Love A Bad Name',a:'Bon Jovi',al:'Slippery When Wet',v:'lPGv9BuQK6I'},
-  {t:'Alive',a:'Pearl Jam',al:'Ten',v:'nU8gqaATNKk'},
+  {t:'Fuel',a:'Metallica',al:'Reload',v:'OhcLATiI7Os'},
   {t:'Even Flow',a:'Pearl Jam',al:'Ten',v:'csKZLQMnIuU'},
-  {t:'Jeremy',a:'Pearl Jam',al:'Ten',v:'RA2vFDnbdV4'},
-  {t:'Man in the Box',a:'Alice In Chains',al:'Facelift',v:'rNmyFD3OQTU'},
-  {t:'Would?',a:'Alice In Chains',al:'Dirt',v:'3vGMmHkJtFQ'},
-  {t:'Painkiller',a:'Judas Priest',al:'Painkiller',v:'iSVBo7tkPWc'},
-  {t:'Breaking the Law',a:'Judas Priest',al:'British Steel',v:'jtMWvhGxBis'},
-  {t:'Du hast',a:'Rammstein',al:'Sehnsucht',v:'W3q8Od5qJio'},
-  {t:'My Own Summer (Shove It)',a:'Deftones',al:'Around the Fur',v:'qPF5Jg-Ycrs'},
-  {t:'As I Am',a:'Dream Theater',al:'Train of Thought',v:'ksllAgbYHV0'},
-  {t:'Ace of Spades',a:'Motörhead',al:'Ace of Spades',v:'pWB5JZRGl0U'},
-  {t:'Mr. Brightside',a:'The Killers',al:'Hot Fuss',v:'gGdGFtwCNBE'},
-  {t:'Raining Blood',a:'Slayer',al:'Reign In Blood',v:'lzqLmSO3JsM'},
-  {t:'Rock You Like a Hurricane',a:'Scorpions',al:'Love at First Sting',v:'oFEuNnAOuZ0'},
-  {t:'Kickstart My Heart',a:'Mötley Crüe',al:'Dr. Feelgood',v:'CmXWkMlKFkI'},
-  {t:'Shout at the Devil',a:'Mötley Crüe',al:'Shout At The Devil',v:'5o2bT9_nsFQ'},
-  {t:'Paint It, Black',a:'The Rolling Stones',al:'Aftermath',v:'O4irXQhgMqg'},
-  {t:'Crazy Train',a:'Ozzy Osbourne',al:'Blizzard Of Ozz',v:'1x9diScpjbY'},
-  {t:'Mr. Crowley',a:'Ozzy Osbourne',al:'Blizzard Of Ozz',v:'q-LPMXnUVhA'},
-  {t:'No More Tears',a:'Ozzy Osbourne',al:'No More Tears',v:'mPBwR5VBU6E'},
-  {t:'Hellraiser',a:'Ozzy Osbourne',al:'No More Tears',v:'zGTqx5zJdXQ'},
-  {t:"Ain't Talkin' 'Bout Love",a:'Van Halen',al:'Van Halen',v:'9gIhNqaosq4'},
-  {t:'Panama',a:'Van Halen',al:'1984',v:'fCP4oHEAKSU'},
-  {t:'Enter Sandman',a:'Metallica',al:'Metallica',v:'CD-E-LDc384'},
-  {t:'Nothing Else Matters',a:'Metallica',al:'Metallica',v:'tAGnKpE4NCI'},
+  {t:'1979',a:'The Smashing Pumpkins',al:'Mellon Collie And The Infinite Sadness',v:'4aeETEoNfOg'},
+  {t:'Creep',a:'Radiohead',al:'Pablo Honey',v:'XFkzRNyygfk'},
   {t:'Master of Puppets',a:'Metallica',al:'Master of Puppets',v:'E0ozmU9cJDg'},
   {t:'One',a:'Metallica',al:'...And Justice for All',v:'WM8bTdBs-cw'},
   {t:'Fade To Black',a:'Metallica',al:'Ride The Lightning',v:'WVGlFBf6qQo'},
   {t:'Creeping Death',a:'Metallica',al:'Ride The Lightning',v:'taJkFN3XZGU'},
-  {t:'For Whom The Bell Tolls',a:'Metallica',al:'Ride The Lightning',v:'1bq0qFF4iF8'},
-  {t:'Sad But True',a:'Metallica',al:'Metallica',v:'_enkHl4H_EU'},
-  {t:'The Unforgiven',a:'Metallica',al:'Metallica',v:'Ckom3gf57Yw'},
   {t:'The Unforgiven II',a:'Metallica',al:'Reload',v:'RiQPRFQOzGE'},
-  {t:'Wherever I May Roam',a:'Metallica',al:'Metallica',v:'cFqQq1w08yc'},
-  {t:'Whiskey In The Jar',a:'Metallica',al:'Garage Inc.',v:'QdS3bQNJimU'},
-  {t:'Turn The Page',a:'Metallica',al:'Garage Inc.',v:'nP3rJCR7Sew'},
-  {t:'Fuel',a:'Metallica',al:'Reload',v:'OhcLATiI7Os'},
-  {t:'Memory Remains',a:'Metallica',al:'Reload',v:'O0ETLRF_CkU'},
-  {t:'Until It Sleeps',a:'Metallica',al:'Load',v:'dlbW2dHZLr4'},
-  {t:'Seek & Destroy',a:'Metallica',al:"Kill 'Em All",v:'8jMF7VGHq9M'},
-  {t:'Whiplash',a:'Metallica',al:"Kill 'Em All",v:'O5ZkNKdyBHs'},
-  {t:'Battery',a:'Metallica',al:'Master of Puppets',v:'_cNQZtAQlAI'},
-  {t:'Blackened',a:'Metallica',al:'...And Justice for All',v:'ovRlVSp4E_8'},
-  {t:'Harvester of Sorrow',a:'Metallica',al:'...And Justice for All',v:'z9mPRTKnNKQ'},
-  {t:"Don't Tread on Me",a:'Metallica',al:'Metallica',v:'cHf-47VhH1g'},
-  {t:'Die, Die My Darling',a:'Metallica',al:'Garage Inc.',v:'2ZSMCS25RvY'},
-  {t:'Lux Æterna',a:'Metallica',al:'72 Seasons',v:'qAqAGobRMTU'},
   {t:'Moth Into Flame',a:'Metallica',al:'Hardwired...To Self-Destruct',v:'rrBZIBBSfJQ'},
   {t:'Atlas, Rise!',a:'Metallica',al:'Hardwired...To Self-Destruct',v:'EqBFGb54JEs'},
-  {t:'Hardwired',a:'Metallica',al:'Hardwired...To Self-Destruct',v:'BO-PiBxTFo0'},
-  {t:'Orion',a:'Metallica',al:'Master of Puppets',v:'g4BlVH6hBnU'},
-  {t:'The Thing That Should Not Be',a:'Metallica',al:'Master of Puppets',v:'MBivf8nJb9s'},
-  {t:'Of Wolf and Man',a:'Metallica',al:'Metallica',v:'SgPRkNHk08U'},
+  {t:'The Pretender',a:'Foo Fighters',al:'Echoes, Silence, Patience & Grace',v:'SBjQ9tuuTJQ'},
+  {t:'Heart-Shaped Box',a:'Nirvana',al:'In Utero',v:'LFduOI_XR9A'},
+  {t:'Rock You Like a Hurricane',a:'Scorpions',al:'Love at First Sting',v:'oFEuNnAOuZ0'},
+  {t:'Kickstart My Heart',a:'Mötley Crüe',al:'Dr. Feelgood',v:'CmXWkMlKFkI'},
+  {t:'Welcome To The Jungle',a:"Guns N' Roses",al:'Appetite For Destruction',v:'o1tj2zJ2Wvg'},
+  {t:'Toxicity',a:'System Of A Down',al:'Toxicity',v:'-OxsyOGnBFQ'},
+  {t:'Carry on Wayward Son',a:'Kansas',al:'Leftoverture',v:'2X_2IdybTV0'},
+  {t:'Chop Suey!',a:'System Of A Down',al:'Toxicity',v:'CSvFpBOe8eY'},
+  {t:'Boulevard of Broken Dreams',a:'Green Day',al:'American Idiot',v:'Yz6H0QBKDHE'},
+  {t:'Free Bird',a:'Lynyrd Skynyrd',al:"Pronounced 'Leh-Nerd 'Skin-Nerd",v:'CqnU4zr_Hjk'},
+  {t:'Notion',a:'The Rare Occasions',al:'Notion',v:'pTNMHvbZBzM'},
   {t:'Back In Black',a:'AC/DC',al:'Back In Black',v:'pAgnJDJN4VA'},
+  {t:"Sweet Child O' Mine",a:"Guns N' Roses",al:'Appetite For Destruction',v:'1w7OgIMMRc4'},
+  {t:'The Man Who Sold The World',a:'Nirvana',al:'MTV Unplugged In New York',v:'9gRMsTEF5o0'},
+  {t:'You Shook Me All Night Long',a:'AC/DC',al:'Back In Black',v:'Lo2qQmj0_h4'},
   {t:'Highway to Hell',a:'AC/DC',al:'Highway to Hell',v:'l482T0yNkeo'},
+  {t:'Californication',a:'Red Hot Chili Peppers',al:'Californication',v:'YlUKcNNmywk'},
   {t:'Thunderstruck',a:'AC/DC',al:'The Razors Edge',v:'v2AC41dglnM'},
+  {t:'Dream On',a:'Aerosmith',al:'Aerosmith',v:'E_k7-USacBE'},
+  {t:'November Rain',a:"Guns N' Roses",al:'Use Your Illusion I',v:'8SbUC-UaAxE'},
+  {t:'Dani California',a:'Red Hot Chili Peppers',al:'Stadium Arcadium',v:'Jd9VahCnp7A'},
+  {t:'Otherside',a:'Red Hot Chili Peppers',al:'Californication',v:'XIiH3DOGWuI'},
+  {t:'Snow (Hey Oh)',a:'Red Hot Chili Peppers',al:'Stadium Arcadium',v:'_ByEBjf9Nx0'},
+  {t:'Holiday / Boulevard of Broken Dreams',a:'Green Day',al:'American Idiot',v:'0UFXNB-GNQ8'},
+  {t:'Paranoid',a:'Black Sabbath',al:'Paranoid',v:'0qanF-DfajQ'},
+  {t:'Live And Let Die',a:"Guns N' Roses",al:'Use Your Illusion I',v:'VHpfLInnEmQ'},
+  {t:'Paint It, Black',a:'The Rolling Stones',al:'Aftermath',v:'O4irXQhgMqg'},
+  {t:"Can't Stop",a:'Red Hot Chili Peppers',al:'By the Way',v:'8DyziWtkfBw'},
   {t:'T.N.T.',a:'AC/DC',al:'High Voltage',v:'qF7UBWjQBkQ'},
   {t:'Hells Bells',a:'AC/DC',al:'Back In Black',v:'etAIpkdhU9Q'},
-  {t:'Shoot to Thrill',a:'AC/DC',al:'Back In Black',v:'aSH5SXMQK6M'},
-  {t:'You Shook Me All Night Long',a:'AC/DC',al:'Back In Black',v:'Lo2qQmj0_h4'},
-  {t:'Dirty Deeds Done Dirt Cheap',a:'AC/DC',al:'Dirty Deeds Done Dirt Cheap',v:'X3znXuKSXnk'},
-  {t:'Paradise City',a:"Guns N' Roses",al:'Appetite For Destruction',v:'i0p1bmr0EmE'},
-  {t:"Sweet Child O' Mine",a:"Guns N' Roses",al:'Appetite For Destruction',v:'1w7OgIMMRc4'},
-  {t:'Welcome To The Jungle',a:"Guns N' Roses",al:'Appetite For Destruction',v:'o1tj2zJ2Wvg'},
-  {t:'November Rain',a:"Guns N' Roses",al:'Use Your Illusion I',v:'8SbUC-UaAxE'},
+  {t:'Mr. Crowley',a:'Ozzy Osbourne',al:'Blizzard Of Ozz',v:'q-LPMXnUVhA'},
+  {t:'Ace of Spades',a:'Motörhead',al:'Ace of Spades',v:'pWB5JZRGl0U'},
+  {t:'Crazy Train',a:'Ozzy Osbourne',al:'Blizzard Of Ozz',v:'1x9diScpjbY'},
+  {t:'Black Dog',a:'Led Zeppelin',al:'Led Zeppelin IV',v:'BdkMnNWFbao'},
   {t:"Knockin' On Heaven's Door",a:"Guns N' Roses",al:'Use Your Illusion II',v:'F0HoHNBAsQI'},
-  {t:'You Could Be Mine',a:"Guns N' Roses",al:'Use Your Illusion II',v:'LTB1htCeIQk'},
-  {t:'Civil War',a:"Guns N' Roses",al:'Use Your Illusion II',v:'7z5QqkgoeEk'},
-  {t:'Live And Let Die',a:"Guns N' Roses",al:'Use Your Illusion I',v:'VHpfLInnEmQ'},
-  {t:'Paranoid',a:'Black Sabbath',al:'Paranoid',v:'0qanF-DfajQ'},
+  {t:'Stairway to Heaven',a:'Led Zeppelin',al:'Led Zeppelin IV',v:'QkF3oxziUI4'},
+  {t:'Breaking the Law',a:'Judas Priest',al:'British Steel',v:'jtMWvhGxBis'},
+  {t:'Alive',a:'Pearl Jam',al:'Ten',v:'nU8gqaATNKk'},
+  {t:'Wanted Dead Or Alive',a:'Bon Jovi',al:'Slippery When Wet',v:'E2GkCzDjTbY'},
+  {t:'You Give Love A Bad Name',a:'Bon Jovi',al:'Slippery When Wet',v:'lPGv9BuQK6I'},
+  {t:'Fortunate Son',a:'Creedence Clearwater Revival',al:'Willy And The Poor Boys',v:'E09h6GKfxhI'},
+  {t:'One Eyed Bastard',a:'Green Day',al:'Saviors',v:'gD25p9fFMoE'},
+  {t:'Basket Case',a:'Green Day',al:'Dookie',v:'NUTGr5t3MoY'},
+  {t:"Livin' On A Prayer",a:'Bon Jovi',al:'Slippery When Wet',v:'lDK9QqIzhwk'},
+  {t:'All The Small Things',a:'blink-182',al:'Enema Of The State',v:'9X_ViIPA-Gc'},
+  {t:'All Apologies',a:'Nirvana',al:'In Utero',v:'WoHxoz_KhvU'},
+  {t:'For Whom The Bell Tolls',a:'Metallica',al:'Ride The Lightning',v:'1bq0qff4iF8'},
+  {t:'Feel Good Inc.',a:'Gorillaz',al:'Demon Days',v:'HyHNuVaZJ-k'},
+  {t:'I Want It That Way',a:'Backstreet Boys',al:'Millennium',v:'4fndeDfaWCg'},
   {t:'Iron Man',a:'Black Sabbath',al:'Paranoid',v:'7wQBrQBGbXQ'},
   {t:'War Pigs',a:'Black Sabbath',al:'Paranoid',v:'LQUXuQ6Zd9w'},
-  {t:'Heaven and Hell',a:'Black Sabbath',al:'Heaven and Hell',v:'aOynk1Z38cA'},
-  {t:'Stairway to Heaven',a:'Led Zeppelin',al:'Led Zeppelin IV',v:'QkF3oxziUI4'},
-  {t:'Black Dog',a:'Led Zeppelin',al:'Led Zeppelin IV',v:'BdkMnNWFbao'},
+  {t:'Learn to Fly',a:'Foo Fighters',al:'There Is Nothing Left To Lose',v:'1VQ9TOeAiAg'},
   {t:'Immigrant Song',a:'Led Zeppelin',al:'Led Zeppelin III',v:'y8OtzJtp-EM'},
-  {t:'Walk',a:'Pantera',al:'Vulgar Display of Power',v:'4aGNfSAP3BE'},
+  {t:'Shoot to Thrill',a:'AC/DC',al:'Back In Black',v:'aSH5SXMQK6M'},
+  {t:'Panama',a:'Van Halen',al:'1984',v:'fCP4oHEAKSU'},
   {t:'Cemetery Gates',a:'Pantera',al:'Cowboys from Hell',v:'YMdSx1n4ZnE'},
   {t:'Cowboys from Hell',a:'Pantera',al:'Cowboys from Hell',v:'omEGvFHkBMw'},
+  {t:'Walk',a:'Pantera',al:'Vulgar Display of Power',v:'4aGNfSAP3BE'},
   {t:'Floods',a:'Pantera',al:'The Great Southern Trendkill',v:'yiySV0E4Vys'},
   {t:"I'm Broken",a:'Pantera',al:'Far Beyond Driven',v:'yrHia2Vgpxs'},
   {t:'This Love',a:'Pantera',al:'Vulgar Display of Power',v:'t67w2LOC0m8'},
   {t:'Domination',a:'Pantera',al:'Cowboys from Hell',v:'iWGvFCEjkuI'},
   {t:'5 Minutes Alone',a:'Pantera',al:'Far Beyond Driven',v:'qvPRJSTmGxs'},
   {t:'Mouth for War',a:'Pantera',al:'Vulgar Display of Power',v:'G3NQq1DpGTo'},
+  {t:'Killing In The Name',a:'Rage Against The Machine',al:'Rage Against The Machine',v:'bWXazVeUs00'},
+  {t:'Walk This Way',a:'Aerosmith',al:'Toys In The Attic',v:'4B_UYYPb-Gk'},
+  {t:'Civil War',a:"Guns N' Roses",al:'Use Your Illusion II',v:'7z5QqkgoeEk'},
+  {t:"Ain't Talkin' 'Bout Love",a:'Van Halen',al:'Van Halen',v:'9gIhNqaosq4'},
+  {t:'Come Out and Play',a:'The Offspring',al:'Smash',v:'NrI-UBIB9dE'},
+  {t:'Self Esteem',a:'The Offspring',al:'Smash',v:'aaMvHl1BSAQ'},
+  {t:'Enter Sandman',a:'Metallica',al:'Metallica (Black Album)',v:'CD-E4uGmKPM'},
+  {t:'Nothing Else Matters',a:'Metallica',al:'Metallica (Black Album)',v:'tAGnKpE4NCI'},
+  {t:'Whiskey In The Jar',a:'Metallica',al:'Garage Inc.',v:'QdS3bQNJimU'},
+  {t:'Seek & Destroy',a:'Metallica',al:"Kill 'Em All",v:'8jMF7VGHq9M'},
+  {t:'Pretty Fly (For A White Guy)',a:'The Offspring',al:'Americana',v:'XKdmFexA5CA'},
+  {t:"The Kids Aren't Alright",a:'The Offspring',al:'Americana',v:'KPgpKBK7xAY'},
+  {t:"Ain't No Rest for the Wicked",a:'Cage The Elephant',al:'Cage The Elephant',v:'qqfNkeMxMHc'},
+  {t:'Mr. Brightside',a:'The Killers',al:'Hot Fuss',v:'gGdGFtwCNBE'},
+  {t:'Could Have Been Me',a:'The Struts',al:'Everybody Wants',v:'tNu9JGJ2DP8'},
+  {t:'Take It On the Run',a:'REO Speedwagon',al:'Hi Infidelity',v:'LXSxkKpPVOY'},
+  {t:'Runaway',a:'Bon Jovi',al:'Bon Jovi',v:'IDJJ2jTdVK4'},
+  {t:'Bullet With Butterfly Wings',a:'The Smashing Pumpkins',al:'Mellon Collie And The Infinite Sadness',v:'NzG5-b36GV4'},
+  {t:'The Thing That Should Not Be',a:'Metallica',al:'Master of Puppets',v:'MBivf8nJb9s'},
+  {t:'My Hero',a:'Foo Fighters',al:'The Colour And The Shape',v:'EqPtz5qN7HM'},
+  {t:'You Could Be Mine',a:"Guns N' Roses",al:'Use Your Illusion II',v:'LTB1htCeIQk'},
+  {t:'Man in the Box',a:'Alice In Chains',al:'Facelift',v:'rNmyFD3OQTU'},
+  {t:'Smooth Criminal',a:'Alien Ant Farm',al:'Anthology',v:'vGCQAFWGWFw'},
+  {t:'When I Come Around',a:'Green Day',al:'Dookie',v:'yBCBqK8JQQU'},
+  {t:'Here Without You',a:'3 Doors Down',al:'Away From The Sun',v:'OQspFEXbNh8'},
+  {t:'Jeremy',a:'Pearl Jam',al:'Ten',v:'RA2vFDnbdV4'},
+  {t:'Kryptonite',a:'3 Doors Down',al:'The Better Life',v:'gd6obFABMKE'},
+  {t:'Everybody Wants To Rule The World',a:'Tears For Fears',al:'Songs From The Big Chair',v:'ST76gFPCN3k'},
+  {t:'Gone Away',a:'The Offspring',al:'Ixnay On The Hombre',v:'tCWaQeKkjXs'},
+  {t:'Last Resort',a:'Papa Roach',al:'Infest',v:'VVohqBBNGG4'},
+  {t:'All My Life',a:'Foo Fighters',al:'One By One',v:'jhgVpg2nPpU'},
+  {t:'Symphony Of Destruction',a:'Megadeth',al:'Countdown To Extinction',v:'q2EMWlFGhKU'},
+  {t:'Dirty Deeds Done Dirt Cheap',a:'AC/DC',al:'Dirty Deeds Done Dirt Cheap',v:'X3znXuKSXnk'},
+  {t:'Down with the Sickness',a:'Disturbed',al:'The Sickness',v:'BrsVGfWGKMg'},
+  {t:'Breed',a:'Nirvana',al:'Nevermind',v:'UTLsVDjyMmY'},
+  {t:'505',a:'Arctic Monkeys',al:'Favourite Worst Nightmare',v:'s4CNpPDP2pA'},
+  {t:'Do I Wanna Know?',a:'Arctic Monkeys',al:'AM',v:'bpOSxM0UIJ4'},
+  {t:'Freaks',a:'Surf Curse',al:'Freaks',v:'_bFXuLNBrHs'},
+  {t:'Everlong',a:'Foo Fighters',al:'The Colour And The Shape',v:'eBG7P-K-r1Y'},
+  {t:'Aerials',a:'System Of A Down',al:'Toxicity',v:'L-iepu3EtyE'},
+  {t:'By the Way',a:'Red Hot Chili Peppers',al:'By the Way',v:'KR1HfwTzAmE'},
+  {t:'Under the Bridge',a:'Red Hot Chili Peppers',al:'Blood Sugar Sex Magik',v:'glen_951HxQ'},
+  {t:'Fake It',a:'Seether',al:'Finding Beauty In Negative Spaces',v:'1nG_7eVJu90'},
+  {t:'Slither',a:'Velvet Revolver',al:'Contraband',v:'lMBmSJGX__4'},
+  {t:'Remedy',a:'Seether',al:'Karma and Effect',v:'gAqkKQV5sIA'},
+  {t:'Blurry',a:'Puddle Of Mudd',al:'Come Clean',v:'oUJHAGG9eRM'},
+  {t:'Song 2',a:'Blur',al:'Blur',v:'SSbBvKaM6sk'},
+  {t:'I Hate Everything About You',a:'Three Days Grace',al:'Three Days Grace',v:'Xjk6L6gHgqc'},
+  {t:'Duality',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'4MNANgBt_a0'},
+  {t:'B.Y.O.B.',a:'System Of A Down',al:'Mezmerize',v:'byU5PgfYAH4'},
+  {t:'Bodies',a:'Drowning Pool',al:'Sinner',v:'04F4xlWSFh0'},
+  {t:'About A Girl',a:'Nirvana',al:'Bleach',v:'DPLlXTdPRMY'},
+  {t:'Lonely Day',a:'System Of A Down',al:'Hypnotize',v:'FRD_1bEoYxY'},
+  {t:'Somebody Told Me',a:'The Killers',al:'Hot Fuss',v:'pCeKMcetZOI'},
+  {t:'Higher',a:'Creed',al:'Human Clay',v:'7xRBEMFSBQg'},
+  {t:'One Last Breath',a:'Creed',al:'Weathered',v:'W5KJsNi5ywY'},
+  {t:'Brain Stew',a:'Green Day',al:'Insomniac',v:'wGNBjRNguBo'},
+  {t:'Before I Forget',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'E0ozmU9cJDg'},
+  {t:'Raining Blood',a:'Slayer',al:'Reign In Blood',v:'lzqLmSO3JsM'},
+  {t:'Wait and Bleed',a:'Slipknot',al:'Slipknot',v:'H5BmEUTlBiE'},
+  {t:'Heaven and Hell',a:'Black Sabbath',al:'Heaven and Hell',v:'aOynk1Z38cA'},
+  {t:'Du hast',a:'Rammstein',al:'Sehnsucht',v:'W3q8Od5qJio'},
+  {t:'One Step Closer',a:'Linkin Park',al:'Hybrid Theory',v:'XmKSY9jE56c'},
+  {t:"You're Gonna Go Far, Kid",a:'The Offspring',al:'Rise And Fall, Rage And Grace',v:'SZvxH7UyS4Q'},
+  {t:"Why Don't You Get A Job",a:'The Offspring',al:'Americana',v:'AjNGAu1JFiI'},
+  {t:'Smash',a:'The Offspring',al:'Smash',v:'8RLQFdHIHBE'},
+  {t:'Painkiller',a:'Judas Priest',al:'Painkiller',v:'iSVBo7tkPWc'},
+  {t:'The Unforgiven',a:'Metallica',al:'Metallica (Black Album)',v:'Ckom3gf57Yw'},
+  {t:'Sad But True',a:'Metallica',al:'Metallica (Black Album)',v:'_enkHl4H_EU'},
+  {t:'Wherever I May Roam',a:'Metallica',al:'Metallica (Black Album)',v:'cFqQq1w08yc'},
+  {t:'Hardwired',a:'Metallica',al:'Hardwired...To Self-Destruct',v:'BO-PiBxTFo0'},
+  {t:'Harvester of Sorrow',a:'Metallica',al:'...And Justice for All',v:'z9mPRTKnNKQ'},
+  {t:'Whiplash',a:'Metallica',al:"Kill 'Em All",v:'O5ZkNKdyBHs'},
+  {t:'Don\'t Tread on Me',a:'Metallica',al:'Metallica (Black Album)',v:'cHf-47VhH1g'},
+  {t:'Die, Die My Darling',a:'Metallica',al:'Garage Inc.',v:'2ZSMCS25RvY'},
+  {t:'Lux Æterna',a:'Metallica',al:'72 Seasons',v:'qAqAGobRMTU'},
+  {t:'Turn The Page',a:'Metallica',al:'Garage Inc.',v:'nP3rJCR7Sew'},
+  {t:'Psychosocial',a:'Slipknot',al:'All Hope Is Gone',v:'0bVFpKgqSxI'},
+  {t:'Blackened',a:'Metallica',al:'...And Justice for All',v:'ovRlVSp4E_8'},
+  {t:'Battery',a:'Metallica',al:'Master of Puppets',v:'_cNQZtAQlAI'},
+  {t:'Animal I Have Become',a:'Three Days Grace',al:'One-X',v:'sZ-KVCN0mFQ'},
+  {t:'The Memory Remains',a:'Metallica',al:'Reload',v:'O0ETLRF_CkU'},
+  {t:'Shout at the Devil',a:'Mötley Crüe',al:'Shout At The Devil',v:'5o2bT9_nsFQ'},
+  {t:'Until It Sleeps',a:'Metallica',al:'Load',v:'dlbW2dHZLr4'},
+  {t:'Would?',a:'Alice In Chains',al:'Dirt',v:'3vGMmHkJtFQ'},
+  {t:'Freak On a Leash',a:'Korn',al:'Follow The Leader',v:'LlGGkHXhZJQ'},
+  {t:'How You Remind Me',a:'Nickelback',al:'Silver Side Up',v:'1cQh1ccqu8M'},
+  {t:'21 Guns',a:'Green Day',al:'21st Century Breakdown',v:'iGSMHkCXqKY'},
+  {t:'Good Riddance (Time of Your Life)',a:'Green Day',al:'Nimrod',v:'CnQ8N1KgrGk'},
+  {t:'Wake Me up When September Ends',a:'Green Day',al:'American Idiot',v:'NU9nuMJSNpY'},
+  {t:'Holiday',a:'Green Day',al:'American Idiot',v:'0UFXNB-GNQ8'},
+  {t:'Should I Stay or Should I Go',a:'The Clash',al:'Combat Rock',v:'BN1WwnEDWAM'},
+  {t:'Break Stuff',a:'Limp Bizkit',al:'Significant Other',v:'ZpUYjpKg9KY'},
+  {t:"Rollin' (Air Raid Vehicle)",a:'Limp Bizkit',al:'Chocolate Starfish And The Hot Dog Flavored Water',v:'VfBgs-1SKNQ'},
+  {t:'No More Tears',a:'Ozzy Osbourne',al:'No More Tears',v:'mPBwR5VBU6E'},
+  {t:'Hellraiser',a:'Ozzy Osbourne',al:'No More Tears',v:'zGTqx5zJdXQ'},
+  {t:'Say It Ain\'t So',a:'Weezer',al:'Weezer (Blue Album)',v:'Fm7Gvr9eOSI'},
+  {t:'Crawling',a:'Linkin Park',al:'Hybrid Theory',v:'Gd9OhYroLN0'},
+  {t:'Numb',a:'Linkin Park',al:'Meteora',v:'kXYiU_JCYtU'},
+  {t:'Riot',a:'Three Days Grace',al:'One-X',v:'4m7LkJKtN5I'},
+  {t:'The Emptiness Machine',a:'Linkin Park',al:'From Zero',v:'P5n9CWLR4wo'},
+  {t:'Take A Look Around',a:'Limp Bizkit',al:'Chocolate Starfish And The Hot Dog Flavored Water',v:'uH5GCN0VeX0'},
+  {t:'Savin\' Me',a:'Nickelback',al:'All The Right Reasons',v:'04F4xlWSFh0'},
+  {t:'Faint',a:'Linkin Park',al:'Meteora',v:'LYU-8IFcDPw'},
+  {t:'Drive',a:'Incubus',al:'Make Yourself',v:'qlBLFMD0EXg'},
+  {t:'Wish You Were Here',a:'Incubus',al:'Morning View',v:'M6dPQb0bGCc'},
+  {t:'Runaway',a:'Linkin Park',al:'Hybrid Theory',v:'CFNHerTBFdE'},
+  {t:'The Red',a:'Chevelle',al:"Wonder What's Next",v:'t_-KMEXFrUQ'},
+  {t:'Lying from You',a:'Linkin Park',al:'Meteora',v:'uHVEcClWiRQ'},
+  {t:'In the End',a:'Linkin Park',al:'Hybrid Theory',v:'eVTXPUF4Oz4'},
+  {t:'Coming Undone',a:'Korn',al:'See You On the Other Side',v:'oGTtBNHhZBo'},
+  {t:'Fly Away',a:'Lenny Kravitz',al:'5',v:'9ILkPPeUCNA'},
+  {t:"It's Been Awhile",a:'Staind',al:'Break the Cycle',v:'FSsRIFcJPzU'},
+  {t:'My Sacrifice',a:'Creed',al:'Weathered',v:'5FmFsZd1GSo'},
+  {t:'Smells Like Teen Spirit',a:'Nirvana',al:'Nevermind',v:'hTWKbfoikeg'},
+  {t:'Nookie',a:'Limp Bizkit',al:'Significant Other',v:'lJvjgKxhv58'},
+  {t:'My Generation',a:'Limp Bizkit',al:'Chocolate Starfish And The Hot Dog Flavored Water',v:'IhXtJiSZE6k'},
+  {t:'Twisted Transistor',a:'Korn',al:'See You On the Other Side',v:'JVfVmZujFOI'},
+  {t:'The Blister Exists',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'fVgBxFCgWKQ'},
+  {t:'Dead Memories',a:'Slipknot',al:'All Hope Is Gone',v:'HG7Sm87Pf3A'},
+  {t:'Unholy Confessions',a:'Avenged Sevenfold',al:'Waking The Fallen',v:'lcO1RGOkKJM'},
+  {t:'(sic)',a:'Slipknot',al:'Slipknot',v:'bMBmSJGX__4'},
+  {t:'Papercut',a:'Linkin Park',al:'Hybrid Theory',v:'vjVkXlxsO8Q'},
+  {t:'Pushing Me Away',a:'Linkin Park',al:'Hybrid Theory',v:'r2z8u5_bExs'},
+  {t:'Custer',a:'Slipknot',al:'.5: The Gray Chapter',v:'2h8X03_f6mc'},
+  {t:'My Way',a:'Limp Bizkit',al:'Chocolate Starfish And The Hot Dog Flavored Water',v:'4QLq1tqewGk'},
+  {t:'My Own Summer (Shove It)',a:'Deftones',al:'Around the Fur',v:'qPF5Jg-Ycrs'},
+  {t:'As I Am',a:'Dream Theater',al:'Train of Thought',v:'ksllAgbYHV0'},
+  {t:'Orion',a:'Metallica',al:'Master of Puppets',v:'g4BlVH6hBnU'},
+  {t:'Given Up',a:'Linkin Park',al:'Minutes to Midnight',v:'PQF0SFXmMFw'},
+  {t:'Of Wolf and Man',a:'Metallica',al:'Metallica (Black Album)',v:'SgPRkNHk08U'},
+  {t:'Hellraiser',a:'Ozzy Osbourne / Motörhead',al:'No More Tears (30th Anniversary)',v:'zGTqx5zJdXQ'},
+  {t:'Rape Me',a:'Nirvana',al:'In Utero',v:'7O9KxEH8jEk'},
+  {t:'Even If It Kills Me',a:'Papa Roach',al:'Even If It Kills Me',v:'WJA3FuGWDls'},
+  {t:'Only One',a:'Slipknot',al:'Slipknot',v:'3g0jn0X9dRU'},
+  {t:'Before I Forget',a:'Slipknot',al:'Vol. 3: The Subliminal Verses',v:'fVgBxFCgWKQ'}
 ];
 
-// ── STATE ────────────────────────────────────────────────────────────────────
 var musicCurrentIndex = -1;
-var musicIsPlaying = false;
-var musicYTPlayer = null;
-var musicYTReady = false;
 var musicFilteredList = null;
-var musicSyncRef = null;
-var musicSyncListener = null;
-var musicIsDM = false;
-var musicIgnoreSync = false; // prevent feedback loop when we push state
 
-// ── FIREBASE SYNC ─────────────────────────────────────────────────────────────
-function musicFbRef() {
-  var campId = window._activeCampaignId || 'global';
-  return db.ref('music/' + campId);
-}
-
-function musicStartSync() {
-  if (musicSyncRef) { musicSyncRef.off('value', musicSyncListener); }
-  musicSyncRef = musicFbRef();
-  musicSyncListener = musicSyncRef.on('value', function(snap) {
-    var data = snap.val();
-    if (!data) return;
-    if (musicIgnoreSync) return;
-    // Update sync status bar
-    var dot = document.getElementById('musicSyncDot');
-    var lbl = document.getElementById('musicSyncLabel');
-    var dmLbl = document.getElementById('musicDMLabel');
-    if (dot) dot.className = 'music-sync-dot live';
-    if (lbl) lbl.textContent = '🔴 Live — synced with party';
-    if (dmLbl) dmLbl.textContent = data.dm ? 'DM: ' + data.dm : '';
-    // If we are NOT DM, follow the DM's state
-    if (!musicIsDM) {
-      if (data.idx !== undefined && data.idx !== musicCurrentIndex) {
-        musicLoadTrack(data.idx, false);
-      }
-      if (data.playing !== undefined) {
-        if (data.playing && musicYTReady && musicYTPlayer) {
-          try { musicYTPlayer.playVideo(); } catch(e){}
-        } else if (!data.playing && musicYTReady && musicYTPlayer) {
-          try { musicYTPlayer.pauseVideo(); } catch(e){}
-        }
-        musicIsPlaying = data.playing;
-        musicUpdatePlayBtn();
-      }
-    }
-  });
-}
-
-function musicPushState() {
-  if (!musicIsDM) return;
-  musicIgnoreSync = true;
-  var user = window._currentUser;
-  musicFbRef().set({
-    idx: musicCurrentIndex,
-    playing: musicIsPlaying,
-    ts: Date.now(),
-    dm: user ? user.username : 'DM'
-  }).then(function() {
-    setTimeout(function(){ musicIgnoreSync = false; }, 500);
-  });
-}
-
-// ── INIT ─────────────────────────────────────────────────────────────────────
 function musicInit() {
-  // Figure out if current user is DM of active campaign
-  var campId = window._activeCampaignId;
-  if (campId && window._campaigns) {
-    var camp = window._campaigns[campId];
-    if (camp && window._currentUser && camp.owner === window._currentUser.username) {
-      musicIsDM = true;
-    }
-  }
-  var dmLbl = document.getElementById('musicDMLabel');
-  if (dmLbl) dmLbl.textContent = musicIsDM ? '(You are DM — you control playback)' : '(Follow DMs playback)';
   renderMusicList(null);
-  musicStartSync();
-  // Load YouTube IFrame API if not yet loaded
-  if (!window.YT) {
-    var tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-  } else if (window.YT && window.YT.Player) {
-    musicYTReady = true;
-  }
 }
 
-// YouTube IFrame API callback (global)
-function onYouTubeIframeAPIReady() {
-  musicYTReady = true;
-  // If a track was selected while API was loading, load it now
-  if (musicCurrentIndex >= 0) musicLoadTrack(musicCurrentIndex, false);
-}
-
-// ── PLAYLIST RENDERING ───────────────────────────────────────────────────────
 function musicThumb(v) {
   return 'https://img.youtube.com/vi/' + v + '/mqdefault.jpg';
 }
@@ -6897,18 +6808,15 @@ function renderMusicList(filter) {
   var sub = document.getElementById('musicSidebarSub');
   if (!list) return;
   var items = filter
-    ? PLAYLIST.filter(function(s) {
-        var q = filter.toLowerCase();
-        return s.t.toLowerCase().includes(q) || s.a.toLowerCase().includes(q) || (s.al||'').toLowerCase().includes(q);
-      })
+    ? PLAYLIST.filter(function(s){ var q = filter.toLowerCase(); return s.t.toLowerCase().includes(q) || s.a.toLowerCase().includes(q) || (s.al||'').toLowerCase().includes(q); })
     : PLAYLIST;
   musicFilteredList = items;
   if (sub) sub.textContent = items.length + ' songs';
-  list.innerHTML = items.map(function(s) {
+  list.innerHTML = items.map(function(s, i) {
     var realIdx = PLAYLIST.indexOf(s);
     var active = realIdx === musicCurrentIndex;
-    return '<div class="music-item' + (active ? ' active' : '') + '" onclick="musicPlay(' + realIdx + ')">' +
-      '<img class="music-thumb" src="' + musicThumb(s.v) + '" onerror="this.style.opacity='3'">' +
+    return '<div class="music-item' + (active?' active':'') + '" onclick="musicPlay(' + realIdx + ')">' +
+      '<img class="music-thumb" src="' + musicThumb(s.v) + '" onerror="this.src=\'\'">' +
       '<div class="music-item-info">' +
         '<div class="music-item-title">' + esc(s.t) + '</div>' +
         '<div class="music-item-artist">' + esc(s.a) + '</div>' +
@@ -6916,124 +6824,52 @@ function renderMusicList(filter) {
   }).join('');
 }
 
-function musicFilter(val) { renderMusicList(val || null); }
-
-// ── PLAYBACK ─────────────────────────────────────────────────────────────────
-function musicPlay(idx) {
-  if (!musicIsDM) { showToast('Only the DM can control music', 'error'); return; }
-  musicLoadTrack(idx, true);
-  musicIsPlaying = true;
-  musicPushState();
+function musicFilter(val) {
+  renderMusicList(val || null);
 }
 
-function musicLoadTrack(idx, autoplay) {
+function musicPlay(idx) {
   musicCurrentIndex = idx;
   var s = PLAYLIST[idx];
   if (!s) return;
-
-  // Update info panel
-  var artWrap = document.getElementById('musicArtWrap');
-  if (artWrap) {
-    artWrap.innerHTML = '<img class="music-album-art-img" src="' + musicThumb(s.v) + '" onerror="this.style.opacity='.2'">';
+  // Update now-playing display
+  var titleEl = document.getElementById('musicTrackTitle');
+  var artistEl = document.getElementById('musicTrackArtist');
+  var albumEl = document.getElementById('musicTrackAlbum');
+  var imgEl = document.getElementById('musicAlbumImg');
+  if (titleEl) titleEl.textContent = s.t;
+  if (artistEl) artistEl.textContent = s.a;
+  if (albumEl) albumEl.textContent = s.al || '';
+  if (imgEl) { imgEl.src = musicThumb(s.v); imgEl.onerror = function(){ this.src=''; }; }
+  // Update mini player in profile
+  var miniThumb = document.getElementById('miniThumb');
+  var miniTitle = document.getElementById('miniTitle');
+  if (miniThumb) { miniThumb.src = musicThumb(s.v); miniThumb.style.display = ''; }
+  if (miniTitle) miniTitle.textContent = s.t + ' — ' + s.a;
+  // Load YouTube embed
+  var frame = document.getElementById('musicYTFrame');
+  var iframe = document.getElementById('musicYTIframe');
+  if (iframe && frame) {
+    frame.style.display = 'block';
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + s.v + '?autoplay=1&rel=0&modestbranding=1';
   }
-  var el = function(id, val) { var e = document.getElementById(id); if(e) e.textContent = val; };
-  el('musicTrackTitle', s.t);
-  el('musicTrackArtist', s.a);
-  el('musicTrackAlbum', s.al || '');
-
-  // Update mini player
-  var mt = document.getElementById('miniThumb');
-  var mn = document.getElementById('miniTitle');
-  if (mt) { mt.src = musicThumb(s.v); mt.style.display = ''; }
-  if (mn) mn.textContent = s.t + ' — ' + s.a;
-
-  // Update play button
-  var pb = document.getElementById('musicPlayBtn');
-  if (pb) { pb.disabled = false; pb.innerHTML = '&#9646;&#9646; Pause'; }
-
-  // Create or update the YouTube player
-  var box = document.getElementById('musicYTBox');
-  if (!box) return;
-
-  if (!musicYTReady || !window.YT || !window.YT.Player) {
-    // API not ready yet — show fallback iframe
-    box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + s.v +
-      '?autoplay=' + (autoplay?1:0) + '&rel=0&modestbranding=1" allow="autoplay;encrypted-media" allowfullscreen style="width:100%;height:100%;border:none;display:block;"></iframe>';
-    return;
-  }
-
-  // Destroy old player if exists
-  if (musicYTPlayer) {
-    try { musicYTPlayer.destroy(); } catch(e){}
-    musicYTPlayer = null;
-  }
-  box.innerHTML = '<div id="musicYTPlayerDiv"></div>';
-
-  musicYTPlayer = new YT.Player('musicYTPlayerDiv', {
-    width: '100%',
-    height: '100%',
-    videoId: s.v,
-    playerVars: {
-      autoplay: autoplay ? 1 : 0,
-      rel: 0,
-      modestbranding: 1,
-      origin: window.location.origin || 'null'
-    },
-    events: {
-      onReady: function(e) {
-        if (autoplay) { try { e.target.playVideo(); } catch(x){} }
-      },
-      onStateChange: function(e) {
-        if (e.data === YT.PlayerState.ENDED) { musicNext(); }
-        if (e.data === YT.PlayerState.PLAYING) { musicIsPlaying = true; musicUpdatePlayBtn(); }
-        if (e.data === YT.PlayerState.PAUSED)  { musicIsPlaying = false; musicUpdatePlayBtn(); }
-      },
-      onError: function(e) {
-        // Video blocked — show fallback with YouTube link
-        box.innerHTML =
-          '<div class="music-unavail">' +
-            '<div class="music-unavail-icon">&#9888;</div>' +
-            '<div class="music-unavail-txt">Playback blocked by label.<br>Open on YouTube to listen.</div>' +
-            '<a class="music-unavail-link" href="https://www.youtube.com/watch?v=' + s.v + '" target="_blank">&#9654; Open on YouTube</a>' +
-          '</div>';
-      }
-    }
-  });
-
-  // Re-render list for active highlight
+  // Re-render list to show active state
   renderMusicList(document.getElementById('musicSearch') ? document.getElementById('musicSearch').value || null : null);
 }
 
-function musicTogglePlay() {
-  if (!musicIsDM) { showToast('Only the DM can control music', 'error'); return; }
-  if (!musicYTPlayer) { if (musicCurrentIndex < 0) musicPlay(0); return; }
-  if (musicIsPlaying) {
-    try { musicYTPlayer.pauseVideo(); } catch(e){}
-    musicIsPlaying = false;
-  } else {
-    try { musicYTPlayer.playVideo(); } catch(e){}
-    musicIsPlaying = true;
-  }
-  musicUpdatePlayBtn();
-  musicPushState();
-}
-
-function musicUpdatePlayBtn() {
-  var pb = document.getElementById('musicPlayBtn');
-  if (!pb) return;
-  pb.innerHTML = musicIsPlaying ? '&#9646;&#9646; Pause' : '&#9654; Play';
-}
-
 function musicNext() {
-  if (musicCurrentIndex < 0) { musicPlay(0); return; }
   var next = (musicCurrentIndex + 1) % PLAYLIST.length;
   musicPlay(next);
 }
 
 function musicPrev() {
-  if (musicCurrentIndex < 0) { musicPlay(0); return; }
   var prev = (musicCurrentIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
   musicPlay(prev);
+}
+
+function musicReplay() {
+  if (musicCurrentIndex >= 0) musicPlay(musicCurrentIndex);
+  else musicPlay(0);
 }
 
 // ══════════════════════════════════════════════════════
