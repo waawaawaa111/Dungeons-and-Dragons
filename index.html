@@ -650,66 +650,10 @@ body.map-view #page-map{height:calc(100vh - 52px)!important;width:100vw!importan
 .enc-deadly{background:rgba(139,0,0,.3);color:#fc8181;border:1px solid #8b0000;animation:pulse-border .8s ease infinite;}
 
 /* ── DYNAMIC THEME ── */
-/* ── THEMES (time-of-day auto + manual) ── */
-body.theme-dawn  {--bg:#0d0808;--bg2:#140c0c;--bg3:#1a1010;--bg4:#221414;--border:#2e1a1a;--red:#e05252;--red-dark:#c04040;--red-dim:rgba(224,82,82,.15);}
-body.theme-dusk  {--bg:#080810;--bg2:#0c0c1a;--bg3:#101020;--bg4:#141428;--border:#1e1e30;--red:#7b68ee;--red-dark:#6050cc;--red-dim:rgba(123,104,238,.15);}
-body.theme-night {--bg:#050508;--bg2:#09090f;--bg3:#0d0d18;--bg4:#111122;--border:#181825;--red:#e53e3e;--red-dark:#c53030;--red-dim:rgba(229,62,62,.15);}
-body.theme-day   {--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#222222;--border:#2a2a2a;--red:#e53e3e;--red-dark:#c53030;--red-dim:rgba(229,62,62,.15);}
-body.theme-forest{--bg:#060d08;--bg2:#0b1510;--bg3:#101c15;--bg4:#15241a;--border:#1a2e1f;--red:#38a169;--red-dark:#2d8556;--red-dim:rgba(56,161,105,.15);}
-body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--border:#2e2b22;--red:#d4a017;--red-dark:#b8860b;--red-dim:rgba(212,160,23,.15);}
-/* ── ANIMATED TOKEN ── */
-@keyframes token-pulse{0%,100%{box-shadow:0 0 0 0 rgba(229,62,62,.5)}50%{box-shadow:0 0 0 8px rgba(229,62,62,0)}}
-@keyframes token-glow {0%,100%{filter:drop-shadow(0 0 3px var(--red))}50%{filter:drop-shadow(0 0 10px var(--red))}}
-.token-animated{animation:token-pulse 2s ease infinite;}
-.token-glowing {animation:token-glow  1.5s ease infinite;}
-/* ── PROFILE BADGE / TITLE ── */
-.profile-title-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;font-family:'Cinzel',serif;}
-.ptb-dm       {background:rgba(139,0,0,.3);   color:#fc8181;border:1px solid rgba(139,0,0,.5);}
-.ptb-slayer   {background:rgba(212,160,23,.2); color:#d4a017;border:1px solid rgba(212,160,23,.4);}
-.ptb-veteran  {background:rgba(74,124,89,.25); color:#5cb88a;border:1px solid rgba(74,124,89,.5);}
-.ptb-sage     {background:rgba(123,104,238,.2);color:#9f8ff7;border:1px solid rgba(123,104,238,.4);}
-.ptb-hero     {background:rgba(229,62,62,.15); color:var(--red);border:1px solid rgba(229,62,62,.3);}
-.ptb-novice   {background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
-/* ── PET SKIN SWATCHES ── */
-.pet-skin-swatch{width:36px;height:36px;border-radius:8px;cursor:pointer;border:2px solid transparent;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .15s;}
-.pet-skin-swatch:hover,.pet-skin-swatch.active{border-color:var(--red);background:var(--red-dim);}
-/* ── XP BAR (social) ── */
-.social-xp-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:4px 0 8px;}
-.social-xp-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-dark));border-radius:3px;transition:width .6s;}
-/* ── ANALYTICS CARDS ── */
-.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;}
-.analytics-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
-.analytics-val{font-family:'Cinzel',serif;font-size:28px;font-weight:700;color:var(--red);}
-.analytics-label{font-size:12px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
-.analytics-sub{font-size:11px;color:var(--dim);margin-top:2px;}
-/* ── PREMIUM PAGE ── */
-.premium-hero{background:linear-gradient(135deg,#0d0d0d 0%,#1a0808 50%,#0d0d0d 100%);border:1px solid rgba(229,62,62,.3);border-radius:16px;padding:48px 40px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden;}
-.premium-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(229,62,62,.12),transparent 60%);pointer-events:none;}
-.premium-hero-title{font-family:'Cinzel',serif;font-size:36px;font-weight:700;background:linear-gradient(135deg,#e53e3e,#ff8c00,#e53e3e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;}
-.premium-hero-sub{font-size:17px;color:var(--muted);max-width:500px;margin:0 auto 28px;line-height:1.6;}
-.premium-price{font-family:'Cinzel',serif;font-size:42px;font-weight:700;color:var(--text);}
-.premium-price-sub{font-size:14px;color:var(--muted);}
-.premium-cta{background:linear-gradient(135deg,#e53e3e,#c53030);color:white;border:none;padding:14px 36px;border-radius:12px;cursor:pointer;font-family:'Cinzel',serif;font-size:17px;letter-spacing:.05em;transition:all .2s;box-shadow:0 4px 20px rgba(229,62,62,.3);}
-.premium-cta:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(229,62,62,.4);}
-.premium-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:32px;}
-.premium-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden;}
-.premium-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent);}
-.premium-card-icon{font-size:28px;margin-bottom:12px;}
-.premium-card-title{font-family:'Cinzel',serif;font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text);}
-.premium-card-desc{font-size:14px;color:var(--muted);line-height:1.6;}
-.premium-lock-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;background:linear-gradient(90deg,rgba(229,62,62,.2),rgba(255,140,0,.15));border:1px solid rgba(229,62,62,.3);border-radius:20px;font-size:11px;color:#ffa94d;margin-top:10px;font-family:'Cinzel',serif;}
-.premium-compare{width:100%;border-collapse:collapse;font-size:14px;}
-.premium-compare th{padding:12px 16px;text-align:left;font-family:'Cinzel',serif;font-size:13px;border-bottom:1px solid var(--border);color:var(--muted);}
-.premium-compare td{padding:10px 16px;border-bottom:1px solid rgba(42,42,42,.4);color:var(--text);}
-.premium-compare tr:last-child td{border-bottom:none;}
-.premium-compare .check{color:#5cb88a;font-size:16px;}
-.premium-compare .cross{color:var(--dim);font-size:16px;}
-.premium-compare .premium-col{color:#ffa94d;}
-.theme-picker{display:flex;gap:10px;flex-wrap:wrap;}
-.theme-swatch{width:44px;height:44px;border-radius:10px;cursor:pointer;border:2px solid transparent;position:relative;transition:all .15s;overflow:hidden;}
-.theme-swatch:hover{border-color:var(--red);transform:scale(1.08);}
-.theme-swatch.active{border-color:var(--red);box-shadow:0 0 0 2px rgba(229,62,62,.4);}
-.theme-swatch-label{font-size:10px;color:var(--muted);text-align:center;margin-top:4px;}
+body.theme-dawn{--bg:#0d0808;--bg2:#140c0c;--bg3:#1a1010;}
+body.theme-dusk{--bg:#080810;--bg2:#0c0c1a;--bg3:#101020;}
+body.theme-night{--bg:#050508;--bg2:#09090f;--bg3:#0d0d18;}
+body.theme-day{--bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;}
 
 /* ── TYPING INDICATOR ── */
 .typing-indicator{display:none;align-items:center;gap:4px;padding:6px 12px;font-size:12px;color:var(--muted);}
@@ -802,7 +746,6 @@ body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--borde
   <button class="nav-item" id="nav-tools" onclick="navigate('tools')">&#9881; DM Tools</button>
   <button class="nav-item" id="nav-dmai" onclick="navigate('dmai')" style="background:linear-gradient(135deg,rgba(229,62,62,.2),rgba(139,0,139,.2));border-color:rgba(229,62,62,.4);color:var(--red);">&#9670; DM AI</button>
   <button class="nav-item" id="nav-admin" onclick="navigate('admin')">&#128737; Admin</button>
-  <button class="nav-item" id="nav-premium" onclick="navigate('premium')" style="margin-left:auto;background:linear-gradient(135deg,rgba(229,62,62,.25),rgba(255,140,0,.15));border:1px solid rgba(229,62,62,.4);color:#ffa94d;border-radius:8px;">&#9733; Premium</button>
   <button class="nav-item" id="pwaInstallBtn" onclick="pwaInstall()" style="display:none;margin-left:auto;background:var(--red);color:white;border-radius:6px;padding:6px 12px;font-size:13px;">&#8659; Install</button>
 </nav>
 
@@ -981,55 +924,6 @@ body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--borde
     <div class="profile-field-label">Friends</div>
     <div id="friendsList"><div style="color:var(--dim);font-size:13px;padding:8px 0">No friends yet. Add by Dungeon Number!</div></div>
   </div>
-  <!-- PROFILE TITLE / BADGE -->
-  <div class="profile-field">
-    <div class="profile-field-label">Title</div>
-    <div id="profileTitleBadge" style="margin-bottom:6px;"></div>
-    <select class="form-select" id="profileTitleSelect" onchange="saveProfileTitle()">
-      <option value="novice">Novice Adventurer</option>
-      <option value="hero">Hero of the Realm</option>
-      <option value="dm">Dungeon Master</option>
-      <option value="slayer">Dragon Slayer</option>
-      <option value="veteran">Battle-Hardened Veteran</option>
-      <option value="sage">Arcane Sage</option>
-    </select>
-  </div>
-  <!-- THEME PICKER -->
-  <div class="profile-field">
-    <div class="profile-field-label">Theme</div>
-    <div class="theme-picker" id="themePicker">
-      <div>
-        <div class="theme-swatch active" id="tsw-night" style="background:linear-gradient(135deg,#050508,#0d0d18);" onclick="setManualTheme('night')" title="Night (Default)"></div>
-        <div class="theme-swatch-label">Night</div>
-      </div>
-      <div>
-        <div class="theme-swatch" id="tsw-dawn" style="background:linear-gradient(135deg,#140c0c,#1a1010);" onclick="setManualTheme('dawn')" title="Blood Dawn"></div>
-        <div class="theme-swatch-label">Dawn</div>
-      </div>
-      <div>
-        <div class="theme-swatch" id="tsw-dusk" style="background:linear-gradient(135deg,#0c0c1a,#101020);" onclick="setManualTheme('dusk')" title="Arcane Dusk"></div>
-        <div class="theme-swatch-label">Dusk</div>
-      </div>
-      <div>
-        <div class="theme-swatch" id="tsw-forest" style="background:linear-gradient(135deg,#0b1510,#101c15);" onclick="setManualTheme('forest')" title="Forest Green"></div>
-        <div class="theme-swatch-label">Forest</div>
-      </div>
-      <div>
-        <div class="theme-swatch" id="tsw-stone" style="background:linear-gradient(135deg,#161410,#1c1a15);" onclick="setManualTheme('stone')" title="Dungeon Stone"></div>
-        <div class="theme-swatch-label">Stone</div>
-      </div>
-    </div>
-  </div>
-  <!-- XP & LEVEL -->
-  <div class="profile-field">
-    <div class="profile-field-label">Adventurer Level</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-      <span style="font-family:'Cinzel',serif;font-size:13px;color:var(--text);">Level <span id="profileLevelNum">1</span></span>
-      <span style="font-size:12px;color:var(--muted);"><span id="profileXPNum">0</span> / <span id="profileXPNext">100</span> XP</span>
-    </div>
-    <div class="social-xp-bar"><div class="social-xp-fill" id="profileXPBar" style="width:0%"></div></div>
-    <div style="font-size:12px;color:var(--dim);">Earn XP by playing sessions, rolling crits, and completing quests.</div>
-  </div>
   <div class="profile-field">
     <div class="profile-field-label">Race</div>
     <select class="form-select" id="profileRace" onchange="saveProfileRace()">
@@ -1177,15 +1071,7 @@ body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--borde
       <button class="btn-secondary" id="cdInviteBtn" onclick="copyInviteLink()" style="display:none">&#128279; Invite Link</button>
       <button class="btn-secondary" id="cdJoinBtn" style="display:none" onclick="joinCampaign()">+ Join Campaign</button>
     </div>
-    <!-- CAMPAIGN DETAIL TABS -->
-    <div class="tab-row" style="margin-bottom:16px;">
-      <button class="tab-btn active" id="cdTabPlayers"   onclick="switchCdTab('players')">&#128101; Players</button>
-      <button class="tab-btn"        id="cdTabAnalytics" onclick="switchCdTab('analytics')">&#128202; Analytics</button>
-      <button class="tab-btn"        id="cdTabLog"       onclick="switchCdTab('log')">&#128221; Session Log</button>
-    </div>
-
-    <!-- PLAYERS TAB -->
-    <div id="cdTabContentPlayers" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
       <div class="section-card">
         <div class="section-title">&#128101; Players</div>
         <div id="cdPlayersList"></div>
@@ -1202,31 +1088,6 @@ body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--borde
       <div class="section-card">
         <div class="section-title">&#128221; Session Notes</div>
         <textarea id="cdSessionNotes" class="form-textarea" placeholder="Write session notes here — visible to all players..." style="min-height:120px;" oninput="saveSessionNotes()"></textarea>
-      </div>
-    </div>
-
-    <!-- ANALYTICS TAB -->
-    <div id="cdTabContentAnalytics" style="display:none;margin-bottom:16px;">
-      <div class="analytics-grid" id="cdAnalyticsGrid">
-        <div class="analytics-card"><div style="font-size:24px;margin-bottom:6px">🎲</div><div class="analytics-val">0</div><div class="analytics-label">Sessions</div></div>
-        <div class="analytics-card"><div style="font-size:24px;margin-bottom:6px">⚡</div><div class="analytics-val">0</div><div class="analytics-label">Critical Hits</div></div>
-        <div class="analytics-card"><div style="font-size:24px;margin-bottom:6px">💀</div><div class="analytics-val">0</div><div class="analytics-label">Deaths</div></div>
-        <div class="analytics-card"><div style="font-size:24px;margin-bottom:6px">🌟</div><div class="analytics-val">0</div><div class="analytics-label">Heroic Moments</div></div>
-      </div>
-      <div class="section-card">
-        <div class="section-title">&#127941; Player Leaderboard</div>
-        <div id="cdLeaderboard"><div class="empty-state" style="padding:20px"><div style="color:var(--dim);font-size:14px">No events yet. Log events in the Session Log tab!</div></div></div>
-      </div>
-    </div>
-
-    <!-- SESSION LOG TAB -->
-    <div id="cdTabContentLog" style="display:none;margin-bottom:16px;">
-      <div class="section-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div class="section-title" style="margin:0;">&#128221; Session Log</div>
-          <button class="btn-primary" style="padding:7px 14px;font-size:13px;" onclick="logNewEvent()">+ Log Event</button>
-        </div>
-        <div id="cdSessionLog"><div class="empty-state" style="padding:24px;"><div class="empty-icon">&#128221;</div><div>No events logged yet.<br><span style="color:var(--dim);font-size:13px;">Track crits, deaths, and heroic moments.</span></div></div></div>
       </div>
     </div>
     <!-- INITIATIVE TRACKER -->
@@ -2443,87 +2304,6 @@ body.theme-stone {--bg:#0e0d0b;--bg2:#161410;--bg3:#1c1a15;--bg4:#23201a;--borde
     </div>
     <button class="auth-btn" onclick="saveCsAvatar()">Save Portrait</button>
   </div>
-  <!-- PREMIUM PAGE -->
-  <div class="page" id="page-premium">
-    <div class="premium-hero">
-      <div style="font-size:48px;margin-bottom:16px;">&#9733;</div>
-      <div class="premium-hero-title">D&amp;D Manager Premium</div>
-      <div class="premium-hero-sub">Cloud saves, unlimited characters, advanced maps, and everything your campaign needs — from anywhere, on any device.</div>
-      <div style="margin-bottom:24px;">
-        <div class="premium-price">$4.99 <span style="font-size:16px;color:var(--muted);">/ month</span></div>
-        <div class="premium-price-sub">or $39.99/year — save 33%</div>
-      </div>
-      <button class="premium-cta" onclick="showToast('Premium coming soon — stay tuned!','success')">&#9733; Upgrade to Premium</button>
-    </div>
-
-    <div class="premium-grid">
-      <div class="premium-card">
-        <div class="premium-card-icon">&#9729;</div>
-        <div class="premium-card-title">Cloud Saves</div>
-        <div class="premium-card-desc">Campaigns, characters, and maps saved to the cloud. Access everything from any browser or device — nothing lost if you clear your cache.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-      <div class="premium-card">
-        <div class="premium-card-icon">&#128249;</div>
-        <div class="premium-card-title">Full Session History</div>
-        <div class="premium-card-desc">Complete timeline of every session — who did what, when, and how. Auto-generates a recap your players can read before next session.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-      <div class="premium-card">
-        <div class="premium-card-icon">&#128444;</div>
-        <div class="premium-card-title">Map Gallery</div>
-        <div class="premium-card-desc">Save unlimited maps with auto-generated thumbnails. Organize by campaign, tag by biome, and share directly with players via link.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-      <div class="premium-card">
-        <div class="premium-card-icon">&#128100;</div>
-        <div class="premium-card-title">Character Vault</div>
-        <div class="premium-card-desc">Unlimited characters with full portrait uploads, version history, and cross-campaign sharing. Never lose a character sheet again.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-      <div class="premium-card">
-        <div class="premium-card-icon">&#127760;</div>
-        <div class="premium-card-title">Custom Campaign URLs</div>
-        <div class="premium-card-desc">Share your campaign with a clean link like <code style="color:var(--red);font-size:12px;">campaign-dnd.app/join/my-epic-campaign</code>. Players join with one tap.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-      <div class="premium-card">
-        <div class="premium-card-icon">&#127881;</div>
-        <div class="premium-card-title">Advanced AI (Unlimited)</div>
-        <div class="premium-card-desc">Unlimited DM AI messages, AI-generated encounter tables tuned to your world, NPC memory across sessions, and AI session recaps.</div>
-        <div class="premium-lock-badge">&#128274; Premium</div>
-      </div>
-    </div>
-
-    <!-- COMPARISON TABLE -->
-    <div class="section-card" style="margin-bottom:32px;">
-      <div class="section-title" style="margin-bottom:20px;">&#128203; Free vs Premium</div>
-      <table class="premium-compare">
-        <thead>
-          <tr>
-            <th style="width:50%">Feature</th>
-            <th>Free</th>
-            <th class="premium-col">&#9733; Premium</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Campaigns</td><td>Unlimited</td><td class="premium-col">Unlimited + Cloud Sync</td></tr>
-          <tr><td>Characters</td><td>Unlimited (local)</td><td class="premium-col">Unlimited + Cloud Vault</td></tr>
-          <tr><td>Maps</td><td>1 per campaign (local)</td><td class="premium-col">Unlimited Gallery + Thumbnails</td></tr>
-          <tr><td>Messages &amp; Voice</td><td><span class="check">✓</span></td><td class="premium-col"><span class="check">✓</span></td></tr>
-          <tr><td>Themes &amp; Cosmetics</td><td><span class="check">✓ All 6 themes</span></td><td class="premium-col"><span class="check">✓ + Exclusive themes</span></td></tr>
-          <tr><td>Player XP &amp; Analytics</td><td><span class="check">✓</span></td><td class="premium-col"><span class="check">✓ + Full history</span></td></tr>
-          <tr><td>DM AI</td><td>Limited messages</td><td class="premium-col">Unlimited + smarter</td></tr>
-          <tr><td>Campaign URL</td><td><span class="cross">✗</span></td><td class="premium-col"><span class="check">✓ Custom slug</span></td></tr>
-          <tr><td>Session History</td><td>Last 10 events</td><td class="premium-col">Full history forever</td></tr>
-          <tr><td>Map Gallery</td><td><span class="cross">✗</span></td><td class="premium-col"><span class="check">✓ Unlimited</span></td></tr>
-          <tr><td>Player Portal Link</td><td><span class="cross">✗</span></td><td class="premium-col"><span class="check">✓ Shareable read-only view</span></td></tr>
-          <tr><td>Ads</td><td>None</td><td class="premium-col">None</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
 </div>
 
 <!-- NEW CHAT MODAL -->
@@ -6272,9 +6052,6 @@ function savePfp() {
 
 function refreshProfilePanel() {
   if (!currentUser) return;
-  renderProfileTitle();
-  updateProfileXPBar();
-  loadSavedTheme();
   document.getElementById('profileUsername').textContent = currentUser.username;
   document.getElementById('profileDN').textContent = currentUser.dn;
   document.getElementById('pStatFriends').textContent = (currentUser.friends || []).length;
@@ -9751,255 +9528,7 @@ function escHTML(s) {
   // Hide app until logged in
   document.getElementById('mainContent').style.display = 'none';
   document.querySelector('.navbar').style.display = 'none';
-  
-// ══════════════════════════════════════════════════════
-//  MANUAL THEME
-// ══════════════════════════════════════════════════════
-var _manualTheme = null;
-
-function setManualTheme(theme) {
-  _manualTheme = theme;
-  document.body.className = document.body.className.replace(/theme-\w+/g,'').trim();
-  document.body.classList.add('theme-' + theme);
-  // Update swatch active state
-  ['night','dawn','dusk','forest','stone'].forEach(function(t) {
-    var el = document.getElementById('tsw-' + t);
-    if (el) el.classList.toggle('active', t === theme);
-  });
-  if (currentUser) {
-    localStorage.setItem(uKey('dnd_theme'), theme);
-  }
-}
-
-function loadSavedTheme() {
-  var saved = currentUser ? localStorage.getItem(uKey('dnd_theme')) : null;
-  if (saved) {
-    setManualTheme(saved);
-  } else {
-    // fall back to time-of-day
-    updateDynamicTheme();
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  PROFILE TITLE / BADGE
-// ══════════════════════════════════════════════════════
-var TITLE_DEFS = {
-  novice:  { label: 'Novice Adventurer',        cls: 'ptb-novice',  icon: '🎲' },
-  hero:    { label: 'Hero of the Realm',         cls: 'ptb-hero',    icon: '⚔️' },
-  dm:      { label: 'Dungeon Master',            cls: 'ptb-dm',      icon: '👑' },
-  slayer:  { label: 'Dragon Slayer',             cls: 'ptb-slayer',  icon: '🐉' },
-  veteran: { label: 'Battle-Hardened Veteran',   cls: 'ptb-veteran', icon: '🛡️' },
-  sage:    { label: 'Arcane Sage',               cls: 'ptb-sage',    icon: '🔮' },
-};
-
-function saveProfileTitle() {
-  if (!currentUser) return;
-  var val = document.getElementById('profileTitleSelect').value;
-  currentUser.title = val;
-  var key = currentUser.username.toLowerCase().replace(/[.#$\[\]]/g, '_');
-  if (typeof fbUserRef === 'function') { var u = {}; u[key] = currentUser; fbUserRef(key).set(currentUser); }
-  renderProfileTitle();
-}
-
-function renderProfileTitle() {
-  var el = document.getElementById('profileTitleBadge');
-  if (!el || !currentUser) return;
-  var key = currentUser.title || 'novice';
-  var def = TITLE_DEFS[key] || TITLE_DEFS.novice;
-  el.innerHTML = '<span class="profile-title-badge ' + def.cls + '">' + def.icon + ' ' + def.label + '</span>';
-  var sel = document.getElementById('profileTitleSelect');
-  if (sel) sel.value = key;
-}
-
-// ══════════════════════════════════════════════════════
-//  PLAYER XP & LEVELING
-// ══════════════════════════════════════════════════════
-var XP_PER_LEVEL = [0,100,250,500,900,1400,2100,3000,4200,6000,10000];
-
-function earnXP(amount, reason) {
-  if (!currentUser) return;
-  currentUser.xp = (currentUser.xp || 0) + amount;
-  var prevLevel = currentUser.level || 1;
-  // Calculate new level
-  var newLevel = 1;
-  for (var i = XP_PER_LEVEL.length - 1; i >= 0; i--) {
-    if (currentUser.xp >= XP_PER_LEVEL[i]) { newLevel = i + 1; break; }
-  }
-  currentUser.level = newLevel;
-  // Save
-  var key = currentUser.username.toLowerCase().replace(/[.#$\[\]]/g, '_');
-  if (typeof fbUserRef === 'function') fbUserRef(key).set(currentUser);
-  // Level up notification
-  if (newLevel > prevLevel) {
-    showToast('🎉 Level Up! You are now Level ' + newLevel, 'success');
-    unlockAchievement && unlockAchievement('level_up_' + newLevel, '⬆️', 'Level ' + newLevel + '!', 'Reached adventurer level ' + newLevel);
-  }
-  updateProfileXPBar();
-}
-
-function updateProfileXPBar() {
-  if (!currentUser) return;
-  var level  = currentUser.level || 1;
-  var xp     = currentUser.xp   || 0;
-  var xpThis = XP_PER_LEVEL[level - 1] || 0;
-  var xpNext = XP_PER_LEVEL[level]     || XP_PER_LEVEL[XP_PER_LEVEL.length - 1];
-  var pct    = xpNext > xpThis ? Math.min(100, ((xp - xpThis) / (xpNext - xpThis)) * 100) : 100;
-  var bar = document.getElementById('profileXPBar');
-  var numEl = document.getElementById('profileXPNum');
-  var nextEl = document.getElementById('profileXPNext');
-  var lvlEl = document.getElementById('profileLevelNum');
-  if (bar)   bar.style.width = pct + '%';
-  if (numEl) numEl.textContent = xp - xpThis;
-  if (nextEl) nextEl.textContent = xpNext - xpThis;
-  if (lvlEl) lvlEl.textContent = level;
-  // Also update profile stat level
-  var psl = document.getElementById('pStatLevel');
-  if (psl) psl.textContent = level;
-}
-
-// ══════════════════════════════════════════════════════
-//  CAMPAIGN ANALYTICS
-// ══════════════════════════════════════════════════════
-function getCampaignAnalytics(campaignId) {
-  var key = 'camp_analytics_' + campaignId;
-  try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) { return {}; }
-}
-function saveCampaignAnalytics(campaignId, data) {
-  localStorage.setItem('camp_analytics_' + campaignId, JSON.stringify(data));
-}
-
-function logCampaignEvent(type, playerDN, playerName, detail) {
-  if (!_currentCampaignId) return;
-  var analytics = getCampaignAnalytics(_currentCampaignId);
-  analytics.events = analytics.events || [];
-  analytics.stats  = analytics.stats  || {};
-  var event = { type: type, dn: playerDN, name: playerName, detail: detail, time: Date.now() };
-  analytics.events.unshift(event);
-  if (analytics.events.length > 200) analytics.events = analytics.events.slice(0, 200);
-  // Aggregate stats per player
-  analytics.stats[playerDN] = analytics.stats[playerDN] || { name: playerName, crits: 0, deaths: 0, heroic: 0, sessions: 0 };
-  if (type === 'crit')    { analytics.stats[playerDN].crits++;   earnXP(25, 'Critical hit!'); }
-  if (type === 'death')   { analytics.stats[playerDN].deaths++;  earnXP(10, 'Dramatic death scene'); }
-  if (type === 'heroic')  { analytics.stats[playerDN].heroic++;  earnXP(50, 'Heroic moment'); }
-  if (type === 'session') { analytics.stats[playerDN].sessions++; earnXP(20, 'Session played'); }
-  saveCampaignAnalytics(_currentCampaignId, analytics);
-  renderCdAnalytics();
-}
-
-function logNewEvent() {
-  var types = ['crit','death','heroic','session','custom'];
-  var typeStr = prompt('Event type (crit / death / heroic / session / custom):','crit');
-  if (!typeStr) return;
-  var detail = prompt('Brief description (optional):','');
-  var dn   = currentUser ? currentUser.dn : 'unknown';
-  var name = currentUser ? currentUser.username : 'Unknown';
-  logCampaignEvent(typeStr.trim(), dn, name, detail);
-  renderCdSessionLog();
-  showToast('Event logged!', 'success');
-}
-
-function renderCdAnalytics() {
-  var gridEl = document.getElementById('cdAnalyticsGrid');
-  var lbEl   = document.getElementById('cdLeaderboard');
-  if (!gridEl || !_currentCampaignId) return;
-  var analytics = getCampaignAnalytics(_currentCampaignId);
-  var stats = analytics.stats || {};
-  // Aggregate totals
-  var totalCrits = 0, totalDeaths = 0, totalHeroic = 0, totalSessions = 0, topCrit = '', topHeroic = '';
-  var maxCrit = -1, maxHeroic = -1;
-  for (var dn in stats) {
-    var s = stats[dn];
-    totalCrits   += s.crits   || 0;
-    totalDeaths  += s.deaths  || 0;
-    totalHeroic  += s.heroic  || 0;
-    totalSessions += s.sessions || 0;
-    if ((s.crits||0) > maxCrit)   { maxCrit = s.crits;   topCrit = s.name; }
-    if ((s.heroic||0) > maxHeroic){ maxHeroic = s.heroic; topHeroic = s.name; }
-  }
-  gridEl.innerHTML =
-    card('🎲', totalSessions, 'Sessions Played', '') +
-    card('⚡', totalCrits,   'Critical Hits',   topCrit ? 'Leader: ' + esc(topCrit) : '') +
-    card('💀', totalDeaths,  'Deaths',           'The road was hard') +
-    card('🌟', totalHeroic,  'Heroic Moments',  topHeroic ? 'Hero: ' + esc(topHeroic) : '');
-
-  function card(icon, val, label, sub) {
-    return '<div class="analytics-card"><div style="font-size:24px;margin-bottom:6px">' + icon + '</div><div class="analytics-val">' + val + '</div><div class="analytics-label">' + label + '</div>' + (sub ? '<div class="analytics-sub">' + sub + '</div>' : '') + '</div>';
-  }
-
-  // Leaderboard
-  var rows = [];
-  for (var d in stats) { rows.push(stats[d]); }
-  rows.sort(function(a,b) { return ((b.crits||0) + (b.heroic||0)*2) - ((a.crits||0) + (a.heroic||0)*2); });
-  if (!rows.length) { lbEl.innerHTML = '<div class="empty-state" style="padding:20px"><div style="color:var(--dim);font-size:14px">No events logged yet. Hit + Log Event to start tracking!</div></div>'; return; }
-  var lbHtml = '';
-  rows.forEach(function(s, i) {
-    var score = (s.crits||0) + (s.heroic||0)*2;
-    var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1)+'.';
-    lbHtml += '<div class="player-item"><div class="friend-avatar" style="font-size:18px;">' + medal + '</div><div class="player-item-info"><div class="player-item-name">' + esc(s.name||'Unknown') + '</div><div style="font-size:12px;color:var(--muted);">⚡' + (s.crits||0) + ' crits · 🌟' + (s.heroic||0) + ' heroic · 💀' + (s.deaths||0) + ' deaths</div></div><div style="font-family:'Cinzel',serif;font-size:16px;color:var(--red);">' + score + ' pts</div></div>';
-  });
-  lbEl.innerHTML = lbHtml;
-}
-
-function renderCdSessionLog() {
-  var el = document.getElementById('cdSessionLog');
-  if (!el || !_currentCampaignId) return;
-  var analytics = getCampaignAnalytics(_currentCampaignId);
-  var events = (analytics.events || []).slice(0, 50);
-  if (!events.length) { el.innerHTML = '<div class="empty-state" style="padding:24px"><div class="empty-icon">&#128221;</div><div>No events logged yet.</div></div>'; return; }
-  var icons = { crit:'⚡', death:'💀', heroic:'🌟', session:'🎲', custom:'📌' };
-  var html = '';
-  events.forEach(function(e) {
-    var d = new Date(e.time);
-    var ts = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-    html += '<div class="player-item" style="padding:10px 14px;"><div style="font-size:20px;width:28px;text-align:center;">' + (icons[e.type]||'📌') + '</div><div class="player-item-info"><div class="player-item-name">' + esc(e.name||'Unknown') + ' — ' + esc(e.type) + '</div><div style="font-size:12px;color:var(--muted);">' + esc(e.detail||'') + '</div></div><div style="font-size:11px;color:var(--dim);white-space:nowrap;">' + ts + '</div></div>';
-  });
-  el.innerHTML = html;
-}
-
-function switchCdTab(tab) {
-  ['players','analytics','log'].forEach(function(t) {
-    var btn = document.getElementById('cdTab' + t.charAt(0).toUpperCase() + t.slice(1));
-    var content = document.getElementById('cdTabContent' + t.charAt(0).toUpperCase() + t.slice(1));
-    if (btn) btn.classList.toggle('active', t === tab);
-    if (content) content.style.display = t === tab ? (t === 'players' ? 'grid' : 'block') : 'none';
-  });
-  if (tab === 'analytics') renderCdAnalytics();
-  if (tab === 'log')       renderCdSessionLog();
-}
-
-// ══════════════════════════════════════════════════════
-//  HOOK XP INTO EXISTING EVENTS
-// ══════════════════════════════════════════════════════
-// Patch dice roller to award XP on nat-20
-var _origRollDie = typeof rollDie === 'function' ? rollDie : null;
-function rollDie(sides, btn) {
-  if (_origRollDie) _origRollDie(sides, btn);
-  // Check for nat-20 after a short delay (the original function sets the result)
-  if (sides === 20) {
-    setTimeout(function() {
-      var numEl = document.getElementById('diceResultNum');
-      if (numEl && numEl.textContent === '20') {
-        earnXP(15, 'Natural 20!');
-        showToast('⚡ Natural 20! +15 XP', 'success');
-        if (_currentCampaignId && currentUser) {
-          logCampaignEvent('crit', currentUser.dn, currentUser.username, 'Natural 20!');
-        }
-      }
-    }, 100);
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  NAVIGATE HOOK for premium + analytics
-// ══════════════════════════════════════════════════════
-var _origNavigate = navigate;
-function navigate(page) {
-  _origNavigate(page);
-  if (page === 'premium') { /* page renders statically */ }
-}
-
-// Always require login — no session restore
+  // Always require login — no session restore
   document.getElementById('authScreen').style.display = 'flex';
 })();
 </script>
